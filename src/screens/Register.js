@@ -28,16 +28,22 @@ var pdffile
 var filename1 = 'Upload your Pan'
 var filename2 = 'Upload your address proof'
 const Register = ({navigation}) => {
+ 
   const [FirstName, setFirstName] = useState('');
+  const [showComponent, setshowComponent] = useState(true);
+   const [websiteLink, setwebsiteLink] = useState('');
   const [LastName, setLastName] = useState('');
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
   const [password, setpassword] = useState('');
   const [Otp, setotp] = useState('');
   const [selectedValue, setselectedValue] = useState('');
+  const [selectedsecondValue, setselectedsecondValue] = useState('');
   const [selectedPANSource, setselectedPANSource] = useState('');
+  const [selectedTrustFileSource, setselectedTrustFileSource] = useState('');
   const [selectedIDSource, setselectedIDSource] = useState('');
   const [selectedPANName, setselectedPANName] = useState('Upload your Pan');
+   const [selectedTrustFileName, setselectedTrustFileName] = useState('Upload 80G/Trust Certificate');
   const [selectedIDName, setselectedIDName] = useState('Upload your address proof');
   const [filebaseString, setfilebaseString] = useState('');
   const [imagebaseString, setimagebaseString] = useState('');
@@ -46,6 +52,10 @@ const Register = ({navigation}) => {
   const setTaskti = text => {
     setFirstName(text);
   };
+    const setwebsitelink = text => {
+    setwebsiteLink(text);
+  };
+
   const setTasktipass = text => {
     setLastName(text);
   };
@@ -162,6 +172,75 @@ const Register = ({navigation}) => {
   
     
   };
+
+
+
+ const selectTrustCertiFile = async () => {
+    //Opening Document Picker for selection of one file
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
+        //There can me more options as well
+        // DocumentPicker.types.allFiles
+        // DocumentPicker.types.images
+        // DocumentPicker.types.plainText
+        // DocumentPicker.types.audio
+        // DocumentPicker.types.pdf
+      });
+
+      
+               
+      
+      //Printing the log realted to the file
+      
+      console.log('res : ' + JSON.stringify(res));
+      console.log('URi : ' + res.uri);
+      console.log('Type : ' + res.type);
+      console.log('File Name : ' + res.name);
+      console.log('File Size : ' + res.size);
+      pdfpath = res.uri
+      filename1 = res.name
+      setselectedTrustFileName(res.name);
+      setselectedTrustFileSource(res.uri);
+     
+       RNFetchBlob.fs
+          .readFile(res.uri, 'base64')
+          .then((data) => {
+            setfilebaseString(data)
+            console.log('base : ' +data);
+           })
+          .catch((err) => { console.log('err : ' +err);});
+       
+       
+      //Setting the state to show single file attributes
+     
+    } catch (err) {
+      //Handling any exception (If any)
+      if (DocumentPicker.isCancel(err)) {
+        //If user canceled the document selection
+        alert('Canceled from single doc picker');
+      } else {
+        //For Unknown Error
+        alert('Unknown Error: ' + JSON.stringify(err));
+        throw err;
+      }
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   const registration = async () => {
     var formdata = new FormData();
     console.log(password);
@@ -235,6 +314,14 @@ const Register = ({navigation}) => {
   const updateSecureText = () => {
     setisPasswordHidden(!isPasswordHidden);
   };
+
+  const selectedDonationType = ()=> {
+    console.log(selectedValue);
+  
+    
+  }
+
+
   return (
     
       <Container>
@@ -321,6 +408,37 @@ const Register = ({navigation}) => {
             <Text style={Styles.login_text_forget}>Forget Password?</Text>
           </TouchableOpacity> */}
 
+             <Picker
+            
+              selectedValue={selectedValue}
+            
+              style={{
+                height: 20,
+                width: '100%',
+                borderColor: '#000',
+                alignSelf: 'center',
+                borderWidth: 1,
+                marginTop: 19,
+              }}
+              onValueChange={
+                (itemValue, itemIndex) => setselectedValue(itemValue)
+                
+                // console.log(itemValue)
+                // Alert.alert(itemValue)
+              }>
+               
+              <Picker.Item label="Select one" value=""  />
+              <Picker.Item label="Donor" value="0" />
+              <Picker.Item label="Donee" value="1" />
+            </Picker>
+
+           
+           
+<View>
+   
+    {selectedValue =="0" ?   <View>   
+         
+
 <TouchableOpacity
           activeOpacity={0.5}
           style={Styles1.buttonStyle}
@@ -379,26 +497,178 @@ const Register = ({navigation}) => {
         </TouchableOpacity> 
         <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
 
-        
-            <Picker
-              selectedValue={selectedValue}
+        </View>
+    : null }
+
+
+
+
+
+
+
+    {selectedValue =="1" ?  ( <Picker
+              selectedValue={selectedsecondValue}
+            
               style={{
                 height: 50,
                 width: '100%',
                 borderColor: '#000',
                 alignSelf: 'center',
                 borderWidth: 1,
-                marginTop: 19,
+               
               }}
               onValueChange={
-                (itemValue, itemIndex) => setselectedValue(itemValue)
+                (itemValue, itemIndex) => setselectedsecondValue(itemValue)
+                
                 // console.log(itemValue)
                 // Alert.alert(itemValue)
               }>
-              <Picker.Item label="Select one" value="" />
-              <Picker.Item label="Donor" value="0" />
-              <Picker.Item label="Donee" value="1" />
+               
+              <Picker.Item label="Select one" value=""  />
+              <Picker.Item label="Individual" value="2" />
+              <Picker.Item label="Organisation" value="3" />
+            </Picker>) : null}
+       </View>
+
+           
+     <View>
+
+
+
+     {/* <Picker
+              selectedsecondValue={selectedsecondValue}
+            
+              style={{
+                height: 50,
+                width: '100%',
+                borderColor: '#000',
+                alignSelf: 'center',
+                borderWidth: 1,
+               
+              }}
+              onValueChange={
+                (itemValue, itemIndex) => setselectedsecondValue(itemValue)
+                
+                // console.log(itemValue)
+                // Alert.alert(itemValue)
+              }>
+               
+              <Picker.Item label="Select one" value=""  />
+              <Picker.Item label="Individual" value="2" />
+              <Picker.Item label="Organisation" value="3" />
+            </Picker>  */}
+           
+
+       {selectedsecondValue =="2" ?   <View>   
+         
+
+<TouchableOpacity
+          activeOpacity={0.5}
+          style={Styles1.buttonStyle}
+          onPress={selectOneFile}>
+          <Text style={{marginRight: 10, fontSize: 17}}>
+            {selectedPANName}
+          </Text>
+          <Image
+            source={{
+              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
+            }}
+            style={Styles1.imageIconStyle}
+          />
+        </TouchableOpacity>
+        <Text style={Styles1.warningHint}>{'Only PDF or Image format is acceptable'}</Text>
+
+        <Picker
+
+              selectedValue={selectedID}
+              style={{
+                height: 50,
+                width: '100%',
+                borderColor: '#000',
+                alignSelf: 'center',
+                borderWidth: 1,
+                marginTop: 7,
+              }}
+              onValueChange={
+                (itemValue, itemIndex) => setselectedID(itemValue)
+                // console.log(itemValue)
+                // Alert.alert(itemValue)
+              }>
+              <Picker.Item label="Select ID Type" value="" />
+              <Picker.Item label="Adhar" value="0" />
+              <Picker.Item label="National ID" value="1" />
+              <Picker.Item label="Passport" value="2" />
+              <Picker.Item label="Driving License" value="3" />
             </Picker>
+
+
+        <View style={{marginBottom: 7, marginTop: -15}}></View>
+       
+        <TouchableOpacity
+          activeOpacity={0.5}
+          style={Styles1.buttonStyle}
+          onPress={selectOneFile1}>
+          <Text style={{marginRight: 10, fontSize: 17}}>
+            {selectedIDName}
+          </Text>
+          <Image
+            source={{
+              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
+            }}
+            style={Styles1.imageIconStyle}
+          />
+        </TouchableOpacity> 
+        <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
+
+        </View>
+    : null }
+
+
+ {selectedsecondValue =="3" ?  <View><Text><TouchableOpacity
+          activeOpacity={0.5}
+          style={Styles1.buttonStyle}
+          onPress={selectTrustCertiFile}>
+          <Text style={{marginRight: 10, fontSize: 17}}>
+            {selectedTrustFileName}
+          </Text>
+          <Image
+            source={{
+              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
+            }}
+            style={Styles1.imageIconStyle}
+          />
+        </TouchableOpacity>
+        <View>
+        <Text style={Styles1.warningHint}>{' PDF or Image format is acceptable'}</Text>
+        </View>
+  </Text>
+ 
+        <TextInput
+              placeholder="Website Link"
+              placeholderTextColor="#FFF"
+              onChangeText={text => setwebsiteLink(text)}
+              style={Styles.login_text_input}
+              keyboardType="default"
+            />
+         
+            
+    
+       
+
+      
+</View>  : null}
+
+
+</View>
+    
+                  
+
+    
+   
+
+        
+
+           
             <TouchableOpacity
               style={Styles.login_btn_forget}
               onPress={() => registration()}>
