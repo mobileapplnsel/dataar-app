@@ -620,6 +620,7 @@ module.exports = StyleSheet.create({
   login_text_input_contain: {
     flexDirection: 'column',
     justifyContent: 'space-between',
+    color:'black',
     // alignSelf: 'center',
     // backgroundColor: '#f55656',
     paddingStart: 30,
@@ -632,6 +633,7 @@ module.exports = StyleSheet.create({
     // backgroundColor: '#dcdedc',
     borderBottomColor: '#000',
     borderBottomWidth: 1,
+     color:'black',
     paddingTop: 20,
   },
   login_text_font: {

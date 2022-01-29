@@ -20,9 +20,11 @@ import CheckBox from '@react-native-community/checkbox';
 import {Picker} from '@react-native-picker/picker';
 import Feather from 'react-native-vector-icons/Feather';
 import DocumentPicker from 'react-native-document-picker';
+import RNFetchBlob from 'rn-fetch-blob';
 
 
 var pdfpath
+var pdffile
 var filename1 = 'Upload your Pan'
 var filename2 = 'Upload your address proof'
 const Register = ({navigation}) => {
@@ -37,7 +39,8 @@ const Register = ({navigation}) => {
   const [selectedIDSource, setselectedIDSource] = useState('');
   const [selectedPANName, setselectedPANName] = useState('Upload your Pan');
   const [selectedIDName, setselectedIDName] = useState('Upload your address proof');
-  
+  const [filebaseString, setfilebaseString] = useState('');
+  const [imagebaseString, setimagebaseString] = useState('');
   const [selectedID, setselectedID] = useState('');
   const [isPasswordHidden, setisPasswordHidden] = useState(false);
   const setTaskti = text => {
@@ -70,9 +73,14 @@ const Register = ({navigation}) => {
         // DocumentPicker.types.audio
         // DocumentPicker.types.pdf
       });
+
+      
+               
+      
       //Printing the log realted to the file
+      
       console.log('res : ' + JSON.stringify(res));
-      console.log('URI : ' + res.uri);
+      console.log('URi : ' + res.uri);
       console.log('Type : ' + res.type);
       console.log('File Name : ' + res.name);
       console.log('File Size : ' + res.size);
@@ -80,6 +88,16 @@ const Register = ({navigation}) => {
       filename1 = res.name
       setselectedPANName(res.name);
       setselectedPANSource(res.uri);
+     
+       RNFetchBlob.fs
+          .readFile(res.uri, 'base64')
+          .then((data) => {
+            setfilebaseString(data)
+            console.log('base : ' +data);
+           })
+          .catch((err) => { console.log('err : ' +err);});
+       
+       
       //Setting the state to show single file attributes
      
     } catch (err) {
@@ -106,7 +124,11 @@ const Register = ({navigation}) => {
         // DocumentPicker.types.audio
         // DocumentPicker.types.pdf
       });
+
+         
+
       //Printing the log realted to the file
+    
       console.log('res : ' + JSON.stringify(res));
       console.log('URI : ' + res.uri);
       console.log('Type : ' + res.type);
@@ -116,6 +138,14 @@ const Register = ({navigation}) => {
       filename1 = res.name
       setselectedIDName(res.name);
       setselectedIDSource(res.uri);
+       RNFetchBlob.fs
+          .readFile(res.uri, 'base64')
+          .then((data) => {
+            setimagebaseString(data)
+            console.log('base1 : ' +data);
+           })
+          .catch((err) => { console.log('err : ' +err);});
+       
       //Setting the state to show single file attributes
      
     } catch (err) {
@@ -129,10 +159,21 @@ const Register = ({navigation}) => {
         throw err;
       }
     }
+  
+    
   };
   const registration = async () => {
     var formdata = new FormData();
     console.log(password);
+   
+    console.log(selectedPANName);
+    console.log(selectedPANSource);
+    // console.log( filebaseString);
+      console.log("s"+imagebaseString);
+   
+   
+
+   
     if (FirstName == '') {
       Alert.alert('First Name', 'Please enter first name');
     } else if (LastName == '') {
@@ -166,6 +207,13 @@ const Register = ({navigation}) => {
         device_id: '',
         device_type: 'A',
         usertype: selectedValue,
+        kycfile_type: 'base64',
+        kyc_file: filebaseString,
+        pan_number: '1234567890',
+        address_proof_type:'Adhar Card',
+        address_proof_number:'1234567890',
+        kyc_address_file:imagebaseString,
+
       };
       // formdata.append('firstname', FirstName);
       // formdata.append('lastname', LastName);
@@ -290,6 +338,7 @@ const Register = ({navigation}) => {
         <Text style={Styles1.warningHint}>{'Only PDF or Image format is acceptable'}</Text>
 
         <Picker
+
               selectedValue={selectedID}
               style={{
                 height: 50,

@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   package="com.dataarapp">
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
@@ -11,7 +12,8 @@
       android:allowBackup="false"
       android:usesCleartextTraffic="true"
       android:largeHeap="true"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:requestLegacyExternalStorage="true">
       <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
       <activity
         android:name=".MainActivity"
