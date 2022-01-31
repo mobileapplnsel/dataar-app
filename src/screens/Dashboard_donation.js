@@ -155,7 +155,7 @@ class Dashboard_donation extends Component {
     var response = await API.post('donation_list', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
-      console.log(response);
+      console.log('donation_list response: ',response.data.campaign_data);
       this.setState({
         setcmpData: [...response.data.campaign_data],
       });
@@ -300,31 +300,52 @@ class Dashboard_donation extends Component {
     var amountpaind;
     if (item.donation_mode == '1') {
       if (item.total_donation_amountpaid == null) {
-        progressStatus =
-          (parseInt(0) / parseInt(item.campaign_target_amount)) * 100;
+        // progressStatus =
+        //   (parseInt(0) / parseInt(item.campaign_target_amount)) * 100;
+        progressStatus = 0.00
         amountpaind = 0 + ' of ' + item.campaign_target_amount;
       } else {
         progressStatus =
           (parseInt(item.total_donation_amountpaid) /
             parseInt(item.campaign_target_amount)) *
           100;
+          progressStatus = parseFloat(progressStatus).toFixed(2)
+          if (progressStatus > 100)
+          {
+            progressStatus = 100
+          }
         amountpaind =
           item.total_donation_amountpaid + ' of ' + item.campaign_target_amount;
       }
     } else {
       if (item.total_donation_quantity == null) {
-        progressStatus =
-          (parseInt(0) / parseInt(item.campaign_target_amount)) * 100;
+        // progressStatus =
+        //   (parseInt(0) / parseInt(item.campaign_target_amount)) * 100;
+           progressStatus = 0.00
         amountpaind = 0 + ' of ' + item.campaign_target_amount;
       } else {
         progressStatus =
           (parseInt(item.total_donation_quantity) /
             parseInt(item.campaign_target_amount)) *
           100;
+          progressStatus = parseFloat(progressStatus).toFixed(2)
+          console.log('progressStatus:::::', progressStatus)
+          if (progressStatus == 'Infinity')
+          {
+            progressStatus = 0
+          }
+          else if (progressStatus > 100.00)
+          {
+            progressStatus = 100
+          }
         amountpaind =
           item.total_donation_quantity + ' of ' + item.campaign_target_amount;
       }
     }
+
+    var base64String = item.campaign_image
+    var base64Icon = 'data:image/png;base64,'+base64String
+    // console.log('base64Icon: ', base64Icon)
 
     const wish = item.like_status == 1 ? true : false;
     console.log(wish);
@@ -339,7 +360,14 @@ class Dashboard_donation extends Component {
                   justifyContent: 'space-between',
                   backgroundColor: '#ffff',
                 }}>
+                  <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('Campaing_details', {
+            camp_id: item.campaign_id,
+          })
+        }>
                 <Text style={Styles.doner_name_font}>{item.campaign_name}</Text>
+                </TouchableOpacity>
                 <View style={{flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => this.like(item, index)}>
                     {wish ? (
@@ -365,7 +393,17 @@ class Dashboard_donation extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={{flexDirection: 'row'}}>
+              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:10, backgroundColor: 'null', flex: 1, marginTop: 6}}>
+<Image style={{
+  
+    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 10, width: '100%', 
+}}
+// source={{uri: base64Icon}}
+source={require('../../src/assets/images/21-Free-Banner-Templates-for-Photoshop-and-Illustrator.jpg')}
+>
+</Image> 
+</View>
+              <View style={{flexDirection: 'row', marginTop: -10}}>
                 <Text style={Styles.doner_title_font}>
                   {item.campaign_details}
                 </Text>
@@ -392,18 +430,26 @@ class Dashboard_donation extends Component {
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                   }}>
-                  <Image
+                  {/* <Image
                     style={Styles.location_icon_font}
                     source={require('../../src/assets/images/location.jpg')}
                     // resizeMode="contain"dashboard_main_btn
-                  />
-                  <Text style={Styles.doner_title_font}> {item.location}</Text>
+                  /> */}
+                  {/* <Text style={Styles.doner_title_font}> {item.location}</Text> */}
+                  <Text style={Styles.doner_title_font}> {''}</Text>
                 </View>
-                <Text style={Styles.doner_title_font}>
+
+
+
+                {/* <Text style={Styles.doner_title_font}>
                   {item.days} days to go
+                </Text> */}
+                 <Text style={Styles.doner_title_font}>
+                  {'5'} days to go
                 </Text>
               </View>
-              <View
+             
+                <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
@@ -411,7 +457,7 @@ class Dashboard_donation extends Component {
                   // backgroundColor: '#5ca7f2',
                 }}>
                 <Text style={Styles.doner_title_font}>
-                  {item.quantity} Doner
+                  {item.quantity} Share
                 </Text>
                 <View
                   style={{
@@ -434,7 +480,7 @@ class Dashboard_donation extends Component {
                     ]}
                     onPress={() => this.comment(item)}>
                     <Text style={Styles.doner_comment_font}>
-                      {item.quantity} Comment
+                       Review
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -615,9 +661,9 @@ class Dashboard_donation extends Component {
           <CardItem>
             <View style={{flexDirection: 'column'}}>
 
-            <View style={{marginLeft: 0, marginRight: 0, borderRadius:12, backgroundColor: 'null', flex: 1, marginTop: -20}}>
+            <View style={{alignItems: 'center',marginLeft: 0, marginRight: 0, borderRadius:12, backgroundColor: 'null', flex: 1, marginTop: -20}}>
 <Image style={{
-    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: 300
+    resizeMode: 'contain', alignSelf: 'center', height: 200, borderRadius: 4, width: 350
 }}
 source={require('../../src/assets/images/daatar_banner.jpg')}>
 </Image> 
@@ -626,7 +672,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
 <Text style={{fontSize:22,
         color:'black',
         alignSelf:'center',
-        marginTop:-15, fontWeight: '500', marginBottom: 10}}>One coin creates divine</Text>
+        marginTop:-10, fontWeight: '500', marginBottom: 10}}>One coin creates divine</Text>
 
 <TouchableOpacity
                   style={Styles.donate_btn_now1}

@@ -948,7 +948,8 @@ module.exports = StyleSheet.create({
     marginTop: 20,
     color: '#f55656',
     justifyContent: 'center',
-    alignSelf: 'center'
+    alignSelf: 'center',
+    borderRadius: 6,
   },
   donate_btn_now1: {
     // fontSize: 18,
