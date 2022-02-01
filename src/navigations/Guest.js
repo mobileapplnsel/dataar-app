@@ -279,7 +279,7 @@ const DrawerScreen = () => (
       },
     }}>
     {/* <Drawer.Screen name="Home" component={TabsScreen} /> */}
-    <Drawer.Screen name="Donation" component={HomeStackScreenDoner} />
+    <Drawer.Screen name="Dashboard" component={HomeStackScreenDoner} />
   </Drawer.Navigator>
 );
 const DrawerScreencamp = () => (

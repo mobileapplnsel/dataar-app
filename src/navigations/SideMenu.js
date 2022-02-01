@@ -44,7 +44,7 @@ const CustomSidebarMenu = props => {
     var user_Type = await AsyncStorage.getItem('user_type');
     setUser_id(user_id);
     setUser_Type(user_Type);
-    console.log('user_id', user_id);
+    console.log('user_id:::', user_id);
   }, []);
   const logout = () => {
     AsyncStorage.clear();
@@ -54,23 +54,44 @@ const CustomSidebarMenu = props => {
     <SafeAreaView style={{flex: 1}}>
       {/*Top Large Image */}
       <Image
-        source={{uri: BASE_PATH + proileImage}}
+       // source={{uri: BASE_PATH + proileImage}}
+        source={require('../../src/assets/images/heart1.png')}
         style={styles.sideMenuProfileIcon}
       />
+
+
+
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
+
+        {/* {user_id !== null ? (
+        <DrawerItem
+          label="Donation Campaign"
+          onPress={() => props.navigation.navigate('Dashboard_donation')}
+        />
+        ) : null} */}
+
+        {user_id !== null ? (
         <DrawerItem
           label="Update KYC"
           onPress={() => props.navigation.navigate('Add profile')}
         />
+        ) : null}
+
+        {user_id !== null ? (
         <DrawerItem
           label="User profile"
           onPress={() => props.navigation.navigate('User profile')}
         />
+        ) : null}
+
+{user_id !== null ? (
         <DrawerItem
           label="Preference"
           onPress={() => props.navigation.navigate('Preference')}
         />
+        ) : null}
+
         {/* {user_Type === 1 ? (
           <DrawerItem
             label="Dashboard"
@@ -113,6 +134,10 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 100 / 2,
     alignSelf: 'center',
+     backgroundColor: 'transparent',
+     tintColor: '#f55656',
+     resizeMode: 'contain'
+     
   },
   iconStyle: {
     width: 15,
