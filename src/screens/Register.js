@@ -40,6 +40,8 @@ const Register = ({navigation}) => {
   const [selectedValue, setselectedValue] = useState('');
   const [selectedsecondValue, setselectedsecondValue] = useState('');
   const [selectedPANSource, setselectedPANSource] = useState('');
+  const [selectedPANNumber, setselectedPANNumber] = useState('');
+  const [selectedKYCNumber, setselectedKYCNumber] = useState('');
   const [selectedTrustFileSource, setselectedTrustFileSource] = useState('');
   const [selectedIDSource, setselectedIDSource] = useState('');
   const [selectedPANName, setselectedPANName] = useState('Upload your Pan');
@@ -52,6 +54,16 @@ const Register = ({navigation}) => {
   const setTaskti = text => {
     setFirstName(text);
   };
+
+  const setPanNum = text => {
+    setPanNum(text);
+  };
+
+  const setKYCNum = text => {
+    setKYCNum(text);
+  };
+
+
     const setwebsitelink = text => {
     setwebsiteLink(text);
   };
@@ -453,7 +465,17 @@ const Register = ({navigation}) => {
             style={Styles1.imageIconStyle}
           />
         </TouchableOpacity>
+       
+
         <Text style={Styles1.warningHint}>{'Only PDF or Image format is acceptable'}</Text>
+
+        <TextInput
+              placeholder="Pan Number"
+              placeholderTextColor="#000"
+              onChangeText={text => setselectedPANNumber(text)}
+              style={Styles.login_text_input}
+              keyboardType="default"
+            />
 
         <Picker
 
@@ -479,6 +501,9 @@ const Register = ({navigation}) => {
             </Picker>
 
 
+               
+          
+
         <View style={{marginBottom: 7, marginTop: -15}}></View>
        
         <TouchableOpacity
@@ -496,6 +521,14 @@ const Register = ({navigation}) => {
           />
         </TouchableOpacity> 
         <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
+
+        <TextInput
+              placeholder="Address Proof Number"
+              placeholderTextColor="#000"
+              onChangeText={text => setselectedKYCNumber(text)}
+              style={Styles.login_text_input}
+              keyboardType="default"
+            />
 
         </View>
     : null }
@@ -620,6 +653,14 @@ const Register = ({navigation}) => {
         </TouchableOpacity> 
         <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
 
+        <TextInput
+              placeholder=""
+              placeholderTextColor="#000"
+              onChangeText={text => setwebsiteLink(text)}
+              style={Styles.login_text_input}
+              keyboardType="default"
+            />
+
         </View>
     : null }
 
@@ -645,7 +686,7 @@ const Register = ({navigation}) => {
  
         <TextInput
               placeholder="Website Link"
-              placeholderTextColor="#FFF"
+              placeholderTextColor="#000"
               onChangeText={text => setwebsiteLink(text)}
               style={Styles.login_text_input}
               keyboardType="default"
