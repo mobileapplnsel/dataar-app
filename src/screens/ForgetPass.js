@@ -83,7 +83,7 @@ const ForgetPass = ({navigation}) => {
         console.log('token', token);
         setisloading(true);
         setTimeout(() => {
-          navigation.navigate('Dashboard_donation');
+          navigation.navigate('Dashboard_donation_forDonor');
           setisloading(false);
           setselectedValue('');
         }, 3000);
@@ -135,7 +135,7 @@ const ForgetPass = ({navigation}) => {
         await AsyncStorage.setItem('user_type', response.user_type);
         setisloading(true);
         setTimeout(() => {
-          navigation.navigate('Dashboard_donation');
+          navigation.navigate('Dashboard_donation_forDonor');
           setisloading(false);
           setemail('');
           setpassword('');

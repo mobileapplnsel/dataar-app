@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React, {Component, useEffect, useState} from 'react';
 // var styles = require('../../src/assets/files/Styles');
-import {NavigationActions} from 'react-navigation';
+import {NavigationActions, NavigationEvents} from 'react-navigation';
+
 import {
   Dimensions,
   ScrollView,
@@ -39,19 +40,26 @@ const CustomSidebarMenu = props => {
   const proileImage = 'react_logo.png';
   const [user_id, setUser_id] = useState('');
   const [user_Type, setUser_Type] = useState('');
+  const [token, setToken] = useState('');
   useEffect(async () => {
     var user_id = await AsyncStorage.getItem('user_id');
     var user_Type = await AsyncStorage.getItem('user_type');
+    var token = await AsyncStorage.getItem('token');
     setUser_id(user_id);
     setUser_Type(user_Type);
+    setToken(token);
     console.log('user_id:::', user_id);
   }, []);
   const logout = () => {
     AsyncStorage.clear();
     props.navigation.navigate('LogIn');
   };
+  const callToSetCatSubcatValue = () => {
+    console.log('callToSetCatSubcatValue called:::');
+  };
   return (
     <SafeAreaView style={{flex: 1}}>
+      
       {/*Top Large Image */}
       <Image
        // source={{uri: BASE_PATH + proileImage}}
@@ -59,37 +67,67 @@ const CustomSidebarMenu = props => {
         style={styles.sideMenuProfileIcon}
       />
 
-
-
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />
 
-        {/* {user_id !== null ? (
-        <DrawerItem
-          label="Donation Campaign"
-          onPress={() => props.navigation.navigate('Dashboard_donation')}
-        />
+
+        {user_id == null ? (
+          <DrawerItem label="User Profile" onPress={() =>  logout()} />
+        ) : null}
+
+{/* {user_Type == 0 ? (
+          <DrawerItem label="Donation Campaign" onPress={() => props.navigation.navigate('Dashboard_donation')} />
         ) : null} */}
+        
 
-        {user_id !== null ? (
-        <DrawerItem
-          label="Update KYC"
-          onPress={() => props.navigation.navigate('Add profile')}
+        {user_Type == 0 ? (
+          <DrawerItem label="My Profile" onPress={() => props.navigation.navigate('User profile')} />
+        ) : null}
+
+
+{user_Type == 1 ? (
+          <DrawerItem label="My Profile" onPress={() => props.navigation.navigate('User_profile_forDonee')} />
+        ) : null}
+
+       
+{user_Type == 0 ? (
+          <DrawerItem label="Set Preference" onPress={() => props.navigation.navigate('Preference')} />
+        ) : null}
+
+
+{user_Type == 0 ? (
+         <DrawerItem
+          label="My Donation"
+          onPress={() => props.navigation.navigate('MyDonation')}
         />
         ) : null}
 
-        {user_id !== null ? (
+{user_Type == 0 ? (
         <DrawerItem
-          label="User profile"
-          onPress={() => props.navigation.navigate('User profile')}
+          label="My Favourite"
+          onPress={() => props.navigation.navigate('My_Favourite')}
         />
         ) : null}
 
-{user_id !== null ? (
+{user_Type == 0 ? (
         <DrawerItem
-          label="Preference"
-          onPress={() => props.navigation.navigate('Preference')}
-        />
+          label="Manage Account"
+          onPress={() => props.navigation.navigate('Manage_Account')}
+        />  
+        ) : null}
+
+{user_Type == 1 ? (
+        <DrawerItem
+          label="Manage Account"
+          onPress={() => props.navigation.navigate('Manage_AccountforDonee')}
+        />  
+        ) : null}
+
+{user_Type == 1 ? (
+        <DrawerItem
+          label="Create Campaign"
+          onPress={() => props.navigation.navigate('StartCampaign')}
+        />  
         ) : null}
 
         {/* {user_Type === 1 ? (

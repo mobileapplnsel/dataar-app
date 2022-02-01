@@ -20,7 +20,7 @@ const splash = ({navigation}) => {
         // var user_type = AsyncStorage.getItem('user_type');
         console.log(user_type);
         if (user_type === '0') {
-          navigation.navigate('Dashboard_donation');
+          navigation.navigate('Dashboard_donation_forDonor');
         } else {
           navigation.navigate('Dashboard');
         }

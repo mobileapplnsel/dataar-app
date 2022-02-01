@@ -29,7 +29,7 @@ class Search_screen extends Component {
 
           <TouchableOpacity
                 style={Styles.donate_btn}
-                onPress={() => this.props.navigation.navigate('Dashboard_donation')}>
+                onPress={() => this.props.navigation.navigate('Dashboard_donation_forDonor')}>
                 <Text style={Styles.login_text}>Back</Text>
               </TouchableOpacity>
          

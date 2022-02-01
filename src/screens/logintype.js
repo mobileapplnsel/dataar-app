@@ -65,7 +65,7 @@ const logintype = ({route, navigation}) => {
         console.log('token', token);
         setisloading(true);
         setTimeout(() => {
-          navigation.navigate('Dashboard_donation');
+          navigation.navigate('Dashboard_donation_forDonor');
           setisloading(false);
           setselectedValue('');
         }, 3000);

@@ -42,7 +42,7 @@ const OtpVerify = ({route, navigation}) => {
         await AsyncStorage.setItem('user_type', response.user_type);
         var token = await AsyncStorage.getItem('token');
         console.log('token', token);
-        navigation.navigate('Dashboard_donation');
+        navigation.navigate('Dashboard_donation_forDonor');
       } else {
         await AsyncStorage.setItem('token', response.token);
         await AsyncStorage.setItem('user_id', response.user_id);

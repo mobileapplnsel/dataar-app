@@ -15,6 +15,7 @@ import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 var Styles = require('../assets/files/Styles');
+import Feather from 'react-native-vector-icons/Feather';
 class User_profile extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +28,11 @@ class User_profile extends Component {
       iseditablefname: false,
       iseditablelname: false,
       image: '',
+      isPasswordHidden: false,
+      isConfirmPasswordHidden: false,
+      passwordString: '',
+      confirmPasswordString: '',
+
     };
   }
   btnkyc = () => {
@@ -41,12 +47,13 @@ class User_profile extends Component {
     }
   };
   async componentDidMount() {
-    if (AsyncStorage.getItem('token')['_X'] == null) {
-      //   this.props.navigation.navigate('LogIn');
-    } else {
-    }
-    this.getuser();
+    // if (AsyncStorage.getItem('token')['_X'] == null) {
+    //   //   this.props.navigation.navigate('LogIn');
+    // } else {
+    // }
+    // this.getuser();
   }
+  
   getuser = async () => {
     var token = await AsyncStorage.getItem('token');
     var user_id = await AsyncStorage.getItem('user_id');
@@ -96,7 +103,57 @@ class User_profile extends Component {
       lname: value,
     });
   };
+   updateSecureText = () => {
+    this.setState({ isPasswordHidden: !this.state.isPasswordHidden });
+  };
+  updateSecureText1 = () => {
+    this.setState({ isConfirmPasswordHidden: !this.state.isConfirmPasswordHidden });
+  };
+  submitPasswordChange = async () => {
+    if (this.state.passwordString.trim() == '')
+    {
+      Alert.alert('Warning','Password can not be blank!');
+    }
+    else if (this.state.confirmPasswordString.trim() == '')
+    {
+      Alert.alert('Warning','Confirm Password can not be blank!');
+    }
+    else if (this.state.passwordString != this.state.confirmPasswordString)
+    {
+      Alert.alert('Warning','Confirm password did not match!');
+    }
+    else
+    {
+    var user_id = await AsyncStorage.getItem('user_id');
+    console.log('user_id', user_id);
+    var logs = {
+      user_id: user_id,
+      new_password: this.state.passwordString,
+    };
+    console.log(logs);
+    
+      var response = await API.post('change_password', logs);
+      console.log(response);
+      if (response.status == 'success') {
+        // navigation.navigate('OtpVerify', {mobile: Mobile});
 
+       // this.props.navigation.navigate('ThankYou');
+
+        Alert.alert(
+          'Success',
+          response.message, // <- this part is optional, you can pass an empty string
+          [
+            {text: 'OK', onPress: () => this.props.navigation.goBack()},
+          ],
+          {cancelable: false},
+        );
+        
+      } else {
+        Alert.alert(response.status, response.message);
+      }
+    
+  }
+  };
   render() {
     return (
       <Container>
@@ -107,7 +164,7 @@ class User_profile extends Component {
             <View style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('Dashboard_donation_forDonor')}>
+                  onPress={() => this.props.navigation.goBack()}>
                   <Image
                     style={{
                       width: 30,
@@ -121,7 +178,7 @@ class User_profile extends Component {
                     // resizeMode="contain"dashboard_main_btn
                   />
                 </TouchableOpacity>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                   <Image
                     style={{
                       width: 40,
@@ -134,10 +191,10 @@ class User_profile extends Component {
                     source={require('../../src/assets/images/heart1.png')}
                     // resizeMode="contain"dashboard_main_btn
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
               <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                   <Image
                     style={{
                       width: 30,
@@ -150,7 +207,7 @@ class User_profile extends Component {
                     source={require('../../src/assets/images/search.png')}
                     // resizeMode="contain"dashboard_main_btn
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate('')}>
                   <Image
                     style={{
@@ -174,7 +231,7 @@ class User_profile extends Component {
                 style={{
                   width: 84,
                   height: 80,
-                  marginStart: 14,
+                  marginStart: 30,
                   marginTop: 20,
                   backgroundColor: 'transparent',
                 }}
@@ -185,115 +242,110 @@ class User_profile extends Component {
                 style={[
                   Styles.user_kyc_font,
                   {
-                    marginLeft: 14,
+                    marginLeft: 30,
+                    marginTop: 20,
                   },
                 ]}>
-                User Profile1
+                Change Password
               </Text>
             </View>
             <List style={Styles.profile_main_contain}>
-              <View style={Styles.profile_main_text_contain}>
-                {/* <ListItem style={Styles.profile_main_text_contain}> */}
-                <Text style={Styles.user_profile_lbtext}>First Name:</Text>
-                <View style={Styles.user_edit_contain}>
-                  <TextInput
-                    style={Styles.user_text_input}
-                    placeholder="First Name"
-                    editable={this.state.iseditablefname}
-                    onChangeText={value => this.setFirstname(value)}
-                    value={this.state.fname}
-                    keyboardType="default"></TextInput>
-                  {/* </ListItem> */}
-                  <TouchableOpacity
-                    style={Styles.user_edit_profile_lbtext}
-                    onPress={() => this.fnameedit()}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 21,
-                        marginStart: 12,
-                        marginTop: 20,
-                        backgroundColor: 'transparent',
-                      }}
-                      source={require('../../src/assets/images/penicon.png')}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={Styles.profile_main_text_contain}>
-                <Text style={Styles.user_profile_lbtext}>Last Name:</Text>
-                <View style={Styles.user_edit_contain}>
-                  <TextInput
-                    style={Styles.user_text_input}
-                    placeholder="Last Name"
-                    editable={this.state.iseditablelname}
-                    onChangeText={() => this.setLastname()}
-                    onEndEditing={() => this.updatePro()}
-                    value={this.state.lname}
-                    keyboardType="default"></TextInput>
-                  <TouchableOpacity
-                    style={Styles.user_edit_profile_lbtext}
-                    onPress={() => this.lnameedit()}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 21,
-                        marginStart: 12,
-                        marginTop: 20,
-                        backgroundColor: 'transparent',
-                      }}
-                      source={require('../../src/assets/images/penicon.png')}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={Styles.profile_main_text_contain}>
-                <Text style={Styles.user_profile_lbtext}>Email:</Text>
-                <TextInput
-                  style={Styles.user_text_input}
-                  placeholder="Email"
-                  editable={false}
-                  onChangeText={() => this.setEmailname()}
-                  value={this.state.email}
-                  keyboardType="email-address"></TextInput>
-              </View>
-              <View style={Styles.profile_main_text_contain}>
-                <Text style={Styles.user_profile_lbtext}>Mobile:</Text>
-                <TextInput
-                  style={Styles.user_text_input}
-                  placeholder="Mobile"
-                  editable={false}
-                  onChangeText={() => this.setMobile()}
-                  value={this.state.mobile}
-                  keyboardType="number-pad"></TextInput>
-              </View>
-              {/* </ListItem> */}
-              <View>
-                <TouchableOpacity
-                  style={Styles.view_btn_kyc}
-                  onPress={() => this.btnkyc()}>
-                  <Text style={Styles.donate_btn_text}>View KYC</Text>
-                </TouchableOpacity>
-              </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 14,
+                borderBottomWidth: 1,
+                paddingRight: 10,
+                marginStart: 30,
+                marginEnd: 30,
+              }}>
+              <TextInput
+                placeholder="Password"
+                onChangeText={(text) => this.setState({ passwordString: text })}
+                value={this.state.passwordString}
+                style={{
+                  flex: 1,
+                  paddingTop: 0,
+                  fontSize: 16,
+                  height: 40,
+                  //   borderColor: "#080606",
+                  //   paddingLeft: 15,
+
+                  fontWeight: 'bold',
+                }}
+                keyboardType="default"
+                secureTextEntry={!this.state.isPasswordHidden}
+              />
+              <TouchableOpacity onPress={()=> this.updateSecureText()}>
+                {!this.state.isPasswordHidden ? (
+                  <Feather name="eye-off" color="gray" size={20} />
+                ) : (
+                  <Feather name="eye" color="green" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 14,
+                borderBottomWidth: 1,
+                paddingRight: 10,
+                marginStart: 30,
+                marginEnd: 30,
+              }}>
+              <TextInput
+                placeholder="Confirm Password"
+                onChangeText={(text) => this.setState({ confirmPasswordString: text })}
+                value={this.state.confirmPasswordString}
+                style={{
+                  flex: 1,
+                  paddingTop: 0,
+                  fontSize: 16,
+                  height: 40,
+                  //   borderColor: "#080606",
+                  //   paddingLeft: 15,
+
+                  fontWeight: 'bold',
+                }}
+                keyboardType="default"
+                secureTextEntry={!this.state.isConfirmPasswordHidden}
+              />
+              <TouchableOpacity onPress={()=> this.updateSecureText1()}>
+                {!this.state.isConfirmPasswordHidden ? (
+                  <Feather name="eye-off" color="gray" size={20} />
+                ) : (
+                  <Feather name="eye" color="green" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+                onPress={() => this.submitPasswordChange()}>
+            <View
+              style={{
+                marginTop: 40,
+                paddingRight: 10,
+                marginStart: 30,
+                marginEnd: 30,
+                backgroundColor: '#f55656',
+                height: 60
+              }}>
+                <Text
+                style={{
+                    alignSelf: 'center',
+                    fontSize: 20,
+                    textAlignVertical: 'center',
+                    padding: 16,
+                    fontWeight: 'bold',
+                    color: 'white'
+                  }}>
+                Change Password
+              </Text>
+</View>
+</TouchableOpacity>
             </List>
-            {this.state.kyc == true ? (
-              <View style={Styles.user_kyc_contain}>
-                <ListItem>
-                  <Image
-                    style={{
-                      width: '90%',
-                      height: 160,
-                      marginStart: 20,
-                      marginTop: 20,
-                      backgroundColor: 'transparent',
-                    }}
-                    resizeMode="cover"
-                    source={{uri: `data:image/jpeg;base64,${this.state.image}`}}
-                    // resizeMode="contain"dashboard_main_btn
-                  />
-                </ListItem>
-              </View>
-            ) : null}
+            
             {/* </View> */}
           </ImageBackground>
         </ScrollView>

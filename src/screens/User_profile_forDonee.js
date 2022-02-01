@@ -107,7 +107,7 @@ class User_profile extends Component {
             <View style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('Dashboard_donation_forDonor')}>
+                  onPress={() => this.props.navigation.goBack()}>
                   <Image
                     style={{
                       width: 30,

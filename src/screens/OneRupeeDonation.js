@@ -160,7 +160,7 @@ class DonationAmount extends Component {
     };
     var response = await API.post('add_donation', logs);
     if (response.status == 'success') {
-      this.props.navigation.navigate('Dashboard_donation');
+      this.props.navigation.navigate('Dashboard_donation_forDonor');
       // console.log(response.data)
     } else {
       Alert.alert(response.status, response.message);
@@ -231,7 +231,7 @@ console.log('target amount')
             <View style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.goBack()}>
+                  onPress={() => this.props.navigation.navigate('Dashboard_donation_forDonor')}>
                   <Image
                     style={{
                       width: 30,

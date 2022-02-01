@@ -110,15 +110,15 @@ const Login = ({navigation}) => {
               kind_id: '',
             });
             
-          }, 3000);
+          }, 1000);
         }
 else
 {
               setTimeout(() => {
-                navigation.navigate('Dashboard_donation');
+                navigation.navigate('Dashboard_donation_forDonor');
                 setisloading(false);
                 setselectedValue('');
-              }, 3000);
+              }, 1000);
             }
             } else {
               await AsyncStorage.setItem('token', response.token);
@@ -147,14 +147,14 @@ else
               kind_id: '',
             });
             
-          }, 3000);
+          }, 1000);
         }
 else
 {
               setTimeout(() => {
                 navigation.navigate('Dashboard');
                 setisloading(false);
-              }, 3000);
+              }, 1000);
             }
             }
           } else {
@@ -266,15 +266,15 @@ else
               kind_id: '',
             });
             
-          }, 3000);
+          }, 1000);
         }
 else
 {
           setTimeout(() => {
-            navigation.navigate('Dashboard_donation');
+            navigation.navigate('Dashboard_donation_forDonor');
             setisloading(false);
             setselectedValue('');
-          }, 3000);
+          }, 1000);
         }
         } else {
           await AsyncStorage.setItem('token', response.token);
@@ -297,7 +297,7 @@ else
               kind_id: '',
             });
             
-          }, 3000);
+          }, 1000);
         }
 else
 {
@@ -305,7 +305,7 @@ else
             navigation.navigate('Dashboard');
             setisloading(false);
             setselectedValue('');
-          }, 3000);
+          }, 1000);
         }
         }
       } else {
@@ -324,13 +324,13 @@ else
       password: password,
     };
     var response = await API.post('login', logs);
-    
+    // navigation.closeDrawer();
     var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
-
+    // navigation.closeDrawer()
     console.log('isLoggedInForOneRupee: ', isLoggedInForOneRupee);
     if (response.status === '1') {
       // await React.useContext.signIn(response.token);
-      if (response.user_type === 0) {
+      if (response.user_type == 0) {
         console.log(response.token);
         await AsyncStorage.setItem('token', String(response.token));
         await AsyncStorage.setItem('user_id', response.user_id);
@@ -351,17 +351,19 @@ else
               campaign_id: '',
               kind_id: '',
             });
-            
-          }, 3000);
+            setisloading(false);
+    setemail('');
+    setpassword(''); 
+          }, 1000);
         }
 else
 {
   setTimeout(() => {
-    navigation.navigate('Dashboard_donation');
+    navigation.navigate('Dashboard_donation_forDonor');
     setisloading(false);
     setemail('');
     setpassword('');
-  }, 3000);
+  }, 1000);
 }
         
       } else {
@@ -381,7 +383,7 @@ else
               kind_id: '',
             });
             
-          }, 3000);
+          }, 1000);
         }
 else
 {
@@ -390,7 +392,7 @@ else
           setisloading(false);
           setemail('');
           setpassword('');
-        }, 3000);
+        }, 1000);
       }
       }
     } else {

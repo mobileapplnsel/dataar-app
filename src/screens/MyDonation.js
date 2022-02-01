@@ -107,7 +107,7 @@ class User_profile extends Component {
             <View style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('Dashboard_donation_forDonor')}>
+                  onPress={() => this.props.navigation.goBack()}>
                   <Image
                     style={{
                       width: 30,
@@ -188,7 +188,7 @@ class User_profile extends Component {
                     marginLeft: 14,
                   },
                 ]}>
-                User Profile1
+                User Profile
               </Text>
             </View>
             <List style={Styles.profile_main_contain}>

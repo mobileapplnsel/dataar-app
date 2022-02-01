@@ -78,7 +78,7 @@ class DonationAmount extends Component {
     };
     var response = await API.post('add_donation', logs);
     if (response.status == 'success') {
-      this.props.navigation.navigate('Dashboard_donation');
+      this.props.navigation.navigate('Dashboard_donation_forDonor');
       // console.log(response.data)
     } else {
       Alert.alert(response.status, response.message);

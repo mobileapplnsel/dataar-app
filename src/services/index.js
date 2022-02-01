@@ -42,6 +42,7 @@ export default class API {
     // });
 
     return new Promise(async (resolve, reject) => {
+      console.log('enter111');
       var token = await AsyncStorage.getItem('token');
       console.log(JSON.stringify(params));
       let options = {
@@ -53,7 +54,7 @@ export default class API {
         method: method,
         body: JSON.stringify(params),
       };
-      console.log(url);
+      console.log(url, options);
       // console.log(options);
       fetch(url, options)
         .then(response => response.json())
