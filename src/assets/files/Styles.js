@@ -813,6 +813,7 @@ module.exports = StyleSheet.create({
     alignSelf: 'center',
     // paddingStart: 10,
     padding: 7,
+    paddingTop: 10
     // paddingEnd: 10,
   },
   campaign_text_font1:{

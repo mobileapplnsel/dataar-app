@@ -116,6 +116,18 @@ class Dashboard_donation_forDonor extends Component {
       console.log('Camera permission denied');
     }
   }
+  goToCampaignDetails = async (item, index) => {
+    var token = await AsyncStorage.getItem('token');
+    var user_id = await AsyncStorage.getItem('user_id');
+    if (token != null && token !== '') {
+      this.props.navigation.navigate('Campaing_details_ForDonor', {
+        camp_id: item.campaign_id,
+      })
+      
+    } else {
+      this.props.navigation.navigate('LogIn');
+    }
+  };
   like = async (item, index) => {
     var token = await AsyncStorage.getItem('token');
     var user_id = await AsyncStorage.getItem('user_id');
@@ -124,10 +136,10 @@ class Dashboard_donation_forDonor extends Component {
       var logs = {
         user_id: user_id,
         campaign_id: item.campaign_id,
-        comment: '',
+        // comment: '',
       };
       console.log(logs);
-      var response = await API.post('campaign_like_dislike', logs);
+      var response = await API.post('add_to_favourite', logs);
       if (response.status == 'success') {
         let arr = [...this.state.setcmpData];
         arr[index].like_status = item.like_status == 1 ? 2 : 1;
@@ -359,13 +371,9 @@ class Dashboard_donation_forDonor extends Component {
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   backgroundColor: '#ffff',
-                }}>
+                }}> 
                   <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('Campaing_details', {
-            camp_id: item.campaign_id,
-          })
-        }>
+        onPress={() => this.goToCampaignDetails(item, index)}>
                 <Text style={Styles.doner_name_font}>{item.campaign_name}</Text>
                 </TouchableOpacity>
                 <View style={{flexDirection: 'row'}}>

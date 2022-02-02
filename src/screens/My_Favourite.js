@@ -124,16 +124,17 @@ class Dashboard_donation extends Component {
       var logs = {
         user_id: user_id,
         campaign_id: item.campaign_id,
-        comment: '',
+        // comment: '',
       };
       console.log(logs);
-      var response = await API.post('campaign_like_dislike', logs);
+      var response = await API.post('add_to_favourite', logs);
       if (response.status == 'success') {
-        let arr = [...this.state.setcmpData];
-        arr[index].like_status = item.like_status == 1 ? 2 : 1;
-        this.setState({
-          setcmpData: arr,
-        });
+        // let arr = [...this.state.setcmpData];
+        // arr[index].like_status = item.like_status == 1 ? 2 : 1;
+        // this.setState({
+        //   setcmpData: arr,
+        // });
+        this.dashboard_donate();
       } else {
         let arr = [...this.state.setcmpData];
         arr[index].like_status = item.like_status == 1 ? 2 : 1;
@@ -157,7 +158,7 @@ class Dashboard_donation extends Component {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log('donation_list response: ',response.data.campaign_data);
       this.setState({
-        setcmpData: [...response.data.campaign_data],
+        setcmpData: [...response.data],
       });
       // setcmpData(response.data);
     } else {

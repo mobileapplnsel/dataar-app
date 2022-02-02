@@ -372,21 +372,21 @@ else
         await AsyncStorage.setItem('google_token', '');
         await AsyncStorage.setItem('user_type', response.user_type);
         setisloading(true);
-        if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-          setTimeout(() => {
-            navigation.navigate('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
+//         if (isLoggedInForOneRupee == 'yes')
+//         {
+//           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+//           setTimeout(() => {
+//             navigation.navigate('OneRupeeDonation', {
+//               donate_amt: '100',
+//               donation_mode: 'dsadas',
+//               campaign_id: '',
+//               kind_id: '',
+//             });
             
-          }, 1000);
-        }
-else
-{
+//           }, 1000);
+//         }
+// else
+// {
         setTimeout(() => {
           navigation.navigate('Dashboard');
           setisloading(false);
@@ -394,7 +394,7 @@ else
           setpassword('');
         }, 1000);
       }
-      }
+   //   }
     } else {
       Alert.alert(response.status, response.message);
     }

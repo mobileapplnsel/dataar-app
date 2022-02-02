@@ -14,10 +14,11 @@ import Dashboard_donation_forDonor from '../screens/Dashboard_donation_forDonor'
 import StartCampaign from '../screens/StartCampaign';
 import Donation_details from '../screens/Donation_details';
 import User_profile from '../screens/User_profile';
-import User_profile_forDonee from '../screens/User_profile_forDonee';
+import User_profile_forDonee from '../screens/User_profile_forDonee'; 
 import Add_proifle from '../screens/Add_proifle';
 import View_campaign from '../screens/View_campaign';
 import Campaing_details from '../screens/Campaing_details';
+import Campaing_details_ForDonor from '../screens/Campaing_details_ForDonor';
 import DonationAmount from '../screens/DonationAmount';
 import OneRupeeDonation from '../screens/OneRupeeDonation';
 import MyDonation from '../screens/MyDonation';
@@ -37,6 +38,7 @@ import SideMenu from '../navigations/SideMenu';
 const AuthStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const DrawerCamp = createDrawerNavigator();
+const DrawerCampForDonee = createDrawerNavigator();
 const HomeStack_nav = createStackNavigator();
 const HomeStackScreenForDonerOnly = ({navigation}) => (
   <HomeStack_nav.Navigator initialRouteName="Dashboard_donation_forDonor">
@@ -99,6 +101,13 @@ const HomeStackScreenForDonerOnly = ({navigation}) => (
     <HomeStack_nav.Screen
       name="Campaing_details"
       component={Campaing_details}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <HomeStack_nav.Screen
+      name="Campaing_details_ForDonor"
+      component={Campaing_details_ForDonor}
       options={{
         headerShown: false,
       }}
@@ -336,7 +345,7 @@ const DrawerScreen = () => (
   </Drawer.Navigator>
 );
 const DrawerScreenForDonor = () => (
-  <Drawer.Navigator
+  <DrawerCampForDonee.Navigator
     // initialRouteName="Home"
     drawerPosition="left"
     drawerContent={props => <SideMenu {...props} />}
@@ -356,8 +365,8 @@ const DrawerScreenForDonor = () => (
       },
     }}>
     {/* <Drawer.Screen name="Home" component={TabsScreen} /> */}
-    <Drawer.Screen name="Donation Campaign" component={HomeStackScreenForDonerOnly} />
-  </Drawer.Navigator>
+    <DrawerCampForDonee.Screen name="Donation Campaign" component={HomeStackScreenForDonerOnly} />
+  </DrawerCampForDonee.Navigator>
 );
 const DrawerScreencamp = () => (
   <DrawerCamp.Navigator
@@ -386,11 +395,17 @@ const DrawerScreencamp = () => (
     <AuthStack.Screen name="StartCampaign" component={StartCampaign} /> */}
   </DrawerCamp.Navigator>
 );
+   
 const AuthStackScreen = () => (
   <AuthStack.Navigator headerMode="none" initialRouteName="Splash">
     <AuthStack.Screen name="splash" component={SplashScreen} />
     <AuthStack.Screen name="LogIn" component={LoginScreen} />
     <AuthStack.Screen name="ForgetPassScreen" component={ForgetPassScreen} />
+    <AuthStack.Screen name="OneRupeeDonation" component={OneRupeeDonation} />
+    <AuthStack.Screen name="Manage_Account" component={Manage_Account} />
+    <AuthStack.Screen name="Manage_AccountforDonee" component={Manage_AccountforDonee} />
+    <AuthStack.Screen name="User_profile" component={User_profile} />
+    <AuthStack.Screen name="User_profile_forDonee" component={User_profile_forDonee} />
     <AuthStack.Screen name="SignUp" component={RegisterScreen} />
     <AuthStack.Screen name="OtpVerify" component={OtpVerify} />
     <AuthStack.Screen name="logintype" component={logintype} />
@@ -403,6 +418,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="Dashboard_donation_forDonor" component={DrawerScreenForDonor} />
     <AuthStack.Screen name="View_campaign" component={View_campaign} />
     <AuthStack.Screen name="Campaing_details" component={Campaing_details} />
+    <AuthStack.Screen name="Campaing_details_ForDonor" component={Campaing_details_ForDonor} />
     <HomeStack_nav.Screen
       name="DonationAmount"
       component={DonationAmount}

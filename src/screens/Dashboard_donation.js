@@ -362,9 +362,7 @@ class Dashboard_donation extends Component {
                 }}>
                   <TouchableOpacity
         onPress={() =>
-          this.props.navigation.navigate('Campaing_details', {
-            camp_id: item.campaign_id,
-          })
+          this.props.navigation.navigate('LogIn')
         }>
                 <Text style={Styles.doner_name_font}>{item.campaign_name}</Text>
                 </TouchableOpacity>
