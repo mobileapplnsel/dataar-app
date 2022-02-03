@@ -42,6 +42,7 @@ class Campaing_details extends Component {
       modalComment: false,
       isVisible: false,
       shareHeight: 360,
+      campaignImageURI: ''
     };
   }
   campaign = async () => {
@@ -69,6 +70,11 @@ class Campaing_details extends Component {
       //     amount: amountVal,
       //   });
       // }
+      var base64String = response.data.capmain_details[0]['campaign_image']
+      var base64Icon = 'data:image/png;base64,'+base64String
+      this.setState({campaignImageURI: base64Icon})
+
+
       this.setState({
         cmpData: [...response.data.donations],
         capmain_details: [...response.data.capmain_details],
@@ -281,8 +287,9 @@ class Campaing_details extends Component {
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 10, width: '100%', 
 }}
+source={{uri: this.state.campaignImageURI}}
 // source={{uri: base64Icon}}
-source={require('../../src/assets/images/21-Free-Banner-Templates-for-Photoshop-and-Illustrator.jpg')}
+// source={require('../../src/assets/images/21-Free-Banner-Templates-for-Photoshop-and-Illustrator.jpg')}
 >
 </Image> 
 </View>

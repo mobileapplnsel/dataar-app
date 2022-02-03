@@ -156,10 +156,19 @@ class Dashboard_donation extends Component {
     console.log('My Favourite response: ', response)
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
+
+      if (response.data)
+      {
       console.log('donation_list response: ',response.data.campaign_data);
       this.setState({
         setcmpData: [...response.data],
       });
+    }else
+    {
+      this.setState({
+        setcmpData: [],
+      });
+    }
       // setcmpData(response.data);
     } else {
       Alert.alert(response.status, response.message);

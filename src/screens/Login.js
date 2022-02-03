@@ -436,7 +436,7 @@ else
 
           <TouchableOpacity
             onPress={() => navigation.navigate('ForgetPassScreen')}>
-            <Text style={Styles.login_text_forget}>Forget Password?</Text>
+            <Text style={Styles.login_text_forget}>Forgot Password?</Text>
           </TouchableOpacity>
 
           <TouchableOpacity

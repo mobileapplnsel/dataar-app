@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
+  StyleSheet
   // Picker,
 } from 'react-native';
 import {
@@ -29,6 +30,9 @@ import {Picker} from '@react-native-picker/picker';
 import Selector from '../components/Selector';
 import PickerDob from '../components/Picker';
 import DateTimePicker from '../components/DateTimePicker';
+import DocumentPicker from 'react-native-document-picker';
+import RNFetchBlob from 'rn-fetch-blob';
+
 const StartCampaign = ({navigation}) => {
   const [Title, setTitle] = useState('');
   const [Description, setDescription] = useState('');
@@ -37,6 +41,7 @@ const StartCampaign = ({navigation}) => {
   const [image, setImage] = useState('');
   const [imageType, setImagetype] = useState('');
   const [amount, setamount] = useState('');
+  const [quantity, setquantity] = useState('');
   const [isNext, setNext] = useState(0);
   const [pincode, setpincode] = useState(0);
   const [selCamp, setselCamp] = useState('');
@@ -47,6 +52,60 @@ const StartCampaign = ({navigation}) => {
   const [isEndPickerVisible, setisEndPickerVisible] = useState(false);
   const [strdate, setSdate] = useState(null);
   const [endseldate, setenddate] = useState(null);
+  const [selectedPANName, setselectedPANName] = useState('Upload supported doc pdf');
+  const [selectedPANSource, setselectedPANSource] = useState('');
+  const [filebaseString, setfilebaseString] = useState('');
+  const selectOneFile = async () => {
+    //Opening Document Picker for selection of one file
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
+        //There can me more options as well
+        // DocumentPicker.types.allFiles
+        // DocumentPicker.types.images
+        // DocumentPicker.types.plainText
+        // DocumentPicker.types.audio
+        // DocumentPicker.types.pdf
+      });
+  
+      
+               
+      
+      //Printing the log realted to the file
+      
+      console.log('res : ' + JSON.stringify(res));
+      console.log('URi : ' + res.uri);
+      console.log('Type : ' + res.type);
+      console.log('File Name : ' + res.name);
+      console.log('File Size : ' + res.size);
+      // pdfpath = res.uri
+      // filename1 = res.name
+      setselectedPANName(res.name);
+      setselectedPANSource(res.uri);
+     
+       RNFetchBlob.fs
+          .readFile(res.uri, 'base64')
+          .then((data) => {
+            setfilebaseString(data)
+            console.log('base : ' +data);
+           })
+          .catch((err) => { console.log('err : ' +err);});
+       
+       
+      //Setting the state to show single file attributes
+     
+    } catch (err) {
+      //Handling any exception (If any)
+      if (DocumentPicker.isCancel(err)) {
+        //If user canceled the document selection
+        alert('Canceled from single doc picker');
+      } else {
+        //For Unknown Error
+        alert('Unknown Error: ' + JSON.stringify(err));
+        throw err;
+      }
+    }
+  };
   var radio_props = [
     {label: 'Money  ', value: '1'},
     {label: 'In Kind', value: '2'},
@@ -99,12 +158,24 @@ const StartCampaign = ({navigation}) => {
     setamount('');
   };
   const Start_Campaign = () => {
-    if (amount == '') {
-      Alert.alert('Amount', 'Please Add Amount');
-    } else {
-      // setNext(3);
-      Start_CampaignNow();
-    }
+
+     if (selCamp == '2')
+     {
+      if (quantity == '') {
+        Alert.alert('Quantity', 'Please Add Quantity');
+      } else {
+        // setNext(3);
+        Start_CampaignNow();
+      }
+     } else if (selCamp == '1')
+     {
+      if (amount == '') {
+        Alert.alert('Amount', 'Please Add Amount');
+      } else {
+        // setNext(3);
+        Start_CampaignNow();
+      }
+     }
   };
   const setExpirystart = selectedDate => {
     var date = selectedDate.nativeEvent.timestamp;
@@ -162,7 +233,10 @@ const StartCampaign = ({navigation}) => {
       campaign_image: image,
       campaign_target_amount: amount,
       kind_id: selectedValue,
+      filter_by_type: '1',
       zip: pincode,
+      campaign_target_qty: quantity,
+      supported_doc: filebaseString
     };
     console.log(logs);
     var response = await API.post('add_campaign', logs);
@@ -352,6 +426,28 @@ const StartCampaign = ({navigation}) => {
                   }}
                 />
               </View>
+
+              {selCamp =="1" ?  ( <View> 
+                <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={selectOneFile}>
+            <View style={Styles1.buttonStyle}> 
+          <Text style={{marginRight: 10, fontSize: 17}}>
+            {selectedPANName}
+          </Text>
+          <Image
+            source={{
+              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
+            }}
+            style={Styles1.imageIconStyle}
+          />
+          </View>
+        </TouchableOpacity>
+       
+
+        <Text style={Styles1.warningHint}>{'Only PDF or Image format is acceptable'}</Text> 
+        </View>) : null}
+
               <TouchableOpacity
                 style={Styles.campaign_btn_next2}
                 onPress={() => Next2()}>
@@ -416,7 +512,7 @@ const StartCampaign = ({navigation}) => {
                 </Picker>
                 <TextInput
                   placeholder="Enter Target Quantity"
-                  onChangeText={text => setamount(text)}
+                  onChangeText={text => setquantity(text)}
                   style={Styles.campaign_text_input}
                   keyboardType="number-pad"
                 />
@@ -463,4 +559,34 @@ const StartCampaign = ({navigation}) => {
   );
 };
 
+const Styles1 = StyleSheet.create({
+  errorHint: {
+    marginTop: 3,
+    color: 'red',
+    fontSize: 11,
+    marginBottom: -5,
+    marginLeft: 10,
+},
+  warningHint: {
+  marginTop: -5,
+  color: 'green',
+  fontSize: 11,
+  marginBottom: 10,
+  alignSelf: 'center',
+  paddingLeft: -80
+},
+buttonStyle: {
+  alignItems: 'center',
+  flexDirection: 'row',
+  //backgroundColor: '#DDDDDD',
+  paddingTop: 10,
+  paddingBottom: 10,
+  alignSelf: 'center'
+},
+imageIconStyle: {
+  height: 20,
+  width: 20,
+  resizeMode: 'stretch',
+},
+})
 export default StartCampaign;
