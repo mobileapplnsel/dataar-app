@@ -14,6 +14,7 @@ import {
 import API from '../services/api';
 var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
+import Toast from 'react-native-simple-toast';
 const OtpVerify = ({route, navigation}) => {
   const [Mobile, setMobile] = useState('');
   const [LastName, setLastName] = useState();
@@ -33,7 +34,13 @@ const OtpVerify = ({route, navigation}) => {
       otp: Otp,
     };
     var response = await API.post('user_otp_verification', logs);
-    if (response.token != '') {
+
+    if (response.status == 'error')
+    {
+      Toast.show(response.message, Toast.LONG)
+    }
+   else if (response.token != '') {
+      Toast.show('The OTP has been sent to the registered email, please check and provide the same', Toast.LONG)
       if (response.user_type == 0) {
         console.log(response.token);
         await AsyncStorage.setItem('token', String(response.token));

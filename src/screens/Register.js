@@ -21,7 +21,7 @@ import {Picker} from '@react-native-picker/picker';
 import Feather from 'react-native-vector-icons/Feather';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
-
+import Toast from 'react-native-simple-toast';
 
 var pdfpath
 var pdffile
@@ -276,11 +276,6 @@ const Register = ({navigation}) => {
     } else if (password == '') {
       Alert.alert('Password', 'Please enter password');
     }
-   else if (selectedPANSource == '') {
-    Alert.alert('Pan', 'Please upload your Pan');
-  } else if (selectedIDSource == '') {
-    Alert.alert('ID', 'Please upload your ID proof');
-  }
      else if (
       FirstName != '' &&
       LastName != '' &&
@@ -314,12 +309,15 @@ const Register = ({navigation}) => {
       // formdata.append('usertype', Otp);
       var response = await API.post('register', logs);
       if (response.status == 'success') {
-
         // need to add kyc uploadation function here
-
+        Toast.show(response.message, Toast.LONG)
         navigation.navigate('OtpVerify', {mobile: Mobile});
-      } else {
-        Alert.alert(response.status, response.message);
+      } else if(response.status == 'warning') {
+        Toast.show(response.message, Toast.LONG)
+      } else
+      {
+        Toast.show(response[0]['message'], Toast.LONG)
+       // Alert.alert(response.status, response.message);
       }
     }
   };
@@ -370,6 +368,7 @@ const Register = ({navigation}) => {
               onChangeText={text => setEmail(text)}
               style={Styles.login_text_input}
               keyboardType="email-address"
+              autoCapitalize='none'
             />
             <TextInput
               placeholder="Mobile"
@@ -396,8 +395,7 @@ const Register = ({navigation}) => {
                   height: 40,
                   //   borderColor: "#080606",
                   //   paddingLeft: 15,
-
-                  fontWeight: 'bold',
+                  color: 'black',
                 }}
                 keyboardType="default"
                 secureTextEntry={!isPasswordHidden}
@@ -448,119 +446,14 @@ const Register = ({navigation}) => {
            
 <View>
    
-    {selectedValue =="0" ?   <View>   
-         
-
-<TouchableOpacity
-          activeOpacity={0.5}
-          style={Styles1.buttonStyle}
-          onPress={selectOneFile}>
-          <Text style={{marginRight: 10, fontSize: 17}}>
-            {selectedPANName}
-          </Text>
-          <Image
-            source={{
-              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
-            }}
-            style={Styles1.imageIconStyle}
-          />
-        </TouchableOpacity>
-       
-
-        <Text style={Styles1.warningHint}>{'Only PDF or Image format is acceptable'}</Text>
-
-        <TextInput
-              placeholder="Pan Number"
-              placeholderTextColor="#000"
-              onChangeText={text => setselectedPANNumber(text)}
-              style={Styles.login_text_input}
-              keyboardType="default"
-            />
-
-        <Picker
-
-              selectedValue={selectedID}
-              style={{
-                height: 50,
-                width: '100%',
-                borderColor: '#000',
-                alignSelf: 'center',
-                borderWidth: 1,
-                marginTop: 7,
-              }}
-              onValueChange={
-                (itemValue, itemIndex) => setselectedID(itemValue)
-                // console.log(itemValue)
-                // Alert.alert(itemValue)
-              }>
-              <Picker.Item label="Select ID Type" value="" />
-              <Picker.Item label="Adhar" value="0" />
-              <Picker.Item label="National ID" value="1" />
-              <Picker.Item label="Passport" value="2" />
-              <Picker.Item label="Driving License" value="3" />
-            </Picker>
-
-
-               
-          
-
-        <View style={{marginBottom: 7, marginTop: -15}}></View>
-       
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={Styles1.buttonStyle}
-          onPress={selectOneFile1}>
-          <Text style={{marginRight: 10, fontSize: 17}}>
-            {selectedIDName}
-          </Text>
-          <Image
-            source={{
-              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
-            }}
-            style={Styles1.imageIconStyle}
-          />
-        </TouchableOpacity> 
-        <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
-
-        <TextInput
-              placeholder="Address Proof Number"
-              placeholderTextColor="#000"
-              onChangeText={text => setselectedKYCNumber(text)}
-              style={Styles.login_text_input}
-              keyboardType="default"
-            />
-
-        </View>
-    : null }
+    
 
 
 
 
 
 
-
-    {selectedValue =="1" ?  ( <Picker
-              selectedValue={selectedsecondValue}
-            
-              style={{
-                height: 50,
-                width: '100%',
-                borderColor: '#000',
-                alignSelf: 'center',
-                borderWidth: 1,
-               
-              }}
-              onValueChange={
-                (itemValue, itemIndex) => setselectedsecondValue(itemValue)
-                
-                // console.log(itemValue)
-                // Alert.alert(itemValue)
-              }>
-               
-              <Picker.Item label="Select one" value=""  />
-              <Picker.Item label="Individual" value="2" />
-              <Picker.Item label="Organisation" value="3" />
-            </Picker>) : null}
+    
        </View>
 
            
@@ -568,136 +461,10 @@ const Register = ({navigation}) => {
 
 
 
-     {/* <Picker
-              selectedsecondValue={selectedsecondValue}
-            
-              style={{
-                height: 50,
-                width: '100%',
-                borderColor: '#000',
-                alignSelf: 'center',
-                borderWidth: 1,
-               
-              }}
-              onValueChange={
-                (itemValue, itemIndex) => setselectedsecondValue(itemValue)
-                
-                // console.log(itemValue)
-                // Alert.alert(itemValue)
-              }>
-               
-              <Picker.Item label="Select one" value=""  />
-              <Picker.Item label="Individual" value="2" />
-              <Picker.Item label="Organisation" value="3" />
-            </Picker>  */}
+    
            
 
-       {selectedsecondValue =="2" ?   <View>   
-         
-
-<TouchableOpacity
-          activeOpacity={0.5}
-          style={Styles1.buttonStyle}
-          onPress={selectOneFile}>
-          <Text style={{marginRight: 10, fontSize: 17}}>
-            {selectedPANName}
-          </Text>
-          <Image
-            source={{
-              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
-            }}
-            style={Styles1.imageIconStyle}
-          />
-        </TouchableOpacity>
-        <Text style={Styles1.warningHint}>{'Only PDF or Image format is acceptable'}</Text>
-
-        <Picker
-
-              selectedValue={selectedID}
-              style={{
-                height: 50,
-                width: '100%',
-                borderColor: '#000',
-                alignSelf: 'center',
-                borderWidth: 1,
-                marginTop: 7,
-              }}
-              onValueChange={
-                (itemValue, itemIndex) => setselectedID(itemValue)
-                // console.log(itemValue)
-                // Alert.alert(itemValue)
-              }>
-              <Picker.Item label="Select ID Type" value="" />
-              <Picker.Item label="Adhar" value="0" />
-              <Picker.Item label="National ID" value="1" />
-              <Picker.Item label="Passport" value="2" />
-              <Picker.Item label="Driving License" value="3" />
-            </Picker>
-
-
-        <View style={{marginBottom: 7, marginTop: -15}}></View>
-       
-        <TouchableOpacity
-          activeOpacity={0.5}
-          style={Styles1.buttonStyle}
-          onPress={selectOneFile1}>
-          <Text style={{marginRight: 10, fontSize: 17}}>
-            {selectedIDName}
-          </Text>
-          <Image
-            source={{
-              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
-            }}
-            style={Styles1.imageIconStyle}
-          />
-        </TouchableOpacity> 
-        <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
-
-        <TextInput
-              placeholder=""
-              placeholderTextColor="#000"
-              onChangeText={text => setwebsiteLink(text)}
-              style={Styles.login_text_input}
-              keyboardType="default"
-            />
-
-        </View>
-    : null }
-
-
- {selectedsecondValue =="3" ?  <View><Text><TouchableOpacity
-          activeOpacity={0.5}
-          style={Styles1.buttonStyle}
-          onPress={selectTrustCertiFile}>
-          <Text style={{marginRight: 10, fontSize: 17}}>
-            {selectedTrustFileName}
-          </Text>
-          <Image
-            source={{
-              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
-            }}
-            style={Styles1.imageIconStyle}
-          />
-        </TouchableOpacity>
-        <View>
-        <Text style={Styles1.warningHint}>{' PDF or Image format is acceptable'}</Text>
-        </View>
-  </Text>
- 
-        <TextInput
-              placeholder="Website Link"
-              placeholderTextColor="#000"
-              onChangeText={text => setwebsiteLink(text)}
-              style={Styles.login_text_input}
-              keyboardType="default"
-            />
-         
-            
-    
-       
-
       
-</View>  : null}
 
 
 </View>
@@ -715,6 +482,8 @@ const Register = ({navigation}) => {
               onPress={() => registration()}>
               <Text style={Styles.login_text}>SUBMIT</Text>
             </TouchableOpacity>
+
+            <Text style={Styles.login_text_font}></Text>
            
           </View>
           </ScrollView>

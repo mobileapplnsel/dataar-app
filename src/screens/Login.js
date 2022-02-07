@@ -28,7 +28,7 @@ import {
   GraphRequestManager,
   LoginManager,
 } from 'react-native-fbsdk';
-
+import Feather from 'react-native-vector-icons/Feather';
 import {Picker} from '@react-native-picker/picker';
 import AppPreLoader from '../components/AppPreLoader';
 const Login = ({navigation}) => {
@@ -42,6 +42,7 @@ const Login = ({navigation}) => {
   const [fbToken, setfbToken] = useState('');
   const [isSelect, setisSelect] = useState(false);
   const [isloading, setisloading] = useState(false);
+  const [isPasswordHidden, setisPasswordHidden] = useState(false);
   const setTaskti = text => {
     setemail(text);
   };
@@ -406,6 +407,9 @@ else
   if (isloading) {
     return <AppPreLoader />;
   }
+  const updateSecureText = () => {
+    setisPasswordHidden(!isPasswordHidden);
+  };
   return (
     <Container>
       <ImageBackground
@@ -427,12 +431,43 @@ else
             onChangeText={text => setTaskti(text)}
             style={Styles.login_text_input}
           />
-          <TextInput
+          {/* <TextInput
             placeholder="Password"
             onChangeText={text => setTasktipass(text)}
             style={Styles.login_text_input}
             secureTextEntry={true}
-          />
+          /> */}
+
+<View
+              style={{
+                flexDirection: 'row',
+                marginTop: 14,
+                borderBottomWidth: 1,
+                paddingRight: 10,
+                marginStart: 10,
+                marginEnd: 10,
+              }}>
+              <TextInput
+                placeholder="Password"
+                onChangeText={text => setTasktipass(text)}
+                style={{
+                  flex: 1,
+                  paddingTop: 0,
+                  fontSize: 16,
+                  height: 40,
+                  color: 'black'
+                }}
+                keyboardType="default"
+                secureTextEntry={!isPasswordHidden}
+              />
+              <TouchableOpacity onPress={updateSecureText}>
+                {!isPasswordHidden ? (
+                  <Feather name="eye-off" color="gray" size={20} />
+                ) : (
+                  <Feather name="eye" color="green" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
 
           <TouchableOpacity
             onPress={() => navigation.navigate('ForgetPassScreen')}>
