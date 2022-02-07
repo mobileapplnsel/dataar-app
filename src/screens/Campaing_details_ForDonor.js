@@ -204,6 +204,15 @@ class Campaing_details extends Component {
       </View>
     );
   };
+  Donate = async () => {
+   
+      this.props.navigation.navigate('DonationAmount', {
+        donate_amt: this.state.capmain_details[0]['campaign_target_amount'],
+        donation_mode: this.state.capmain_details[0]['donation_mode'],
+        campaign_id: this.state.capmain_details[0]['campaign_id'],
+        kind_id: this.state.capmain_details[0]['kind_id'],
+      })
+  }
   render() {
     var loaded = this.state.isloading;
     if (loaded) {
@@ -287,9 +296,8 @@ class Campaing_details extends Component {
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 10, width: '100%', 
 }}
-source={{uri: this.state.campaignImageURI}}
-// source={{uri: base64Icon}}
-// source={require('../../src/assets/images/21-Free-Banner-Templates-for-Photoshop-and-Illustrator.jpg')}
+// source={{uri: this.state.campaignImageURI}}
+source={require('../../src/assets/images/daatar_banner.jpg')}
 >
 </Image> 
 </View>
@@ -322,7 +330,7 @@ source={{uri: this.state.campaignImageURI}}
                 </View>
                 <TouchableOpacity
                   style={Styles.donate_btn_now}
-                  onPress={() => this.Donate(item)}>
+                  onPress={() => this.Donate()}>
                   <Text style={Styles.donate_btn_text}>Donate Now</Text>
                 </TouchableOpacity>
               </View>

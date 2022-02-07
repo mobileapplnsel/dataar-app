@@ -26,6 +26,7 @@ import {
   TableWrapper,
   Cell,
 } from 'react-native-table-component';
+import Toast from 'react-native-simple-toast';
 class DonationAmount extends Component {
   constructor(props) {
     super(props);
@@ -78,7 +79,9 @@ class DonationAmount extends Component {
     };
     var response = await API.post('add_donation', logs);
     if (response.status == 'success') {
+      Toast.show(response.message, Toast.LONG)
       this.props.navigation.navigate('Dashboard_donation_forDonor');
+      
       // console.log(response.data)
     } else {
       Alert.alert(response.status, response.message);
@@ -168,7 +171,13 @@ class DonationAmount extends Component {
               </View>
             </View>
 
-            <Text style={Styles.title_donation_text_font1}>
+            <Text style={{
+    fontSize: 25,
+    marginLeft: 10,
+    textAlign:"center",
+    marginTop: 20,
+    marginBottom: 35
+  }}>
               Target Donation
             </Text>
 

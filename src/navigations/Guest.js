@@ -25,6 +25,8 @@ import MyDonation from '../screens/MyDonation';
 import My_Favourite from '../screens/My_Favourite';
 import Manage_Account from '../screens/Manage_Account';
 import Manage_AccountforDonee from '../screens/Manage_AccountforDonee';
+import KYCUpdateForDonee from '../screens/KYCUpdateForDonee';
+import KYCUpdateForDonor from '../screens/KYCUpdateForDonor';
 import ThankYou from '../screens/ThankYou';
 import DonationPayment from '../screens/DonationPayment';
 import DonationDetails from '../screens/DonationDetails';
@@ -157,6 +159,13 @@ const HomeStackScreenForDonerOnly = ({navigation}) => (
     <HomeStack_nav.Screen
       name="Manage_Account"
       component={Manage_Account}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <HomeStack_nav.Screen
+      name="KYCUpdateForDonor"
+      component={KYCUpdateForDonor}
       options={{
         headerShown: false,
       }}
@@ -312,6 +321,13 @@ const HomeStackScreenDonee = ({navigation}) => (
       }}
     />
     <HomeStack_nav.Screen
+      name="KYCUpdateForDonee"
+      component={KYCUpdateForDonee}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <HomeStack_nav.Screen
       name="Add profile"
       component={Add_proifle}
       options={{
@@ -419,6 +435,8 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="View_campaign" component={View_campaign} />
     <AuthStack.Screen name="Campaing_details" component={Campaing_details} />
     <AuthStack.Screen name="Campaing_details_ForDonor" component={Campaing_details_ForDonor} />
+    <AuthStack.Screen name="KYCUpdateForDonee" component={KYCUpdateForDonee} />
+    <AuthStack.Screen name="KYCUpdateForDonor" component={KYCUpdateForDonor} />
     <HomeStack_nav.Screen
       name="DonationAmount"
       component={DonationAmount}

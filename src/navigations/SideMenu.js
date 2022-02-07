@@ -89,16 +89,27 @@ const CustomSidebarMenu = props => {
           <DrawerItem label="My Profile" onPress={() => props.navigation.navigate('User_profile_forDonee')} />
         ) : null}
 
+{user_Type == 1 ? (
+          <DrawerItem label="Update KYC" onPress={() => props.navigation.navigate('KYCUpdateForDonee')} />
+        ) : null}
+
+       
+{user_Type == 0 ? (
+          <DrawerItem label="Update KYC" onPress={() => props.navigation.navigate('KYCUpdateForDonor')} />
+        ) : null}
+
        
 {user_Type == 0 ? (
           <DrawerItem label="Set Preference" onPress={() => props.navigation.navigate('Preference')} />
         ) : null}
 
 
+
+
 {user_Type == 0 ? (
          <DrawerItem
           label="My Donation"
-          onPress={() => props.navigation.navigate('MyDonation')}
+          // onPress={() => props.navigation.navigate('MyDonation')}
         />
         ) : null}
 
