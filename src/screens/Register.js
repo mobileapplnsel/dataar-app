@@ -22,6 +22,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-community/async-storage';
 
 var pdfpath
 var pdffile
@@ -51,6 +52,7 @@ const Register = ({navigation}) => {
   const [imagebaseString, setimagebaseString] = useState('');
   const [selectedID, setselectedID] = useState('');
   const [isPasswordHidden, setisPasswordHidden] = useState(false);
+  
   const setTaskti = text => {
     setFirstName(text);
   };
@@ -258,10 +260,11 @@ const Register = ({navigation}) => {
     console.log(password);
    
     console.log(selectedPANName);
-    console.log(selectedPANSource);
+    console.log(selectedValue);
     // console.log( filebaseString);
       console.log("s"+imagebaseString);
-   
+      var token = await AsyncStorage.getItem('token');
+      console.log("token"+token);
    
 
    
@@ -275,7 +278,7 @@ const Register = ({navigation}) => {
       Alert.alert('Mobile', 'Please enter Mobile');
     } else if (password == '') {
       Alert.alert('Password', 'Please enter password');
-    }
+    }else if(selectedValue ==''){ Alert.alert('select ', 'Please select type');}
      else if (
       FirstName != '' &&
       LastName != '' &&
@@ -289,18 +292,29 @@ const Register = ({navigation}) => {
         email: Email,
         phone: Mobile,
         password: password,
-        usertype: '0',
+        usertype: selectedValue,
         device_id: '',
         device_type: 'A',
-        usertype: selectedValue,
-        kycfile_type: 'base64',
-        kyc_file: filebaseString,
-        pan_number: '1234567890',
-        address_proof_type:'Adhar Card',
-        address_proof_number:'1234567890',
-        kyc_address_file:imagebaseString,
+        fcm_token:token,
+        
 
       };
+//       firstname:soumyajeet
+// lastname:seal
+// email:soumyajeet@gmail.com
+// phone:7894561230
+// password:654321
+// usertype:0
+// device_id:firebasetokenid
+// device_type:A|i
+// fcm_token:khkbrER34
+// usertype: selectedValue,
+// kycfile_type: 'base64',
+// kyc_file: filebaseString,
+// pan_number: '1234567890',
+// address_proof_type:'Adhar Card',
+// address_proof_number:'1234567890',
+// kyc_address_file:imagebaseString,
       // formdata.append('firstname', FirstName);
       // formdata.append('lastname', LastName);
       // formdata.append('email', Email);
@@ -308,6 +322,7 @@ const Register = ({navigation}) => {
       // formdata.append('password', password);
       // formdata.append('usertype', Otp);
       var response = await API.post('register', logs);
+    
       if (response.status == 'success') {
         // need to add kyc uploadation function here
         Toast.show(response.message, Toast.LONG)
