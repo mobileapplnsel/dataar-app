@@ -28,6 +28,13 @@ const OtpVerify = ({route, navigation}) => {
     setMobile(mobile);
   }, []);
   const Otpverify = async () => {
+
+    if (Otp == '')
+    {
+      Toast.show('Please provide the OTP')
+    }
+else
+{
     console.log(Mobile);
     var logs = {
       phone: Mobile,
@@ -60,6 +67,7 @@ const OtpVerify = ({route, navigation}) => {
     } else {
       // Alert.alert(response.status, response.message);
     }
+  }
   };
 
   return (
@@ -82,6 +90,21 @@ const OtpVerify = ({route, navigation}) => {
               onChangeText={text => setTaskti(text)}
               style={Styles.login_text_input}
               keyboardType="phone-pad"/>
+<TouchableOpacity  onPress={() => Otpverify()}>
+<Text style={{
+                    //  marginLeft: 10,
+                    alignSelf: 'flex-end',
+                     marginRight: 10,
+                      color:'black',
+                     paddingTop: 14,
+                     fontWeight: 'bold',
+                     fontSize: 17
+                     
+                  }}>
+                    Resend OTP
+                  </Text>
+                  </TouchableOpacity>
+
             <TouchableOpacity
               style={Styles.login_btn_forget}
               onPress={() => Otpverify()}>

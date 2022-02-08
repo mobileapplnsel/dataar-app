@@ -339,7 +339,39 @@ const Register = ({navigation}) => {
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
             <ScrollView>
-          <View style={Styles.login_main_header}></View>
+            <View style={Styles.dashboard_main_header}>
+        <View style={Styles.dashboard_main_headers}>
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}>
+                  <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 10,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                    }}
+                    source={require('../../src/assets/images/back.png')}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Image
+                    style={{
+                      width: 40,
+                      height: 40,
+                      marginStart: 10,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                    }}
+                    source={require('../../src/assets/images/heart1.png')}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+                </TouchableOpacity>
+              </View>
+        </View>
           <View style={Styles.login_text_main}>
             <Image
               style={{width: 90, height: 80, marginStart: 30, marginTop: 20}}

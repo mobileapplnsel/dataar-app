@@ -106,43 +106,15 @@ const ForgetPass = ({navigation}) => {
   };
   const Login = async () => {
     var logs = {
-      username: Email,
-      password: password,
+      email_id: Email,
     };
-    var response = await API.post('login', logs);
-    console.log(response.token);
-    if (response.status === '1') {
-      // await React.useContext.signIn(response.token);
-      if (response.user_type == 0) {
-        console.log(response.token);
-        await AsyncStorage.setItem('token', String(response.token));
-        await AsyncStorage.setItem('user_id', response.user_id);
-        await AsyncStorage.setItem('google_token', '');
-        await AsyncStorage.setItem('user_type', response.user_type);
-        var token = await AsyncStorage.getItem('token');
-        console.log('token', token);
-        setisloading(true);
-        setTimeout(() => {
-          navigation.navigate('Dashboard');
-          setisloading(false);
-          setemail('');
-          setpassword('');
-        }, 3000);
-      } else {
-        await AsyncStorage.setItem('token', response.token);
-        await AsyncStorage.setItem('user_id', response.user_id);
-        await AsyncStorage.setItem('google_token', '');
-        await AsyncStorage.setItem('user_type', response.user_type);
-        setisloading(true);
-        setTimeout(() => {
-          navigation.navigate('Dashboard_donation_forDonor');
-          setisloading(false);
-          setemail('');
-          setpassword('');
-        }, 3000);
-      }
+    var response = await API.post('forget_password', logs);
+   // console.log(response);
+    if (response.status === 'success') {
+      Toast.show(response.message, Toast.LONG)
+      navigation.navigate('LogIn');
     } else {
-      Alert.alert(response.status, response.message);
+      Alert.alert('Failure', response.message);
     }
   };
 
@@ -154,7 +126,40 @@ const ForgetPass = ({navigation}) => {
       <ImageBackground
         source={require('../../src/assets/images/bg.jpg')}
         style={Styles.login_main}>
-        <View style={Styles.login_main_header}></View>
+        <View style={Styles.dashboard_main_header}>
+        <View style={Styles.dashboard_main_headers}>
+                <TouchableOpacity
+                  onPress={() => navigation.goBack()}>
+                  <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 10,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                      marginTop: 4
+                    }}
+                    source={require('../../src/assets/images/back.png')}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Image
+                    style={{
+                      width: 40,
+                      height: 40,
+                      marginStart: 10,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                    }}
+                    source={require('../../src/assets/images/heart1.png')}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+                </TouchableOpacity>
+              </View>
+        </View>
         <View style={Styles.login_text_main}>
           <Image
             style={{width: 90, height: 80, marginStart: 40, marginTop: 20}}
@@ -164,9 +169,10 @@ const ForgetPass = ({navigation}) => {
         </View>
         <View style={Styles.login_text_input_contain}>
           <TextInput
-            placeholder="Mobile / Email Address"
+            placeholder="Enter Email Address"
             onChangeText={text => setTaskti(text)}
             style={Styles.login_text_input}
+            autoCapitalize='none'
           />
           <TouchableOpacity
             style={Styles.login_btn_forget}

@@ -24,6 +24,7 @@ import Icon_3 from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import Selector from '../components/Selector';
 import Picker from '../components/Picker';
+import Toast from 'react-native-simple-toast';
 // import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -165,6 +166,7 @@ class Dashboard_donation extends Component {
       });
     }else
     {
+      Toast.show(response.message, Toast.LONG)
       this.setState({
         setcmpData: [],
       });

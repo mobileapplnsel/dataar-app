@@ -97,7 +97,7 @@ class Search_screen extends Component {
                     textDecorationLine: 'underline',
                     marginBottom: 40
                   }}>
-                    Please download your recipt and thank you letter
+                    Click to download your recipt and thank you letter
                   </Text>
                   </TouchableOpacity>
 

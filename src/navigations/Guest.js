@@ -437,6 +437,8 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="Campaing_details_ForDonor" component={Campaing_details_ForDonor} />
     <AuthStack.Screen name="KYCUpdateForDonee" component={KYCUpdateForDonee} />
     <AuthStack.Screen name="KYCUpdateForDonor" component={KYCUpdateForDonor} />
+    <AuthStack.Screen name="ThankYou" component={ThankYou} />
+    
     <HomeStack_nav.Screen
       name="DonationAmount"
       component={DonationAmount}

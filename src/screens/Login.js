@@ -430,6 +430,7 @@ else
             placeholder="Mobile / Email Address"
             onChangeText={text => setTaskti(text)}
             style={Styles.login_text_input}
+            autoCapitalize='none'
           />
           {/* <TextInput
             placeholder="Password"

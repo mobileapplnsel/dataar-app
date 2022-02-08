@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, {Component, useEffect, useState} from 'react';
 // var styles = require('../../src/assets/files/Styles');
 import {NavigationActions, NavigationEvents} from 'react-navigation';
-
+//android:roundIcon="@mipmap/ic_launcher_round"
 import {
   Dimensions,
   ScrollView,
@@ -152,6 +152,16 @@ const CustomSidebarMenu = props => {
             onPress={() => props.navigation.navigate('Donation')}
           />
         )} */}
+
+
+          <DrawerItem label="Privacy Polocy" onPress={() => console.log('Teams')} />
+
+          <DrawerItem label="Teams" onPress={() => console.log('Teams1')} />
+
+          <DrawerItem label="About Us" onPress={() => console.log('Teams2')} />
+
+          <DrawerItem label="Terms & Conditions" onPress={() => console.log('Teams3')} />
+        
 
         {user_id !== null ? (
           <DrawerItem label="Logout" onPress={() => logout()} />
