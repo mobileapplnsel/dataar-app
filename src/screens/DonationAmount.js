@@ -154,7 +154,11 @@ class DonationAmount extends Component {
     console.log('response::::: ', response)
     if (response.status == 'success') {
       Toast.show(response.message, Toast.LONG)
-      this.props.navigation.navigate('Dashboard_donation_forDonor');
+      // this.props.navigation.navigate('Dashboard_donation_forDonor');
+
+      this.props.navigation.navigate('ThankYou', {
+        donation_id: response.donation_id,
+      });
       
       // console.log(response.data)
     } else {

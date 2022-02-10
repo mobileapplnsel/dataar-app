@@ -202,7 +202,7 @@ class View_campaign extends Component {
   };
   render() {
     return (
-      <ScrollView>
+      
         <Container>
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
@@ -272,6 +272,7 @@ class View_campaign extends Component {
               </View>
             </View>
             {/* <ScrollView horizontal={true}> */}
+            <ScrollView>
             <View style={Styles.dashboard_main_contain}>
               {/* <FlatList
                 data={this.state.cmpData}
@@ -287,6 +288,11 @@ class View_campaign extends Component {
                   style={{height: 50, backgroundColor: '#537791'}}
                   textStyle={{textAlign: 'center', fontWeight: '100'}}
                 />
+
+{/* <Text style={{color: '#f55656', fontWeight: '800', alignSelf: 'center', fontSize: 26, marginTop: '60%', marginBottom: 10}}>
+          
+             </Text> */}
+
 
                 {this.state.cmpData.map((rowData, index) => (
                   <TableWrapper
@@ -308,12 +314,17 @@ class View_campaign extends Component {
                   </TableWrapper>
                 ))}
               </Table>
+              <Text style={{color: '#f55656', fontWeight: '800', alignSelf: 'center', fontSize: 26, marginTop: '60%', marginBottom: 10}}>
+          
+             </Text>
+             
               {/* </ScrollView> */}
             </View>
+            </ScrollView>
             {/* </ScrollView> */}
           </ImageBackground>
         </Container>
-      </ScrollView>
+     
     );
   }
 }
