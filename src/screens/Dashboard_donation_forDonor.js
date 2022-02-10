@@ -45,6 +45,8 @@ class Dashboard_donation_forDonor extends Component {
       comment: '',
       campaign_id: '',
       genderValue: '',
+      pan_number: '',
+      kyc_verified: '',
       gender: 'Preference',
       ArrPref: [
         {
@@ -233,33 +235,165 @@ class Dashboard_donation_forDonor extends Component {
   };
   Donate = async item => {
     var token = await AsyncStorage.getItem('token');
+    var kyc_verified = await AsyncStorage.getItem('kyc_verified');
+    var pan_number = await AsyncStorage.getItem('pan_number');
+    console.log("pan_number",pan_number);
+
     console.log(token);
+
+
     if (token != null && token !== '') {
-      this.props.navigation.navigate('DonationAmount', {
-        donate_amt: item.campaign_target_amount,
-        donation_mode: item.donation_mode,
-        campaign_id: item.campaign_id,
-        kind_id: item.kind_id,
-      });
+
+
+      var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+    };
+    console.log(logs);
+    var response = await API.post('kyc_status', logs);
+    if (response.status == 'success') {
+      console.log(response.userdata.pan_number);
+      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
+        {
+          if(response.userdata.pan_number!='')
+          {
+            this.props.navigation.navigate('DonationAmount', {
+                      donate_amt: item.campaign_target_amount,
+                      donation_mode: item.donation_mode,
+                      campaign_id: item.campaign_id,
+                      kind_id: item.kind_id,
+                    });
+          }
+        }
+        else
+          {
+            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
+            {
+              Alert.alert("Alert", "Kyc under the processing");
+            }
+            else{
+              Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
+              ],
+              {cancelable: false},);
+            }
+    
+          
+          }
+        
+        
+        
+      // this.setState({
+      //   pan_number:response.,
+      // });
+      // setcmpData(response.data);
     } else {
+      Alert.alert(response.status, response.message);
+    }
+
+  }
+
+    //   if(kyc_verified!=0 && kyc_verified!='')
+    //   {
+    //     if(pan_number!='')
+    //     {
+    //       this.props.navigation.navigate('DonationAmount', {
+    //         donate_amt: item.campaign_target_amount,
+    //         donation_mode: item.donation_mode,
+    //         campaign_id: item.campaign_id,
+    //         kind_id: item.kind_id,
+    //       });
+    //     }
+    //   }
+    //   else
+    //   {
+    //     if(pan_number!='' && pan_number!=null)
+    //     {
+    //       Alert.alert("Alert", "Kyc under the processing");
+    //     }
+    //     else{
+    //       Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+    //         {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
+    //       ],
+    //       {cancelable: false},);
+    //     }
+
+      
+    //   }
+    
+     else {
       this.props.navigation.navigate('LogIn');
     }
   };
 
   OneRupeeDonate = async () => {
     var token = await AsyncStorage.getItem('token');
+    var kyc_verified = await AsyncStorage.getItem('kyc_verified');
+    var pan_number = await AsyncStorage.getItem('pan_number');
     console.log(token);
     if (token != null && token !== '') {
-      this.props.navigation.navigate('OneRupeeDonation', {
-        donate_amt: '100',
-        donation_mode: 'dsadas',
-        campaign_id: '',
-        kind_id: '',
-      });
+
+
+      var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+    };
+    console.log(logs);
+    var response = await API.post('kyc_status', logs);
+    if (response.status == 'success') {
+      console.log(response.userdata.pan_number);
+      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
+        {
+          if(response.userdata.pan_number!='')
+          {
+            this.props.navigation.navigate('OneRupeeDonation', {
+              donate_amt: '100',
+              donation_mode: 'dsadas',
+              campaign_id: '',
+              kind_id: '',
+            });
+          }
+        }
+        else
+          {
+            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
+            {
+              Alert.alert("Alert", " It is currently under review. We will let you know once your KYC gets approved.");
+            }
+            else{
+              Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
+              ],
+              {cancelable: false},);
+            }
+    
+          
+          }
+        
+        
+        
+     
     } else {
-      AsyncStorage.setItem('isLoggedInForOneRupee', 'yes');
+      Alert.alert(response.status, response.message);
+    }
+
+  }
+
+ 
+    
+     else {
       this.props.navigation.navigate('LogIn');
     }
+
+
+
+
+
+
+  
+
+
+    
   };
   // const Logout = async () => {
   //   AsyncStorage.clear();

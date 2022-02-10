@@ -328,15 +328,22 @@ else
     // navigation.closeDrawer();
     var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
     // navigation.closeDrawer()
-    console.log('isLoggedInForOneRupee: ', isLoggedInForOneRupee);
+   // console.log('isLoggedInForOneRupee: ', isLoggedInForOneRupee);
+    console.log('response: ', response);
     if (response.status === '1') {
       // await React.useContext.signIn(response.token);
       if (response.user_type == 0) {
-        console.log(response.token);
+        if(response.pan_number !="")
+        {
+          await AsyncStorage.setItem('pan_number', response.pan_number);
+        }
+        
         await AsyncStorage.setItem('token', String(response.token));
         await AsyncStorage.setItem('user_id', response.user_id);
         await AsyncStorage.setItem('google_token', '');
         await AsyncStorage.setItem('user_type', response.user_type);
+        await AsyncStorage.setItem('kyc_verified', response.kyc_verified);
+       
         var token = await AsyncStorage.getItem('token');
         console.log('token', token);
         setisloading(true);
@@ -372,6 +379,11 @@ else
         await AsyncStorage.setItem('user_id', response.user_id);
         await AsyncStorage.setItem('google_token', '');
         await AsyncStorage.setItem('user_type', response.user_type);
+        await AsyncStorage.setItem('kyc_verified', response.kyc_verified);
+        if(response.pan_number !="")
+        {
+          await AsyncStorage.setItem('pan_number', response.pan_number);
+        }
         setisloading(true);
 //         if (isLoggedInForOneRupee == 'yes')
 //         {

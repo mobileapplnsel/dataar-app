@@ -228,20 +228,26 @@ class User_profile extends Component {
       
    
 
-   if (this.state.selectedPANSource == '') {
-    Alert.alert('Pan', 'Please upload your Pan');
-  } else if (this.state.selectedIDSource == '') {
-    Alert.alert('ID', 'Please upload your ID proof');
-  }
-  else if (this.state.selectedIDSource == '') {
-    Alert.alert('ID', 'Please upload your ID proof');
-  }
-  else if (this.state.selectedPANNumber== '') {
-    Alert.alert('pan', 'Please upload your pan number');
-  }
-  else if (this.state.selectedKYCNumber== '') {
-    Alert.alert('kyc', 'Please upload your kyc number');
-  }
+   
+     if (this.state.selectedPANSource == '') {
+      Alert.alert('Pan', 'Please upload your Pan');
+    } 
+    else if (this.state.selectedPANNumber== '') {
+      Alert.alert('pan', 'Please upload your pan number');
+    }
+    else if (this.state.selectedIDSource == '') {
+      Alert.alert('ID', 'Please upload your address proof ');
+    }
+   
+    else if (this.state.selectedKYCNumber== '') {
+      Alert.alert('kyc', 'Please upload your'+ this.state.selectedID);
+    }
+    else if (this.state.selectedTrustFileSource== '') {
+      Alert.alert('kyc', 'Please upload your TrustCertificate');
+    }
+    else if (this.state.websiteLink== '') {
+      Alert.alert('kyc', 'Please upload your websiteLink');
+    } 
   
      else {
       var logs = {
@@ -269,7 +275,10 @@ class User_profile extends Component {
       if (response.status == 'success') {
 
         // need to add kyc uploadation function here
-        Alert.alert('success', 'Successfully Updated');
+        Alert.alert('success', 'Thank you for submitting your KYC. It is currently under review. We will let you know once your KYC gets approved.', [
+          {text: 'OK', onPress: () => this.props.navigation.navigate('Dashboard')},
+        ],
+        {cancelable: false},);
        
       } else {
         Alert.alert(response.status, response.message);
@@ -391,10 +400,10 @@ onValueChange={
   // Alert.alert(itemValue)
 }>
 <Picker.Item label="Select Address Proof" value="" />
-<Picker.Item label="Aadhaard Card " value="0" />
-<Picker.Item label="Voter Card " value="1" />
-<Picker.Item label="Passport" value="2" />
-<Picker.Item label="Driving License" value="3" />
+<Picker.Item label="Aadhaard Card " value="Aadhaard Card" />
+<Picker.Item label="Voter Card " value="Voter Card" />
+<Picker.Item label="Passport" value="Passport" />
+<Picker.Item label="Driving License" value="Driving License" />
 </Picker>
 
 <TouchableOpacity
@@ -412,14 +421,13 @@ onValueChange={
           />
         </TouchableOpacity> 
         <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
-
         <TextInput
-              placeholder="Address Proof Number"
+              placeholder= {this.state.selectedID +"Number"}
               placeholderTextColor="#000"
               onChangeText={text => this.setState({selectedKYCNumber:text})}
               style={Styles.login_text_input}
-              keyboardType="default"
-            />
+              keyboardType="default"/>
+      
           
   
         </View>
@@ -497,14 +505,43 @@ onValueChange={
           />
         </TouchableOpacity> 
         <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
-
-        <TextInput
-              placeholder="Address Proof Number"
+        {this.state.selectedID =="0" ?  <TextInput
+              placeholder="Aadhaar Card Number"
               placeholderTextColor="#000"
               onChangeText={text => this.setState({selectedKYCNumber:text})}
               style={Styles.login_text_input}
               keyboardType="default"
-            />
+            /> :null}
+{this.state.selectedID =="1" ? <TextInput
+              placeholder="Voter Card Number"
+              placeholderTextColor="#000"
+              onChangeText={text => this.setState({selectedKYCNumber:text})}
+              style={Styles.login_text_input}
+              keyboardType="default"
+            />  :null}
+{this.state.selectedID =="2" ? <TextInput
+              placeholder="Passport Number"
+              placeholderTextColor="#000"
+              onChangeText={text => this.setState({selectedKYCNumber:text})}
+              style={Styles.login_text_input}
+              keyboardType="default"
+            />  :null}
+{this.state.selectedID =="3" ? <TextInput
+              placeholder="Driving License Number"
+              placeholderTextColor="#000"
+              onChangeText={text => this.setState({selectedKYCNumber:text})}
+              style={Styles.login_text_input}
+              keyboardType="default"
+            />  :null}
+{this.state.selectedID =="4" ?<TextInput
+              placeholder="Others Number"
+              placeholderTextColor="#000"
+              onChangeText={text => this.setState({selectedKYCNumber:text})}
+              style={Styles.login_text_input}
+              keyboardType="default"
+            />  :null}
+      
+  
 
 <Text> 
             <TouchableOpacity

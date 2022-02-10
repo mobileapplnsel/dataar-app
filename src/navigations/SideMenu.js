@@ -1,5 +1,8 @@
 import PropTypes from 'prop-types';
 import React, {Component, useEffect, useState} from 'react';
+import API from '../services/api';
+var Styles = require('../assets/files/Styles');
+
 // var styles = require('../../src/assets/files/Styles');
 import {NavigationActions, NavigationEvents} from 'react-navigation';
 //android:roundIcon="@mipmap/ic_launcher_round"
@@ -10,6 +13,7 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
+  Alert,
   SafeAreaView,
 } from 'react-native';
 import {
@@ -57,6 +61,65 @@ const CustomSidebarMenu = props => {
   const callToSetCatSubcatValue = () => {
     console.log('callToSetCatSubcatValue called:::');
   };
+
+  const StartCampg = async () => {
+    var token = await AsyncStorage.getItem('token');
+  
+    console.log(token);
+    if (token != null && token !== '') {
+
+
+      var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+    };
+    console.log(logs);
+    var response = await API.post('kyc_status', logs);
+    if (response.status == 'success') {
+      console.log(response.userdata.pan_number);
+      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
+        {
+          if(response.userdata.pan_number!='')
+          {
+            props.navigation.navigate('StartCampaign')
+            // navigation.navigate('StartCampaign');
+          }
+        }
+        else
+          {
+            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
+            {
+              Alert.alert("Alert", " It is currently under review. We will let you know once your KYC gets approved.");
+            }
+            else{
+              Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+                {text: 'OK', onPress: () => props.navigation.navigate('KYCUpdateForDonee')},
+              ],
+              {cancelable: false},);
+            }
+    
+          
+          }
+        
+        
+        
+     
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+
+  }
+
+ 
+    
+     else {
+      this.props.navigation.navigate('LogIn');
+    }
+  
+  };
+
+
+
   return (
     <SafeAreaView style={{flex: 1}}>
       
@@ -137,7 +200,7 @@ const CustomSidebarMenu = props => {
 {user_Type == 1 ? (
         <DrawerItem
           label="Create Campaign"
-          onPress={() => props.navigation.navigate('StartCampaign')}
+          onPress={() => StartCampg()}
         />  
         ) : null}
 

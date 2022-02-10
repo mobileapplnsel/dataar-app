@@ -10,6 +10,7 @@ import {
   Alert,
   FlatList,
   Animated,
+  ActivityIndicator,
   StyleSheet,
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
@@ -41,6 +42,8 @@ class User_profile extends Component {
       selectedIDName:'Upload your address proof',
       selectedIDSource:'',
       imagebaseString:'',
+      labelName:'',
+      progress: true,
 
     };
   }
@@ -67,11 +70,11 @@ selectOneFile = async () => {
       
       //Printing the log realted to the file
       
-      console.log('res : ' + JSON.stringify(res));
-      console.log('URi : ' + res.uri);
-      console.log('Type : ' + res.type);
-      console.log('File Name : ' + res.name);
-      console.log('File Size : ' + res.size);
+      // console.log('res : ' + JSON.stringify(res));
+      // console.log('URi : ' + res.uri);
+      // console.log('Type : ' + res.type);
+      // console.log('File Name : ' + res.name);
+      // console.log('File Size : ' + res.size);
       pdfpath = res.uri
       filename1 = res.name
      this.setState({selectedPANName:res.name});
@@ -168,18 +171,17 @@ selectOneFile = async () => {
    
   
    if (this.state.selectedPANSource == '') {
-    Alert.alert('Pan', 'Please upload your Pan');
-  } else if (this.state.selectedIDSource == '') {
-    Alert.alert('ID', 'Please upload your ID proof');
+    Alert.alert('Alert', 'Please upload your Pan');
+  } 
+ 
+  else if (this.state.selectedPANNumber== '') {
+    Alert.alert('Alert', 'Please upload your pan number');
   }
   else if (this.state.selectedIDSource == '') {
-    Alert.alert('ID', 'Please upload your ID proof');
-  }
-  else if (this.state.selectedPANNumber== '') {
-    Alert.alert('pan', 'Please upload your pan number');
+    Alert.alert('Alert', 'Please upload your address proof ');
   }
   else if (this.state.selectedKYCNumber== '') {
-    Alert.alert('kyc', 'Please upload your kyc number');
+    Alert.alert('Alert', 'Please upload your  '+ this.state.selectedID);
   }
   
      else {
@@ -208,7 +210,10 @@ selectOneFile = async () => {
       if (response.status == 'success') {
   
         // need to add kyc uploadation function here
-        Alert.alert('success', 'Successfully Updated');
+        Alert.alert('success', 'Thank you for submitting your KYC. It is currently under review. We will let you know once your KYC gets approved.', [
+          {text: 'OK', onPress: () => this.props.navigation.navigate('Dashboard_donation_forDonor')},
+        ],
+        {cancelable: false},);
        
       } else {
         Alert.alert(response.status, response.message);
@@ -242,7 +247,7 @@ selectOneFile = async () => {
                   />
                 </TouchableOpacity>
 
-                <Text style={{ fontSize: 19, fontWeight: '900', color: 'white', textAlignVertical: 'center'}}>
+                <Text style={{marginLeft:15, fontSize: 19, fontWeight: '900', color: 'white', textAlignVertical: 'center'}}>
                     KYC Update
                   </Text>
                 
@@ -292,15 +297,20 @@ style={{
 }}
 onValueChange={
   (itemValue, itemIndex) => this.setState({selectedID:itemValue})
+  
   // console.log(itemValue)
   // Alert.alert(itemValue)
 }>
 <Picker.Item label="Select Address Proof" value="" />
-<Picker.Item label="Aadhaar Card" value="0" />
-<Picker.Item label="Voter Card" value="1" />
-<Picker.Item label="Passport" value="2" />
-<Picker.Item label="Driving License" value="3" />
+<Picker.Item label="Aadhaar Card" value="Aadhaar Card" />
+<Picker.Item label="Voter Card" value="Voter Card" />
+<Picker.Item label="Passport" value="Passport" />
+<Picker.Item label="Driving License" value="Driving License" />
+<Picker.Item label="Others" value="Others" />
 </Picker>
+
+
+
 
 <TouchableOpacity
           activeOpacity={0.5}
@@ -318,19 +328,27 @@ onValueChange={
         </TouchableOpacity> 
         <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
 
-        <TextInput
-              placeholder="Address Proof Number"
+
+  <TextInput
+              placeholder= {this.state.selectedID +"Number"}
               placeholderTextColor="#000"
               onChangeText={text => this.setState({selectedKYCNumber:text})}
               style={Styles.login_text_input}
-              keyboardType="default"
-            />
+              keyboardType="default"/>
+            
   
         </View>
 
 
        
-           
+           <ActivityIndicator
+            //visibility of Overlay Loading Spinner
+            visible={this.state.progress}
+            //Text with the Spinner
+            textContent={'Loading...'}
+            //Text style of the Spinner Text
+            textStyle={Styles1.spinnerTextStyle}
+          />
             
             
             
@@ -343,6 +361,8 @@ onValueChange={
               <Text style={Styles.login_text}>SUBMIT</Text>
             </TouchableOpacity>
            </View>
+         
+         
            </ImageBackground>
         </ScrollView>
       </Container>
@@ -360,6 +380,9 @@ const Styles1 = StyleSheet.create({
     fontSize: 11,
     marginBottom: -5,
     marginLeft: 10,
+},
+spinnerTextStyle: {
+  color: '#FFF',
 },
   warningHint: {
   marginTop: -5,

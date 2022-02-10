@@ -28,12 +28,58 @@ const Dashboard = ({navigation}) => {
   };
   const StartCampaign = async () => {
     var token = await AsyncStorage.getItem('token');
+    var kyc_verified = await AsyncStorage.getItem('kyc_verified');
+    var pan_number = await AsyncStorage.getItem('pan_number');
     console.log(token);
     if (token != null && token !== '') {
-      navigation.navigate('StartCampaign');
+
+
+      var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+    };
+    console.log(logs);
+    var response = await API.post('kyc_status', logs);
+    if (response.status == 'success') {
+      console.log(response.userdata.pan_number);
+      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
+        {
+          if(response.userdata.pan_number!='')
+          {
+            navigation.navigate('StartCampaign');
+          }
+        }
+        else
+          {
+            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
+            {
+              Alert.alert("Alert", " It is currently under review. We will let you know once your KYC gets approved.");
+            }
+            else{
+              Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonee')},
+              ],
+              {cancelable: false},);
+            }
+    
+          
+          }
+        
+        
+        
+     
     } else {
-      navigation.navigate('LogIn');
+      Alert.alert(response.status, response.message);
     }
+
+  }
+
+ 
+    
+     else {
+      this.props.navigation.navigate('LogIn');
+    }
+  
   };
   const user = async () => {
     var token = await AsyncStorage.getItem('token');
