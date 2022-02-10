@@ -10,6 +10,8 @@ import {
   Alert,
   FlatList,
   Animated,
+  ActivityIndicator,
+  StyleSheet
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
@@ -27,6 +29,7 @@ class User_profile extends Component {
       iseditablefname: false,
       iseditablelname: false,
       image: '',
+      progress: false,
     };
   }
   btnkyc = () => {
@@ -48,6 +51,9 @@ class User_profile extends Component {
     this.getuser();
   }
   getuser = async () => {
+    this.setState({
+      progress: true,
+    })
     var token = await AsyncStorage.getItem('token');
     var user_id = await AsyncStorage.getItem('user_id');
     console.log(token);
@@ -60,12 +66,14 @@ class User_profile extends Component {
       console.log(response);
       if (response.status == 'success') {
         // navigation.navigate('OtpVerify', {mobile: Mobile});
+        
         this.setState({
           fname: response.data.first_name,
           lname: response.data.last_name,
           email: response.data.email,
           mobile: response.data.phone,
           image: response.data.kyc_file,
+          progress: false,
         });
       } else {
         Alert.alert(response.status, response.message);
@@ -100,14 +108,14 @@ class User_profile extends Component {
   render() {
     return (
       <Container>
-        <ScrollView>
+       
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
             <View style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('Dashboard_donation_forDonor')}>
+                  onPress={() => this.props.navigation.goBack()}>
                   <Image
                     style={{
                       width: 30,
@@ -169,6 +177,7 @@ class User_profile extends Component {
               </View>
             </View>
             {/* <View style={Styles.profile_main_contain}> */}
+            <ScrollView>
             <View>
               <Image
                 style={{
@@ -188,10 +197,15 @@ class User_profile extends Component {
                     marginLeft: 14,
                   },
                 ]}>
-                User Profile1
+                User Profile
               </Text>
             </View>
-            <List style={Styles.profile_main_contain}>
+            <ActivityIndicator animating={this.state.progress} size="large" style={{opacity:1}} color="red"
+            //Text with the Spinner
+            textContent={'Loading...'}
+            textStyle={Styles1.spinnerTextStyle}
+          /> 
+            {/* <List style={Styles.profile_main_contain}> */}
               <View style={Styles.profile_main_text_contain}>
                 {/* <ListItem style={Styles.profile_main_text_contain}> */}
                 <Text style={Styles.user_profile_lbtext}>First Name:</Text>
@@ -267,16 +281,19 @@ class User_profile extends Component {
                   value={this.state.mobile}
                   keyboardType="number-pad"></TextInput>
               </View>
+
+              
+              </ScrollView>
               {/* </ListItem> */}
-              <View>
+              {/* <View>
                 <TouchableOpacity
                   style={Styles.view_btn_kyc}
                   onPress={() => this.btnkyc()}>
                   <Text style={Styles.donate_btn_text}>View KYC</Text>
                 </TouchableOpacity>
-              </View>
-            </List>
-            {this.state.kyc == true ? (
+              </View> */}
+            {/* </List> */}
+            {/* {this.state.kyc == true ? (
               <View style={Styles.user_kyc_contain}>
                 <ListItem>
                   <Image
@@ -289,17 +306,20 @@ class User_profile extends Component {
                     }}
                     resizeMode="cover"
                     source={{uri: `data:image/jpeg;base64,${this.state.image}`}}
-                    // resizeMode="contain"dashboard_main_btn
                   />
                 </ListItem>
               </View>
-            ) : null}
+            ) : null} */}
             {/* </View> */}
           </ImageBackground>
-        </ScrollView>
+        
       </Container>
     );
   }
 }
-
+const Styles1 = StyleSheet.create({
+  spinnerTextStyle: {
+    color: 'green',
+  },
+});
 export default User_profile;

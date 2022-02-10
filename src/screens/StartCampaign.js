@@ -52,7 +52,7 @@ const StartCampaign = ({navigation}) => {
   const [isEndPickerVisible, setisEndPickerVisible] = useState(false);
   const [strdate, setSdate] = useState(null);
   const [endseldate, setenddate] = useState(null);
-  const [selectedPANName, setselectedPANName] = useState('Upload supported doc pdf');
+  const [selectedPANName, setselectedPANName] = useState('Upload supported doc');
   const [selectedPANSource, setselectedPANSource] = useState('');
   const [filebaseString, setfilebaseString] = useState('');
   const selectOneFile = async () => {
@@ -119,15 +119,15 @@ const StartCampaign = ({navigation}) => {
         image === '',
     );
     if (Title == '') {
-      Alert.alert('Title', 'Please Add Title');
+      Alert.alert('Title', 'Please add Title');
     } else if (Description == '') {
-      Alert.alert('Description', 'Please Add Description');
+      Alert.alert('Description', 'Please add Description');
     } else if (image == '') {
-      Alert.alert('Image', 'Please Add Image');
-    } else if (strdate == '') {
-      Alert.alert('Start Date', 'Please Add Start Date');
-    } else if (endseldate == '') {
-      Alert.alert('End Date', 'Please Add End Date');
+      Alert.alert('Image', 'Please add Image');
+    } else if (strdate == null) {
+      Alert.alert('Start Date', 'Please add Start Date');
+    } else if (endseldate == null) {
+      Alert.alert('End Date', 'Please add End Date');
     } else {
       setNext(1);
       // if (Description == '') {
@@ -146,8 +146,16 @@ const StartCampaign = ({navigation}) => {
       Alert.alert('Campaign', 'Please select one');
     } else {
       if (selCamp == '1') {
-        setNext(2);
+        if (selectedPANName === 'Upload supported doc') {
+          Alert.alert('Supportive Doc', 'Please add Supportive doc');
+        }
+       else
+       {
+       setNext(2);
+       }
+       
       } else {
+        
         setNext(3);
       }
     }

@@ -320,6 +320,17 @@ else
   };
   const googlelog = async () => {};
   const Login = async () => {
+
+    if (Email.trim() == '')
+    {
+      Alert.alert('Warning', 'Please enter Mobile or Email');
+    }
+    else if (password.trim() == '')
+    {
+      Alert.alert('Warning', 'Please enter Password');
+    }
+    else
+    {
     var logs = {
       username: Email,
       password: password,
@@ -399,6 +410,7 @@ else
     } else {
       Alert.alert(response.status, response.message);
     }
+  }
   };
   const signInlind = () => {};
   const register = () => {

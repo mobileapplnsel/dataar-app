@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   FlatList,
+  StyleSheet
 } from 'react-native';
 import {
   Container,
@@ -27,6 +28,7 @@ import {
   Cell,
 } from 'react-native-table-component';
 import Toast from 'react-native-simple-toast';
+import RazorpayCheckout from 'react-native-razorpay';
 class DonationAmount extends Component {
   constructor(props) {
     super(props);
@@ -36,10 +38,16 @@ class DonationAmount extends Component {
       donation_mode: props.route.params.donation_mode,
       campaign_id: props.route.params.campaign_id,
       kind_id: props.route.params.kind_id,
+      fname: '',
+      lname: '',
+      email: '',
+      mobile: '',
+      image: '',
     };
   }
   componentDidMount() {
-    this.campaign();
+    // this.campaign();
+    this.getuser();
   }
   campaign = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
@@ -59,13 +67,77 @@ class DonationAmount extends Component {
       Amount: value,
     });
   };
-  donate = () => {
-    if (this.state.donation_mode == '1') {
-      // this.props.navigation.navigate('DonationPayment');
-      this.startInkind();
+  getuser = async () => {
+    var token = await AsyncStorage.getItem('token');
+    var user_id = await AsyncStorage.getItem('user_id');
+    console.log(token);
+    console.log('user_id', user_id);
+    var logs = {
+      user_id: user_id,
+    };
+    if (token != null) {
+      var response = await API.post('fetch_profile_data', logs);
+      console.log(response);
+      if (response.status == 'success') {
+        // navigation.navigate('OtpVerify', {mobile: Mobile});
+        this.setState({
+          fname: response.data.first_name,
+          lname: response.data.last_name,
+          email: response.data.email,
+          mobile: response.data.phone,
+          image: response.data.kyc_file,
+        });
+      } else {
+        Alert.alert(response.status, response.message);
+      }
     } else {
-      this.startInkind();
     }
+  };
+  donate = () => {
+    console.log('this.state.fname + this.state.lname', this.state.fname + ' ' + this.state.lname,)
+    if (this.state.Amount == '')
+    {
+      this.setState({amountError: 'Please enter a valid amount'})
+    }
+   else
+   {
+
+    console.log()
+
+    var options = {
+      description: 'Credits towards consultation',
+      image: 'https://i.imgur.com/3g7nmJC.png',
+      currency: 'INR',
+      key: 'rzp_test_Aabh2L4rXsWHju',
+      amount: this.state.Amount * 100,
+      name: this.state.fname + ' ' + this.state.lname,
+      prefill: {
+        email: this.state.email,
+        contact: this.state.mobile,
+        name: 'Razorpay Software'
+      },
+      theme: {color: '#F37254'}
+    }
+      RazorpayCheckout.open(options).then((data) => {
+      // handle success
+     // alert(`Success: ${data.razorpay_payment_id}`);
+     
+     this.setState({transaction_idd: data.razorpay_payment_id})
+     // alert(`Success: ${data}`);
+      console.log('Success: ', data.razorpay_payment_id)
+      // this.submitDonation()
+      if (this.state.donation_mode == '1') {
+        // this.props.navigation.navigate('DonationPayment');
+        this.startInkind();
+      } else {
+        this.startInkind();
+      }
+    }).catch((error) => {
+      // handle failure
+      alert(`Error: ${error.code} | ${error.description}`);
+    });
+   }
+    
   };
   startInkind = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
@@ -77,7 +149,9 @@ class DonationAmount extends Component {
       campaign_id: this.state.campaign_id,
       status: 'sucess',
     };
+    console.log('logs::::', logs)
     var response = await API.post('add_donation', logs);
+    console.log('response::::: ', response)
     if (response.status == 'success') {
       Toast.show(response.message, Toast.LONG)
       this.props.navigation.navigate('Dashboard_donation_forDonor');
@@ -198,6 +272,7 @@ class DonationAmount extends Component {
                   style={Styles.amount_text_input}
                   keyboardType="decimal-pad"
                 />
+                <Text style={Styles1.errorHint}>{this.state.amountError}</Text>
               </View>
               <TouchableOpacity
                 style={Styles.donate_btn}
@@ -211,5 +286,13 @@ class DonationAmount extends Component {
     );
   }
 }
-
+const Styles1 = StyleSheet.create({
+  errorHint: {
+    marginTop: 3,
+    color: 'red',
+    fontSize: 11,
+    marginBottom: -5,
+    marginLeft: 10,
+},
+})
 export default DonationAmount;

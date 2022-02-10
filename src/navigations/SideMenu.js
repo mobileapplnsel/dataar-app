@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
+  Linking
 } from 'react-native';
 import {
   Container,
@@ -56,6 +57,9 @@ const CustomSidebarMenu = props => {
   };
   const callToSetCatSubcatValue = () => {
     console.log('callToSetCatSubcatValue called:::');
+  };
+  const openinBrowser = () => {
+    Linking.openURL('www.google.com').catch(err => console.error("Couldn't load page", err));
   };
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -152,16 +156,17 @@ const CustomSidebarMenu = props => {
             onPress={() => props.navigation.navigate('Donation')}
           />
         )} */}
+<DrawerItem label="About Us" onPress={ ()=> Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/about-us')} />
 
+          
 
-          <DrawerItem label="Privacy Polocy" onPress={() => console.log('Teams')} />
+          <DrawerItem label="Teams" onPress={() => Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/team')} />
 
-          <DrawerItem label="Teams" onPress={() => console.log('Teams1')} />
+          
 
-          <DrawerItem label="About Us" onPress={() => console.log('Teams2')} />
-
-          <DrawerItem label="Terms & Conditions" onPress={() => console.log('Teams3')} />
+          <DrawerItem label="Terms & Conditions" onPress={() => Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/terms-and-condition')} />
         
+          <DrawerItem label="Privacy Policy" onPress={() => Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/privacy-policy')} />
 
         {user_id !== null ? (
           <DrawerItem label="Logout" onPress={() => logout()} />
