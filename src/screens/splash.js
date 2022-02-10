@@ -13,14 +13,14 @@ const splash = ({navigation}) => {
        AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
       if (token == null) {
         // console.log('token', AsyncStorage.getItem('token'));
-        navigation.navigate('Dashboard_donation');
+        navigation.navigate('Dashboard_donation'); // Dashboard_donation
        
         // LogIn
       } else {
         // var user_type = AsyncStorage.getItem('user_type');
         console.log(user_type);
         if (user_type === '0') {
-          navigation.navigate('Dashboard_donation_forDonor');
+          navigation.navigate('Dashboard_donation_forDonor'); // OtpVerify
         } else {
           navigation.navigate('Dashboard');
         }

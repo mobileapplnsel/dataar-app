@@ -535,10 +535,10 @@ class Dashboard_donation_forDonor extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:10, backgroundColor: 'null', flex: 1, marginTop: -16}}>
+              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: -6}}>
 <Image style={{
   
-    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 10, width: '100%', 
+    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
 }}
 
 // source={{uri: base64Icon}}
@@ -806,11 +806,11 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
          
         <Card style={{overflow: 'hidden'}}>
           <CardItem>
-            <View style={{flexDirection: 'column'}}>
+            <View style={{flexDirection: 'column', flex: 1}}>
 
             <View style={{borderRadius:12, backgroundColor: 'null', flex: 1, marginTop: -20, alignSelf: 'center'}}>
 <Image style={{
-    resizeMode: 'contain', alignSelf: 'center', height: 200, borderRadius: 4, width: 300
+    resizeMode: 'contain', alignSelf: 'center', height: 200, borderRadius: 4, width: 350
 }}
 source={require('../../src/assets/images/daatar_banner.jpg')}>
 </Image> 

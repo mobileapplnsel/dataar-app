@@ -70,6 +70,27 @@ else
   }
   };
 
+  const resendOtp = async () => {
+  
+    
+    var logs = {
+      phone: Mobile//Mobile, '9876541473'
+    };
+    var response = await API.postWithoutHeader('resend_user_otp', logs);
+    console.log('response: ', response)
+    if (response.status == 'error')
+    {
+      Toast.show(response.message, Toast.LONG)
+    }
+    else
+    {
+      Toast.show(response.message, Toast.LONG)
+    }
+      
+   
+  
+  };
+
   return (
     <ScrollView>
       <Container>
@@ -90,7 +111,7 @@ else
               onChangeText={text => setTaskti(text)}
               style={Styles.login_text_input}
               keyboardType="phone-pad"/>
-<TouchableOpacity  onPress={() => Otpverify()}>
+<TouchableOpacity  onPress={() => resendOtp()}>
 <Text style={{
                     //  marginLeft: 10,
                     alignSelf: 'flex-end',

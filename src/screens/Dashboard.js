@@ -57,7 +57,7 @@ const Dashboard = ({navigation}) => {
             }
             else{
               Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
-                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonee')},
+                {text: 'OK', onPress: () => navigation.navigate('KYCUpdateForDonee')},
               ],
               {cancelable: false},);
             }
@@ -77,7 +77,7 @@ const Dashboard = ({navigation}) => {
  
     
      else {
-      this.props.navigation.navigate('LogIn');
+      navigation.navigate('LogIn');
     }
   
   };

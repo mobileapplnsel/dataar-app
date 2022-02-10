@@ -11,6 +11,9 @@ export default class API {
   post(endpoint, params) {
     return this.httpRequest('POST', this.baseUrl + endpoint, params);
   }
+  postWithoutHeader(endpoint, params) {
+    return this.httpRequestWithoutHeader('POST', this.baseUrl + endpoint, params);
+  }
 
   httpRequest(method, url, params) {
     console.log(params);
@@ -53,6 +56,39 @@ export default class API {
         },
         method: method,
         body: JSON.stringify(params),
+      };
+      console.log(url, options);
+      // console.log(options);
+      fetch(url, options)
+        .then(response => response.json())
+        .then(responseJson => {
+          resolve(responseJson);
+          console.log(responseJson);
+        })
+        .catch(error => {
+          reject(error);
+        }); //to catch the errors if any
+    });
+  }
+  httpRequestWithoutHeader(method, url, params) {
+    console.log(params);
+  
+    return new Promise(async (resolve, reject) => {
+      console.log(JSON.stringify(params));
+
+      var formData = new FormData();
+
+for (var k in params) {
+  formData.append(k, params[k]);
+}
+
+      let options = {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'multipart/form-data',
+        },
+        method: method,
+        body: formData,
       };
       console.log(url, options);
       // console.log(options);

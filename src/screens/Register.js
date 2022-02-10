@@ -37,6 +37,7 @@ const Register = ({navigation}) => {
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
   const [password, setpassword] = useState('');
+  const [confirm_password, setConfirmPassword] = useState('');
   const [Otp, setotp] = useState('');
   const [selectedValue, setselectedValue] = useState('');
   const [selectedsecondValue, setselectedsecondValue] = useState('');
@@ -52,6 +53,7 @@ const Register = ({navigation}) => {
   const [imagebaseString, setimagebaseString] = useState('');
   const [selectedID, setselectedID] = useState('');
   const [isPasswordHidden, setisPasswordHidden] = useState(false);
+  const [isConfirmPasswordHidden, setisConfirmPPasswordHidden] = useState(false);
   
   const setTaskti = text => {
     setFirstName(text);
@@ -84,6 +86,9 @@ const Register = ({navigation}) => {
   // };
   const setpass = text => {
     setpassword(text);
+  };
+  const setconfirmpass = text => {
+    setConfirmPassword(text);
   };
   const selectOneFile = async () => {
     //Opening Document Picker for selection of one file
@@ -279,6 +284,9 @@ const Register = ({navigation}) => {
     } else if (password == '') {
       Alert.alert('Password', 'Please enter password');
     }else if(selectedValue ==''){ Alert.alert('select ', 'Please select type');}
+    else if (password != confirm_password) {
+      Alert.alert('Confirm Password', 'Confirm password did not match');
+    }
      else if (
       FirstName != '' &&
       LastName != '' &&
@@ -338,6 +346,10 @@ const Register = ({navigation}) => {
   };
   const updateSecureText = () => {
     setisPasswordHidden(!isPasswordHidden);
+  };
+
+  const updateSecureText1 = () => {
+    setisConfirmPPasswordHidden(!isConfirmPasswordHidden);
   };
 
   const selectedDonationType = ()=> {
@@ -455,6 +467,41 @@ const Register = ({navigation}) => {
                 )}
               </TouchableOpacity>
             </View>
+
+
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 14,
+                borderBottomWidth: 1,
+                paddingRight: 10,
+                marginStart: 10,
+                marginEnd: 10,
+              }}>
+              <TextInput
+                placeholder="Confirm password"
+                onChangeText={text => setconfirmpass(text)}
+                style={{
+                  flex: 1,
+                  paddingTop: 0,
+                  fontSize: 16,
+                  height: 40,
+                  //   borderColor: "#080606",
+                  //   paddingLeft: 15,
+                  color: 'black',
+                }}
+                keyboardType="default"
+                secureTextEntry={!isConfirmPasswordHidden}
+              />
+              <TouchableOpacity onPress={updateSecureText1}>
+                {!isConfirmPasswordHidden ? (
+                  <Feather name="eye-off" color="gray" size={20} />
+                ) : (
+                  <Feather name="eye" color="green" size={20} />
+                )}
+              </TouchableOpacity>
+            </View>
+
             {/* <TextInput
               placeholder="Otp"
               onChangeText={text => setOtp(text)}

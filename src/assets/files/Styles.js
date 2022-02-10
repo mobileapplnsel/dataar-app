@@ -642,7 +642,7 @@ module.exports = StyleSheet.create({
   },
   login_text_font1: {
     fontSize: 20,
-    marginLeft: 50,
+    marginLeft: 40,
   },
   login_text_check: {
     fontSize: 20,
@@ -678,7 +678,7 @@ module.exports = StyleSheet.create({
     fontSize: 18,
     marginLeft: 50,
     // alignSelf:"flex-end",
-    paddingTop: 20,
+    paddingTop: 5,
     color: '#f55656',
   },
   login_text: {

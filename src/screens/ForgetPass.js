@@ -105,17 +105,25 @@ const ForgetPass = ({navigation}) => {
     }
   };
   const Login = async () => {
-    var logs = {
-      email_id: Email,
-    };
-    var response = await API.post('forget_password', logs);
-   // console.log(response);
-    if (response.status === 'success') {
-      Toast.show(response.message, Toast.LONG)
-      navigation.navigate('LogIn');
-    } else {
-      Alert.alert('Failure', response.message);
+    if (Email.trim() == '')
+    {
+      Alert.alert('Warning', 'Please enter email');
     }
+    else
+    {
+      var logs = {
+        email_id: Email,
+      };
+      var response = await API.post('forget_password', logs);
+     // console.log(response);
+      if (response.status === 'success') {
+        Toast.show(response.message, Toast.LONG)
+        navigation.navigate('LogIn');
+      } else {
+        Alert.alert('Failure', response.message);
+      }
+    }
+    
   };
 
   if (isloading) {
