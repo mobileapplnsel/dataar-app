@@ -173,7 +173,7 @@ const ForgetPass = ({navigation}) => {
             style={{width: 90, height: 80, marginStart: 40, marginTop: 20}}
             source={require('../../src/assets/images/heart.png')}
           />
-          <Text style={Styles.login_text_font}>Forget Password</Text>
+          <Text style={Styles.login_text_font}>Forgot Password</Text>
         </View>
         <View style={Styles.login_text_input_contain}>
           <TextInput
@@ -186,7 +186,7 @@ const ForgetPass = ({navigation}) => {
           <TouchableOpacity
             style={Styles.login_btn_forget}
             onPress={() => Login()}>
-            <Text style={Styles.login_text}>Forget</Text>
+            <Text style={Styles.login_text}>Submit</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>

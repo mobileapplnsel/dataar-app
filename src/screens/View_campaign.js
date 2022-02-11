@@ -50,92 +50,7 @@ class View_campaign extends Component {
       widthArr: [40, 180, 80, 80, 40, 120, 60],
     };
   }
-  renderlog = ({item, index}) => {
-    // const progressStatus =
-    // (parseInt(item.amountr) / parseInt(item.amountp)) * 100;
-    console.log(item);
-    return (
-      <View style={{flex: 1}}>
-        <Card style={{overflow: 'hidden'}}>
-          <CardItem>
-            <View style={{flexDirection: 'column', flex: 1}}>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  backgroundColor: '#ffff',
-                }}>
-                <Text style={Styles.doner_name_font}>{item.dname}</Text>
-                <View style={{flexDirection: 'row'}}>
-                  <TouchableOpacity onPress={() => like()}>
-                    <Image
-                      style={Styles.donation_icon_font}
-                      source={require('../../src/assets/images/like.png')}
-                      // resizeMode="contain"dashboard_main_btn
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity onPress={() => dots()}>
-                    <Image
-                      style={Styles.donation_icon_font}
-                      source={require('../../src/assets/images/dots.jpg')}
-                      // resizeMode="contain"dashboard_main_btn
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={{flexDirection: 'row'}}>
-                <Text style={Styles.doner_title_font}>{item.title}</Text>
-              </View>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={Styles.doner_title_font}>
-                  {item.amountr} of {item.amountp}
-                </Text>
-                <Text style={Styles.doner_title_font}>{progressStatus}%</Text>
-              </View>
-              {/* <View> */}
-              <View style={Styles.inner_barpro}>
-                <Animated.View
-                  style={[
-                    Styles.inner_bar,
-                    {width: parseInt(progressStatus) + '%'},
-                  ]}
-                />
-              </View>
-              {/* </View> */}
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Image
-                    style={Styles.location_icon_font}
-                    source={require('../../src/assets/images/location.jpg')}
-                    // resizeMode="contain"dashboard_main_btn
-                  />
-                  <Text style={Styles.doner_title_font}> {item.location}</Text>
-                </View>
-                <Text style={Styles.doner_title_font}>
-                  {item.days} days to go
-                </Text>
-              </View>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={Styles.doner_title_font}>{item.dcount} Doner</Text>
-                <TouchableOpacity
-                  style={Styles.donate_btn_now}
-                  onPress={() => Donate()}>
-                  <Text style={Styles.donate_btn_text}>Donate Now</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </CardItem>
-        </Card>
-      </View>
-    );
-  };
+  
   campaign = async () => {
     console.log(user_id);
     var user_id = await AsyncStorage.getItem('user_id');
@@ -147,6 +62,7 @@ class View_campaign extends Component {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       // console.log(response.data)
       var arr = new Array();
+      console.log('campaign_details_by_user: ', response.data);
       for (var i = 0; i < response.data.length; i++) {
         arr.push([
           response.data[i]['campaign_id'],
@@ -156,11 +72,13 @@ class View_campaign extends Component {
           response.data[i]['donation_mode'],
           response.data[i]['campaign_target_amount'],
           response.data[i]['campaign_id'],
+          response.data[i]['campaign_details'],
+          response.data[i]['campaign_image'],
         ]);
         console.log(arr);
       }
       this.setState({
-        cmpData: arr,
+        cmpData: response.data,
       });
     } else {
       Alert.alert(response.status, response.message);
@@ -200,6 +118,126 @@ class View_campaign extends Component {
       this.props.navigation.navigate('LogIn');
     }
   };
+  renderlog = ({item, index}) => {
+    
+    console.log('item: ', item)
+    var base64String = item.campaign_image
+    var base64Icon = 'data:image/png;base64,'+base64String
+     console.log('base64Icon: ', base64Icon)
+var donation_type = ''
+     if (item.donation_mode == '1')
+     {
+      donation_type = 'Money'
+     }
+     else
+     {
+      donation_type = 'In Kind'
+     }
+
+    const wish = item.like_status == 1 ? true : false;
+    console.log(wish);
+    return (
+      <View style={{flex: 1}} key={item.campaign_id}>
+        <Card style={{overflow: 'hidden'}}>
+          <CardItem>
+            <View style={{flexDirection: 'column', flex: 1}}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  backgroundColor: '#ffff',
+                }}> 
+                  <TouchableOpacity>
+                <Text style={Styles.doner_name_font}>{item.campaign_name}</Text>
+                </TouchableOpacity>
+                
+              </View>
+              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: -6}}>
+<Image style={{
+  
+    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
+}}
+
+source={{uri: base64Icon}}>
+{/* source={require('../../src/assets/images/daatar_banner.jpg')}> */}
+
+</Image> 
+</View>
+
+
+
+              <View style={{flexDirection: 'row', marginTop: 0}}>
+              <Text style={Styles.doner_title_font_Modified}>
+                 Details:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.campaign_details}
+                </Text>
+              </View>
+              {/* 'Start Date',
+        'Expriy Date',
+        'Type',
+        'Amount',
+        'View', */}
+              <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Start Date:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.campaign_start_date}
+                </Text>
+              </View>
+
+              <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Expriy Date:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.campaign_end_date}
+                </Text>
+              </View>
+
+              <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Type:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {donation_type}
+                </Text>
+              </View>
+              
+              <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Amount:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.campaign_target_amount}
+                </Text>
+              </View>
+             
+             
+                
+                
+                <TouchableOpacity
+                  style={{width: '96%',
+                    height: 40,
+                    backgroundColor: '#f55656',
+                    marginTop: 10,
+                    color: '#f55656',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 6,}}
+                  onPress={() => this.props.navigation.navigate('Campaing_details', {
+                    camp_id: item.campaign_id,
+                  })}>
+                  <Text style={Styles.donate_btn_text}>View</Text>
+                </TouchableOpacity>
+            </View>
+          </CardItem>
+        </Card>
+      </View>
+    );
+  };
   render() {
     return (
       
@@ -238,6 +276,10 @@ class View_campaign extends Component {
                     // resizeMode="contain"dashboard_main_btn
                   />
                 </TouchableOpacity>
+
+                <Text style={{marginLeft: 14, fontSize: 19, fontWeight: '900', color: 'white', textAlignVertical: 'center'}}>
+                    My Campaign
+                  </Text>
               </View>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity>
@@ -272,8 +314,8 @@ class View_campaign extends Component {
               </View>
             </View>
             {/* <ScrollView horizontal={true}> */}
-            <ScrollView>
-            <View style={Styles.dashboard_main_contain}>
+            {/* <ScrollView> */}
+            {/* <View style={Styles.dashboard_main_contain}> */}
               {/* <FlatList
                 data={this.state.cmpData}
                 renderItem={this.renderlog}
@@ -281,19 +323,16 @@ class View_campaign extends Component {
               /> */}
               {/* <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}> */}
               {/* <ScrollView style={{marginTop: -1}}> */}
-              <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
+
+
+
+
+              {/* <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
                 <Row
                   data={this.state.tableHead}
-                  // widthArr={this.state.widthArr}
                   style={{height: 50, backgroundColor: '#537791'}}
                   textStyle={{textAlign: 'center', fontWeight: '100'}}
                 />
-
-{/* <Text style={{color: '#f55656', fontWeight: '800', alignSelf: 'center', fontSize: 26, marginTop: '60%', marginBottom: 10}}>
-          
-             </Text> */}
-
-
                 {this.state.cmpData.map((rowData, index) => (
                   <TableWrapper
                     key={index}
@@ -313,14 +352,22 @@ class View_campaign extends Component {
                     ))}
                   </TableWrapper>
                 ))}
-              </Table>
-              <Text style={{color: '#f55656', fontWeight: '800', alignSelf: 'center', fontSize: 26, marginTop: '60%', marginBottom: 10}}>
+              </Table> */}
+
+
+<FlatList
+              data={this.state.cmpData}
+              renderItem={this.renderlog}
+              keyExtractor={(item, id) => id.toString()}
+            />
+
+              {/* <Text style={{color: '#f55656', fontWeight: '800', alignSelf: 'center', fontSize: 26, marginTop: '60%', marginBottom: 10}}>
           
-             </Text>
+             </Text> */}
              
               {/* </ScrollView> */}
-            </View>
-            </ScrollView>
+            {/* </View> */}
+            {/* </ScrollView> */}
             {/* </ScrollView> */}
           </ImageBackground>
         </Container>

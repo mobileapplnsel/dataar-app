@@ -16,6 +16,7 @@ import {
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
+import Toast from 'react-native-simple-toast';
 var Styles = require('../assets/files/Styles');
 class User_profile extends Component {
   constructor(props) {
@@ -30,6 +31,8 @@ class User_profile extends Component {
       iseditablelname: false,
       image: '',
       progress: false,
+      user_id: ''
+
     };
   }
   btnkyc = () => {
@@ -58,9 +61,13 @@ class User_profile extends Component {
     var user_id = await AsyncStorage.getItem('user_id');
     console.log(token);
     console.log('user_id', user_id);
+    
     var logs = {
       user_id: user_id,
     };
+
+    
+
     if (token != null) {
       var response = await API.post('fetch_profile_data', logs);
       console.log('fetch_profile_data: ',response);
@@ -74,6 +81,7 @@ class User_profile extends Component {
           mobile: response.data.phone,
           image: response.data.kyc_file,
           progress: false,
+          user_id: user_id
         });
       } else {
         Alert.alert(response.status, response.message);
@@ -104,7 +112,37 @@ class User_profile extends Component {
       lname: value,
     });
   };
-
+   updateProfile = async () => {
+    if (this.state.fname.trim() == '')
+    {
+      Alert.alert('Warning', 'Please enter First Name');
+    }
+    else if (this.state.lname.trim() == '')
+    {
+      Alert.alert('Warning', 'Please enter Last Name');
+    }
+    else
+    {
+      var logs = {
+        usrId: this.state.user_id,
+        firstname: this.state.fname,
+        lastname: this.state.lname,
+        phone: this.state.mobile,
+        email: this.state.email
+      };
+      console.log('Update Profile logs: ', logs);
+      var response = await API.postWithoutHeader('update_user_profile_info', logs);
+     // console.log(response);
+     console.log('Update Profile response: ', response);
+      if (response.status === 'success') {
+        Toast.show(response.message, Toast.LONG)
+        this.props.navigation.goBack()
+      } else {
+        Alert.alert('Failure', response.message);
+      }
+    }
+    
+  };
   render() {
     return (
       <Container>
@@ -241,8 +279,7 @@ class User_profile extends Component {
                     style={Styles.user_text_input}
                     placeholder="Last Name"
                     editable={this.state.iseditablelname}
-                    onChangeText={() => this.setLastname()}
-                    onEndEditing={() => this.updatePro()}
+                    onChangeText={value => this.setLastname(value)}
                     value={this.state.lname}
                     keyboardType="default"></TextInput>
                   <TouchableOpacity
@@ -282,6 +319,17 @@ class User_profile extends Component {
                   keyboardType="number-pad"></TextInput>
               </View>
 
+              <TouchableOpacity
+            style={{width: '94%',
+            height: 50,
+            backgroundColor: '#f55656',
+            marginTop: 30,
+            color: '#f55656',
+            alignSelf:"center",
+            marginBottom: 34}}
+            onPress={() => this.updateProfile()}>
+            <Text style={Styles.login_text}>Update</Text>
+          </TouchableOpacity>
               
               </ScrollView>
               {/* </ListItem> */}
@@ -316,6 +364,7 @@ class User_profile extends Component {
       </Container>
     );
   }
+  
 }
 const Styles1 = StyleSheet.create({
   spinnerTextStyle: {

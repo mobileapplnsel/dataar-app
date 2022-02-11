@@ -103,6 +103,82 @@ class Campaing_details extends Component {
       Alert.alert(response.status, response.message);
     }
   };
+  renderlog1 = ({item, index}) => {
+    return (
+      <Card style={{overflow: 'hidden'}}>
+      <CardItem>
+      <View style={{flexDirection: 'column'}}>
+        {/* <View
+          style={{
+            flexDirection: 'row',
+            borderWidth: 1,
+            width: '100%',
+            height: 40,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <View style={{alignItems: 'center', marginStart: 6}}>
+            <Text style={Styles.sub_text_font1}>{item.donor_name}</Text>
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <Text style={Styles.sub_text_font1}>{item.updated_at}</Text>
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <Text style={Styles.sub_text_font1}>{item.amountpaid}</Text>
+          </View>
+          <View style={{alignItems: 'center', marginEnd: 6}}>
+            {item.donee_approved === '0' ? (
+              <Text style={Styles.sub_text_font1}>{item.status}</Text>
+            ) : (
+              <TouchableOpacity
+                style={{height: 25, width: 80, backgroundColor: '#64d182'}}
+                onPress={() => this.approve(item)}>
+                <Text style={Styles.sub_text_font1}>Approve</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View> */}
+
+<View style={{flexDirection: 'row', marginTop: -23}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Donor Name:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.donor_name}
+                </Text>
+              </View>
+
+              <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Date:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.updated_at}
+                </Text>
+              </View>
+
+              <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Amount:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.amountpaid}
+                </Text>
+              </View>
+
+              <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Status:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.status}
+                </Text>
+              </View>
+      </View>
+      </CardItem>
+        </Card>
+    );
+  };
   renderlog = ({item, index}) => {
     return (
       <View style={{flexDirection: 'row'}}>

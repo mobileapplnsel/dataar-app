@@ -889,6 +889,16 @@ module.exports = StyleSheet.create({
     fontWeight: '500',
     marginTop: 20,
   },
+  doner_title_font_Modified: {
+    fontSize: 14,
+    alignSelf: 'center',
+    alignItems: 'center',
+    color: '#757373',
+    fontWeight: '500',
+    marginTop: 20,
+    marginEnd: 5,
+    fontWeight: 'bold'
+  },
   prefer_title_font: {
     fontSize: 14,
     alignSelf: 'center',
