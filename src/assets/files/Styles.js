@@ -781,6 +781,7 @@ module.exports = StyleSheet.create({
     // borderBottomWidth: 1,
     // paddingTop:20,
     marginTop: 20,
+    color: 'black'
   },
   campaign_radio_contain: {
     flexDirection: 'row',
@@ -1007,6 +1008,7 @@ module.exports = StyleSheet.create({
     borderBottomColor: '#000',
     borderBottomWidth: 1,
     paddingTop: 0,
+    color: 'black'
   },
   amount_main_contain: {
     // backgroundColor: '#f55656',
@@ -1110,6 +1112,7 @@ module.exports = StyleSheet.create({
     borderBottomColor: '#000',
     borderBottomWidth: 1,
     width: '90%',
+    color: 'black'
   },
   user_edit_profile_lbtext: {
     width: 45,

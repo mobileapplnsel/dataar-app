@@ -268,12 +268,14 @@ class User_profile extends Component {
                   paddingTop: 0,
                   fontSize: 16,
                   height: 40,
+                  color: 'black',
                   //   borderColor: "#080606",
                   //   paddingLeft: 15,
 
                   fontWeight: 'bold',
                 }}
                 keyboardType="default"
+                placeholderTextColor='grey'
                 secureTextEntry={!this.state.isPasswordHidden}
               />
               <TouchableOpacity onPress={()=> this.updateSecureText()}>
@@ -307,8 +309,10 @@ class User_profile extends Component {
                   //   paddingLeft: 15,
 
                   fontWeight: 'bold',
+                  color: 'black'
                 }}
                 keyboardType="default"
+                placeholderTextColor='grey'
                 secureTextEntry={!this.state.isConfirmPasswordHidden}
               />
               <TouchableOpacity onPress={()=> this.updateSecureText1()}>

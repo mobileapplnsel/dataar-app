@@ -415,12 +415,14 @@ const Register = ({navigation}) => {
               onChangeText={text => setTaskti(text)}
               style={Styles.login_text_input}
               keyboardType="default"
+              placeholderTextColor='grey'
             />
             <TextInput
               placeholder="Last Name"
               onChangeText={text => setTasktipass(text)}
               style={Styles.login_text_input}
               keyboardType="default"
+              placeholderTextColor='grey'
             />
             <TextInput
               placeholder="Email"
@@ -428,12 +430,14 @@ const Register = ({navigation}) => {
               style={Styles.login_text_input}
               keyboardType="email-address"
               autoCapitalize='none'
+              placeholderTextColor='grey'
             />
             <TextInput
               placeholder="Mobile"
               onChangeText={text => setMobile(text)}
               style={Styles.login_text_input}
               keyboardType="numeric"
+              placeholderTextColor='grey'
             />
             <View
               style={{
@@ -457,6 +461,7 @@ const Register = ({navigation}) => {
                   color: 'black',
                 }}
                 keyboardType="default"
+                placeholderTextColor='grey'
                 secureTextEntry={!isPasswordHidden}
               />
               <TouchableOpacity onPress={updateSecureText}>
@@ -491,6 +496,7 @@ const Register = ({navigation}) => {
                   color: 'black',
                 }}
                 keyboardType="default"
+                placeholderTextColor='grey'
                 secureTextEntry={!isConfirmPasswordHidden}
               />
               <TouchableOpacity onPress={updateSecureText1}>

@@ -366,18 +366,21 @@ const StartCampaign = ({navigation}) => {
                 onChangeText={text => setTitle(text)}
                 style={Styles.login_text_input}
                 keyboardType="default"
+                placeholderTextColor='grey'
               />
               <TextInput
                 placeholder="Description"
                 onChangeText={text => setDescription(text)}
                 style={Styles.login_text_input}
                 keyboardType="default"
+                placeholderTextColor='grey'
               />
               <TextInput
                 placeholder="Pincode"
                 onChangeText={text => setpincode(text)}
                 style={Styles.login_text_input}
                 keyboardType="number-pad"
+                placeholderTextColor='grey'
               />
               <TouchableOpacity
                 style={Styles.campaign_btn_upload_image}
@@ -474,6 +477,7 @@ const StartCampaign = ({navigation}) => {
                 onChangeText={text => setamount(text)}
                 style={Styles.campaign_text_input}
                 keyboardType="number-pad"
+                placeholderTextColor='grey'
               />
               <View style={Styles.campaign_name_contain}>
                 <TouchableOpacity
@@ -523,6 +527,7 @@ const StartCampaign = ({navigation}) => {
                   onChangeText={text => setquantity(text)}
                   style={Styles.campaign_text_input}
                   keyboardType="number-pad"
+                  placeholderTextColor='grey'
                 />
               </View>
               <View style={Styles.campaign_name_contain}>

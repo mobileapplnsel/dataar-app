@@ -181,6 +181,7 @@ const ForgetPass = ({navigation}) => {
             onChangeText={text => setTaskti(text)}
             style={Styles.login_text_input}
             autoCapitalize='none'
+            placeholderTextColor='grey'
           />
           <TouchableOpacity
             style={Styles.login_btn_forget}

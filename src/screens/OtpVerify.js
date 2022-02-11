@@ -108,6 +108,7 @@ else
           <View style={Styles.login_text_input_contain}>
             <TextInput
               placeholder="Enter OTP"
+              placeholderTextColor='grey'
               onChangeText={text => setTaskti(text)}
               style={Styles.login_text_input}
               keyboardType="phone-pad"/>

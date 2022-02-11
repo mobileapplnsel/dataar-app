@@ -275,6 +275,7 @@ class DonationAmount extends Component {
                   onChangeText={text => this.setAmount(text)}
                   style={Styles.amount_text_input}
                   keyboardType="decimal-pad"
+                  placeholderTextColor='grey'
                 />
                 <Text style={Styles1.errorHint}>{this.state.amountError}</Text>
               </View>

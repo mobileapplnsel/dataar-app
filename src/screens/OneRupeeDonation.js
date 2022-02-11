@@ -394,6 +394,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                 
                 <TextInput
                   placeholder="Enter Donation Amount"
+                  placeholderTextColor='grey'
                   onChangeText={text => this.setAmount(text)}
                   style={Styles1.amount_text_input}
                   keyboardType="decimal-pad"

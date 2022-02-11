@@ -455,6 +455,7 @@ else
             onChangeText={text => setTaskti(text)}
             style={Styles.login_text_input}
             autoCapitalize='none'
+            placeholderTextColor='grey'
           />
           {/* <TextInput
             placeholder="Password"
@@ -483,6 +484,7 @@ else
                   color: 'black'
                 }}
                 keyboardType="default"
+                placeholderTextColor='grey'
                 secureTextEntry={!isPasswordHidden}
               />
               <TouchableOpacity onPress={updateSecureText}>
