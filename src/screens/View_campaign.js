@@ -152,21 +152,21 @@ var donation_type = ''
                 </TouchableOpacity>
                 
               </View>
-              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: -6}}>
+
+              {/* <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: -6}}>
 <Image style={{
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
 }}
 
 source={{uri: base64Icon}}>
-{/* source={require('../../src/assets/images/daatar_banner.jpg')}> */}
 
 </Image> 
-</View>
+</View> */}
 
 
 
-              <View style={{flexDirection: 'row', marginTop: 0}}>
+              {/* <View style={{flexDirection: 'row', marginTop: 0}}>
               <Text style={Styles.doner_title_font_Modified}>
                  Details:   
                 </Text>
@@ -174,11 +174,7 @@ source={{uri: base64Icon}}>
                   {item.campaign_details}
                 </Text>
               </View>
-              {/* 'Start Date',
-        'Expriy Date',
-        'Type',
-        'Amount',
-        'View', */}
+              
               <View style={{flexDirection: 'row', marginTop: 3}}>
               <Text style={Styles.doner_title_font_Modified}>
               Start Date:   
@@ -195,7 +191,7 @@ source={{uri: base64Icon}}>
                 <Text style={Styles.doner_title_font}>
                   {item.campaign_end_date}
                 </Text>
-              </View>
+              </View> */}
 
               <View style={{flexDirection: 'row', marginTop: 3}}>
               <Text style={Styles.doner_title_font_Modified}>

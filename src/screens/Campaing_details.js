@@ -41,6 +41,7 @@ class Campaing_details extends Component {
       modalComment: false,
       isVisible: false,
       shareHeight: 360,
+      campaignImageURI: ''
     };
   }
   campaign = async () => {
@@ -68,11 +69,15 @@ class Campaing_details extends Component {
       //     amount: amountVal,
       //   });
       // }
+      var base64String = response.data.capmain_details[0]['campaign_image']
+      var base64Icon = 'data:image/png;base64,'+base64String
       this.setState({
         cmpData: [...response.data.donations],
         capmain_details: [...response.data.capmain_details],
+        campaignImageURI: base64Icon,
         isloading: false,
       });
+
       console.log(this.state.cmpData);
     } else {
       Alert.alert(response.status, response.message);
@@ -278,7 +283,7 @@ class Campaing_details extends Component {
       return <AppPreLoader />;
     }
     return (
-      <ScrollView>
+      
         <Container>
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
@@ -347,9 +352,21 @@ class Campaing_details extends Component {
                 </TouchableOpacity>
               </View>
             </View>
-            <View style={Styles.dashboard_main_contain}>
+            <ScrollView style={Styles.dashboard_main_contain}>
               <View style={Styles.campaign_details_contain}>
-                <View style={{alignSelf: 'center'}}>
+
+              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', marginTop: -16}}>
+<Image style={{
+  
+    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
+}}
+ source={{uri: this.state.campaignImageURI}}
+// source={require('../../src/assets/images/daatar_banner.jpg')}
+>
+</Image> 
+</View>
+
+                <View style={{alignSelf: 'center', marginTop: 3}}>
                   <Text style={Styles.campaign_text_font1}>
                     {this.state.capmain_details[0]['campaign_details']}
                   </Text>
@@ -401,12 +418,14 @@ class Campaing_details extends Component {
                 renderItem={this.renderlog}
                 keyExtractor={(item, id) => id.toString()}
               />
-            </View>
+               <Text style={Styles.sub_text_font1}>
+                    
+                  </Text>
+            </ScrollView>
           </ImageBackground>
 
           
         </Container>
-      </ScrollView>
     );
   }
 }
