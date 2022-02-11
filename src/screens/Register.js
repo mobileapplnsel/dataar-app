@@ -445,7 +445,7 @@ const Register = ({navigation}) => {
                 marginEnd: 10,
               }}>
               <TextInput
-                placeholder="password"
+                placeholder="Password"
                 onChangeText={text => setpass(text)}
                 style={{
                   flex: 1,

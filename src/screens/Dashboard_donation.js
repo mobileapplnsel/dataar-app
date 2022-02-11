@@ -397,9 +397,9 @@ class Dashboard_donation extends Component {
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
 }}
 
-// source={{uri: base64Icon}}
-// source={require('../../src/assets/images/21-Free-Banner-Templates-for-Photoshop-and-Illustrator.jpg')}
-source={require('../../src/assets/images/daatar_banner.jpg')}>
+ source={{uri: base64Icon}}>
+{/* // source={require('../../src/assets/images/21-Free-Banner-Templates-for-Photoshop-and-Illustrator.jpg')}
+// source={require('../../src/assets/images/daatar_banner.jpg')}> */}
 
 </Image> 
 </View>

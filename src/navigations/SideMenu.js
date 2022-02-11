@@ -169,12 +169,12 @@ const CustomSidebarMenu = props => {
 
 
 
-{user_Type == 0 ? (
+{/* {user_Type == 0 ? (
          <DrawerItem
           label="My Donation"
           // onPress={() => props.navigation.navigate('MyDonation')}
         />
-        ) : null}
+        ) : null} */}
 
 {user_Type == 0 ? (
         <DrawerItem

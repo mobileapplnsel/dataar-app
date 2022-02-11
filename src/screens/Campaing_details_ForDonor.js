@@ -383,8 +383,8 @@ class Campaing_details extends Component {
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 10, width: '100%', 
 }}
-// source={{uri: this.state.campaignImageURI}}
-source={require('../../src/assets/images/daatar_banner.jpg')}
+ source={{uri: this.state.campaignImageURI}}
+// source={require('../../src/assets/images/daatar_banner.jpg')}
 >
 </Image> 
 </View>
