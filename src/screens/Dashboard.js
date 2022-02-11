@@ -85,9 +85,9 @@ const Dashboard = ({navigation}) => {
     var token = await AsyncStorage.getItem('token');
     console.log(token);
     if (token != null && token !== '') {
-      this.props.navigation.navigate('User profile');
+      navigation.navigate('User profile');
     } else {
-      this.props.navigation.navigate('LogIn');
+      navigation.navigate('LogIn');
     }
   };
   return (

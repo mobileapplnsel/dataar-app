@@ -90,6 +90,101 @@ class Campaing_details extends Component {
     this.campaign();
     console.log('campaign', this.props.route.params.camp_id);
   }
+
+  Donate = async item => {
+    var token = await AsyncStorage.getItem('token');
+    var kyc_verified = await AsyncStorage.getItem('kyc_verified');
+    var pan_number = await AsyncStorage.getItem('pan_number');
+    console.log("pan_number",pan_number);
+
+    console.log(token);
+
+
+    if (token != null && token !== '') {
+
+
+      var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+    };
+    console.log(logs);
+    var response = await API.post('kyc_status', logs);
+    if (response.status == 'success') {
+      console.log(response.userdata.pan_number);
+      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
+        {
+          if(response.userdata.pan_number!='')
+          {
+            this.props.navigation.navigate('DonationAmount', {
+              donate_amt: this.state.capmain_details[0]['campaign_target_amount'],
+              donation_mode: this.state.capmain_details[0]['donation_mode'],
+              campaign_id: this.state.capmain_details[0]['campaign_id'],
+              kind_id: this.state.capmain_details[0]['kind_id'],
+            })
+          }
+        }
+        else
+          {
+            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
+            {
+              Alert.alert("Alert", "Your Kyc is currently under review. We will let you know once your KYC gets approved.");
+            }
+            else{
+              Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
+              ],
+              {cancelable: false},);
+            }
+    
+          
+          }
+        
+        
+        
+      // this.setState({
+      //   pan_number:response.,
+      // });
+      // setcmpData(response.data);
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+
+  }
+
+    //   if(kyc_verified!=0 && kyc_verified!='')
+    //   {
+    //     if(pan_number!='')
+    //     {
+    //       this.props.navigation.navigate('DonationAmount', {
+    //         donate_amt: item.campaign_target_amount,
+    //         donation_mode: item.donation_mode,
+    //         campaign_id: item.campaign_id,
+    //         kind_id: item.kind_id,
+    //       });
+    //     }
+    //   }
+    //   else
+    //   {
+    //     if(pan_number!='' && pan_number!=null)
+    //     {
+    //       Alert.alert("Alert", "Kyc under the processing");
+    //     }
+    //     else{
+    //       Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+    //         {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
+    //       ],
+    //       {cancelable: false},);
+    //     }
+
+      
+    //   }
+    
+     else {
+      this.props.navigation.navigate('LogIn');
+    }
+  };
+
+
   user = async () => {
     var token = await AsyncStorage.getItem('token');
     console.log(token);
@@ -204,15 +299,7 @@ class Campaing_details extends Component {
       </View>
     );
   };
-  Donate = async () => {
-   
-      this.props.navigation.navigate('DonationAmount', {
-        donate_amt: this.state.capmain_details[0]['campaign_target_amount'],
-        donation_mode: this.state.capmain_details[0]['donation_mode'],
-        campaign_id: this.state.capmain_details[0]['campaign_id'],
-        kind_id: this.state.capmain_details[0]['kind_id'],
-      })
-  }
+ 
   render() {
     var loaded = this.state.isloading;
     if (loaded) {

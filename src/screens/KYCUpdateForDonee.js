@@ -342,8 +342,8 @@ class User_profile extends Component {
               }>
                
               <Picker.Item label="Select one" value=""  />
-              <Picker.Item label="Individual" value="2" />
-              <Picker.Item label="Organisation" value="3" />
+              <Picker.Item label="Individual" value="0" />
+              <Picker.Item label="Organisation" value="1" />
             </Picker>
             </View>
 
@@ -352,7 +352,7 @@ class User_profile extends Component {
             <View>
               
             
-            {this.state.selectedsecondValue =="2" ?    
+            {this.state.selectedsecondValue =="0" ?    
             <View style ={{ marginBottom:20,marginLeft:20,marginRight:20}}>
               <TouchableOpacity
           activeOpacity={0.5}
@@ -435,7 +435,7 @@ onValueChange={
              : null }
          
          
-          {this.state.selectedsecondValue =="3" ?  <View>
+          {this.state.selectedsecondValue =="1" ?  <View>
             
           <View style ={{ marginBottom:20,marginLeft:20,marginRight:20}}>
               <TouchableOpacity
@@ -484,10 +484,10 @@ onValueChange={
   // Alert.alert(itemValue)
 }>
 <Picker.Item label="Select Address Proof" value="" />
-<Picker.Item label="Aadhaard Card " value="0" />
-<Picker.Item label="Voter Card " value="1" />
-<Picker.Item label="Passport" value="2" />
-<Picker.Item label="Driving License" value="3" />
+<Picker.Item label="Aadhaard Card " value="Aadhaard Card" />
+<Picker.Item label="Voter Card " value="Voter Card" />
+<Picker.Item label="Passport" value="Passport" />
+<Picker.Item label="Driving License" value="Driving License" />
 </Picker>
 
 <TouchableOpacity
@@ -505,42 +505,12 @@ onValueChange={
           />
         </TouchableOpacity> 
         <Text style={Styles1.warningHint}>{'Only image format is acceptable'}</Text>
-        {this.state.selectedID =="0" ?  <TextInput
-              placeholder="Aadhaar Card Number"
+        <TextInput
+              placeholder= {this.state.selectedID +"Number"}
               placeholderTextColor="#000"
               onChangeText={text => this.setState({selectedKYCNumber:text})}
               style={Styles.login_text_input}
-              keyboardType="default"
-            /> :null}
-{this.state.selectedID =="1" ? <TextInput
-              placeholder="Voter Card Number"
-              placeholderTextColor="#000"
-              onChangeText={text => this.setState({selectedKYCNumber:text})}
-              style={Styles.login_text_input}
-              keyboardType="default"
-            />  :null}
-{this.state.selectedID =="2" ? <TextInput
-              placeholder="Passport Number"
-              placeholderTextColor="#000"
-              onChangeText={text => this.setState({selectedKYCNumber:text})}
-              style={Styles.login_text_input}
-              keyboardType="default"
-            />  :null}
-{this.state.selectedID =="3" ? <TextInput
-              placeholder="Driving License Number"
-              placeholderTextColor="#000"
-              onChangeText={text => this.setState({selectedKYCNumber:text})}
-              style={Styles.login_text_input}
-              keyboardType="default"
-            />  :null}
-{this.state.selectedID =="4" ?<TextInput
-              placeholder="Others Number"
-              placeholderTextColor="#000"
-              onChangeText={text => this.setState({selectedKYCNumber:text})}
-              style={Styles.login_text_input}
-              keyboardType="default"
-            />  :null}
-      
+              keyboardType="default"/>
   
 
 <Text> 

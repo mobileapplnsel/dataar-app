@@ -358,7 +358,7 @@ class Dashboard_donation_forDonor extends Component {
           {
             if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
             {
-              Alert.alert("Alert", " It is currently under review. We will let you know once your KYC gets approved.");
+              Alert.alert("Alert", " Your Kyc is currently under review. We will let you know once your KYC gets approved.");
             }
             else{
               Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
