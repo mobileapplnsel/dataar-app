@@ -256,7 +256,7 @@ console.log('target amount')
     
   render() {
     return (
-      <ScrollView>
+      
         <Container>
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
@@ -329,8 +329,24 @@ console.log('target amount')
               </View> */}
             </View>
 
-            <View>
+            <ScrollView>
 
+            <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', marginTop: 10, height: 80,}}>
+            <View style={{width: '50%'}}>
+
+            <Text style={{fontSize: 20, fontWeight: '900', textAlignVertical: 'center', color: 'black', marginLeft: 20}}>
+                    Associated with
+                  </Text>
+            </View>
+            <View style={{width: '50%',}}>
+            <Image style={{ marginRight: 20,
+    resizeMode: 'contain', alignSelf: 'center', height: 80, alignSelf: 'flex-end', borderRadius: 4, width: 80
+}}
+source={require('../../src/assets/images/logo1.jpg')}>
+</Image> 
+
+</View>
+            </View>
             <View style={{marginLeft: 0, marginRight: 0, borderRadius:2, backgroundColor: 'null', flex: 1, marginTop: -15}}>
 <Image style={{
     resizeMode: 'contain', alignSelf: 'center', height: 240, alignSelf: 'center', borderRadius: 4, width: Dimensions.get('window').width - 40
@@ -339,7 +355,10 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
 </Image> 
 </View>
 
-<Text style={Styles.title_donation_text_font1}>
+<Text style={{fontSize: 25,
+    marginLeft: 10,
+    textAlign:"center",
+    marginTop: 0}}>
              
             </Text>
 
@@ -410,16 +429,11 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                
              
             </View>
-            </View>
-            <View style={Styles1.buttonContainer}>
-      {/* <Button
-      onPress={this._onPressButton}
-      title="Press Me"
-      /> */}
-      </View>
+            </ScrollView>
+            
           </ImageBackground>
         </Container>
-      </ScrollView>
+      
     );
   }
   getuser = async () => {

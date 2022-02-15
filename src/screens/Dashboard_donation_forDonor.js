@@ -807,7 +807,7 @@ source={{uri: base64Icon}}>
           <CardItem>
             <View style={{flexDirection: 'column', flex: 1}}>
 
-            <View style={{borderRadius:12, backgroundColor: 'null', flex: 1, marginTop: -20, alignSelf: 'center'}}>
+            <View style={{borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: -20, alignSelf: 'center'}}>
 <Image style={{
     resizeMode: 'contain', alignSelf: 'center', height: 200, borderRadius: 4, width: 350
 }}
