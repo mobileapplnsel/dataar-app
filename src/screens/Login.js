@@ -70,9 +70,10 @@ const Login = ({navigation}) => {
           lastName: userInfo.user.familyName,
           email: userInfo.user.email,
           googleToken: userInfo.idToken,
-          device_id: '',
+          device_id:'firebasetokenid',
           device_type: 'A',
           usertype: selectedValue,
+          fcm_token:'khkbrER34'
         };
         console.log(logs);
         var response = await API.post('login_with_google', logs);
@@ -527,13 +528,13 @@ else
                 // resizeMode="contain"
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => signInlind()}>
+            {/* <TouchableOpacity onPress={() => signInlind()}>
               <Image
                 style={{width: 40, height: 40, marginStart: 10, marginTop: 20}}
                 source={require('../../src/assets/images/in.png')}
                 // resizeMode="contain"
               />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         </View>
       </ImageBackground>

@@ -108,7 +108,7 @@ class DonationAmount extends Component {
       description: 'Credits towards consultation',
       image: 'https://i.imgur.com/3g7nmJC.png',
       currency: 'INR',
-      key: 'rzp_test_Aabh2L4rXsWHju',
+      key: 'rzp_live_6JxkAJpOaUUuG4',
       amount: this.state.Amount * 100,
       name: this.state.fname + ' ' + this.state.lname,
       prefill: {
@@ -116,7 +116,12 @@ class DonationAmount extends Component {
         contact: this.state.mobile,
         name: 'Razorpay Software'
       },
-      theme: {color: '#F37254'}
+      theme: {color: '#F37254'},
+      options: {
+        checkout: {
+          name: "Lacme Corp"
+        }
+      }
     }
       RazorpayCheckout.open(options).then((data) => {
       // handle success

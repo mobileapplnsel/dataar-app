@@ -1114,9 +1114,10 @@ module.exports = StyleSheet.create({
     paddingEnd: 10,
   },
   profile_main_text_contain: {
-    paddingStart: 10,
-    paddingEnd: 10,
+    marginLeft: 10,
+    marginRight: 10,
     justifyContent: 'space-between',
+    
   },
   user_text_input: {
     borderBottomColor: '#000',
@@ -1128,7 +1129,7 @@ module.exports = StyleSheet.create({
     width: 45,
     height: 45,
     justifyContent: 'center',
-    marginStart: 10,
+    marginEnd: 10,
     // alignItems: 'flex-end',
     // alignSelf:'flex-end',
   },

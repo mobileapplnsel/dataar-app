@@ -397,25 +397,25 @@ class Campaing_details extends Component {
                     {this.state.capmain_details[0]['campaign_target_amount']}
                   </Text>
                 </View>
-                <View style={Styles.campaign_details_text_contain}>
+                {/* <View style={Styles.campaign_details_text_contain}>
                   <Text style={Styles.sub_text_font1}>
-                    Comments: {/*this.state.cmpData[0]['donation_mode']*/}
+                    Comments: 
                   </Text>
                   <Text style={Styles.sub_text_font1}>
-                    {'   '} Like: {/*this.state.cmpData[0]['donation_mode']*/}
+                    {'   '} Like: 
                   </Text>
-                </View>
+                </View> */}
               </View>
-              <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+              {/* <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
                 <Row
                   data={this.state.tableHead}
                   style={{height: 40, backgroundColor: '#f1f8ff'}}
                   textStyle={{margin: 6, textAlign: 'center'}}
                 />
-              </Table>
+              </Table> */}
               <FlatList
                 data={this.state.cmpData}
-                renderItem={this.renderlog}
+                renderItem={this.renderlog1}
                 keyExtractor={(item, id) => id.toString()}
               />
                <Text style={Styles.sub_text_font1}>

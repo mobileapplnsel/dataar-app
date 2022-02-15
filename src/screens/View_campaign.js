@@ -204,7 +204,7 @@ source={{uri: base64Icon}}>
               
               <View style={{flexDirection: 'row', marginTop: 3}}>
               <Text style={Styles.doner_title_font_Modified}>
-              Amount:   
+              Target Amount:   
                 </Text>
                 <Text style={Styles.doner_title_font}>
                   {item.campaign_target_amount}

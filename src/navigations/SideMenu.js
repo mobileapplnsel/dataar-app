@@ -38,6 +38,10 @@ import {
   DrawerItem,
 } from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
+import {
+  GoogleSignin,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 // import Strings from '../utils/Strings';
 const CustomSidebarMenu = props => {
   const BASE_PATH =
@@ -57,7 +61,18 @@ const CustomSidebarMenu = props => {
   }, []);
   const logout = () => {
     AsyncStorage.clear();
-    props.navigation.navigate('LogIn');
+    signOut()
+    
+  };
+  const signOut = async () => {
+    try {
+      await GoogleSignin.signOut();
+      props.navigation.navigate('LogIn');
+   // Remember to remove the user from your app's state as well
+    } catch (error) {
+
+      console.error(error);
+    }
   };
   const callToSetCatSubcatValue = () => {
     console.log('callToSetCatSubcatValue called:::');
@@ -221,7 +236,7 @@ const CustomSidebarMenu = props => {
 
           <DrawerItem label="Teams" onPress={() => Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/team')} />
 
-          
+          <DrawerItem label="Contact Us" onPress={() => Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/contact-us')} />
 
           <DrawerItem label="Terms & Conditions" onPress={() => Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/terms-and-condition')} />
         
