@@ -230,16 +230,18 @@ else
   };
   const fblogin = async (dataval, accessToken) => {
     var logs = {
-      firstName: dataval.first_name,
-      lastName: dataval.last_name,
+      fullName: dataval.first_name + ' ' + dataval.last_name,
       facebookToken: accessToken,
-      device_id: '',
+      device_id: 'firebasetokenid',
       device_type: 'A',
-      usertype: selectedValue,
-      facebook_id: dataval.id,
+      usertype: selectedValue,//'1',//selectedValue,
+      // facebook_id: dataval.id,
       email: '',
+      fcm_token: 'khkbrER34'
     };
     var response = await API.post('login_with_facebook', logs);
+    //console.log ('fb response: ', response)
+
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log(response.userdata[0].user_type);

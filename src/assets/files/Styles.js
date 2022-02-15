@@ -1045,6 +1045,7 @@ module.exports = StyleSheet.create({
     marginTop: 20,
     color: '#f55656',
     alignSelf: 'center',
+    borderRadius: 6
   },
   donation_sub: {
     // flex: 1,
