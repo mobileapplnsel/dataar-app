@@ -55,20 +55,20 @@ class Campaing_details extends Component {
       console.log(response.data);
       var arr = new Array();
       var amountVal = 0;
-      // for (var i = 0; i < response.data.donations.length; i++) {
-      //   arr.push([
-      //     response.data.donations[i]['donor_name'],
-      //     response.data.donations[i]['updated_at'],
-      //     response.data.donations[i]['amountpaid'],
-      //     response.data.donations[i]['status'],
-      //   ]);
-      //   console.log(arr);
-      //   amountVal =
-      //     amountVal + parseInt(response.data.donations[i]['amountpaid']);
-      //   this.setState({
-      //     amount: amountVal,
-      //   });
-      // }
+      for (var i = 0; i < response.data.donations.length; i++) {
+        // arr.push([
+        //   response.data.donations[i]['donor_name'],
+        //   response.data.donations[i]['updated_at'],
+        //   response.data.donations[i]['amountpaid'],
+        //   response.data.donations[i]['status'],
+        // ]);
+        // console.log(arr);
+        amountVal =
+          amountVal + parseInt(response.data.donations[i]['amountpaid']);
+        this.setState({
+          amount: amountVal,
+        });
+      }
       var base64String = response.data.capmain_details[0]['campaign_image']
       var base64Icon = 'data:image/png;base64,'+base64String
       this.setState({
@@ -171,14 +171,14 @@ class Campaing_details extends Component {
                 </Text>
               </View>
 
-              <View style={{flexDirection: 'row', marginTop: 3}}>
+              {/* <View style={{flexDirection: 'row', marginTop: 3}}>
               <Text style={Styles.doner_title_font_Modified}>
               Status:   
                 </Text>
                 <Text style={Styles.doner_title_font}>
                   {item.status}
                 </Text>
-              </View>
+              </View> */}
       </View>
       </CardItem>
         </Card>
@@ -282,6 +282,17 @@ class Campaing_details extends Component {
     if (loaded) {
       return <AppPreLoader />;
     }
+
+    var donation_type = ''
+     if (this.state.capmain_details[0]['donation_mode'] == '1')
+     {
+      donation_type = 'Money'
+     }
+     else
+     {
+      donation_type = 'In Kind'
+     }
+
     return (
       
         <Container>
@@ -384,7 +395,7 @@ class Campaing_details extends Component {
                 <View style={Styles.campaign_details_text_contain}>
                   <Text style={Styles.sub_text_font1}>
                     Donation Type:{' '}
-                    {this.state.capmain_details[0]['donation_mode']}
+                    {donation_type}
                   </Text>
                   <Text style={Styles.sub_text_font1}>
                     {'   '}

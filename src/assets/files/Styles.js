@@ -824,7 +824,7 @@ module.exports = StyleSheet.create({
     fontWeight: '700',
   },
   sub_text_font1:{
-    fontSize: 17,
+    fontSize: 15,
     // alignSelf: 'center',
     // color: '#ffff',
     fontWeight: '500',

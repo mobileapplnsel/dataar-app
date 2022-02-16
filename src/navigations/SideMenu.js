@@ -61,7 +61,8 @@ const CustomSidebarMenu = props => {
   }, []);
   const logout = () => {
     AsyncStorage.clear();
-    signOut()
+    props.navigation.navigate('LogIn');
+    // signOut()
     
   };
   const signOut = async () => {
@@ -184,12 +185,12 @@ const CustomSidebarMenu = props => {
 
 
 
-{/* {user_Type == 0 ? (
+{user_Type == 0 ? (
          <DrawerItem
           label="My Donation"
-          // onPress={() => props.navigation.navigate('MyDonation')}
+          onPress={() => props.navigation.navigate('MyDonation')}
         />
-        ) : null} */}
+        ) : null}
 
 {user_Type == 0 ? (
         <DrawerItem

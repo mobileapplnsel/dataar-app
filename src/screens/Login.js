@@ -230,12 +230,14 @@ else
   };
   const fblogin = async (dataval, accessToken) => {
     var logs = {
-      fullName: dataval.first_name + ' ' + dataval.last_name,
+      // fullName: dataval.first_name + ' ' + dataval.last_name,
+      firstName: dataval.first_name,
+      lastName: dataval.last_name,
       facebookToken: accessToken,
       device_id: 'firebasetokenid',
       device_type: 'A',
-      usertype: selectedValue,//'1',//selectedValue,
-      // facebook_id: dataval.id,
+      // usertype: selectedValue,//'1',//selectedValue,
+      facebook_id: dataval.id,
       email: '',
       fcm_token: 'khkbrER34'
     };
