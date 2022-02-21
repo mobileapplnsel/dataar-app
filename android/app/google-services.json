@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "104839958051",
+    "project_id": "dataarapp-eb711",
+    "storage_bucket": "dataarapp-eb711.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104839958051:android:29a1c79bb2d60a34cbeb96",
+        "android_client_info": {
+          "package_name": "com.dataarapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104839958051-3t9i13uokulrvg0k2dhsv5sbmbqv3ktg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dataarapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "104839958051-4f4f96s8ukc1o9df0in49417um7dctmb.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dataarapp",
+            "certificate_hash": "ac81600520067354db31d6e59c6eac8e1c1e67d0"
+          }
+        },
+        {
+          "client_id": "104839958051-er0o37ikkffjpq21771nanrs82nl8t5n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dataarapp",
+            "certificate_hash": "aed23565dfeb054e51c9224ae1ac777ddcf78654"
+          }
+        },
+        {
+          "client_id": "104839958051-nlpuvn6mk2bnh1aujqi58o0nqvqul2ll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5hm6-Z_FnebrcT4d3Y1G9zK_bNfsXxiA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "104839958051-nlpuvn6mk2bnh1aujqi58o0nqvqul2ll.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

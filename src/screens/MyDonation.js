@@ -327,7 +327,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                 </TouchableOpacity>
 
                 <Text style={{marginLeft: 14, fontSize: 19, fontWeight: '900', color: 'white', textAlignVertical: 'center'}}>
-                    My Campaign
+                    My Donation
                   </Text>
               </View>
               <View style={Styles.dashboard_main_headers}>
