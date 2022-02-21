@@ -253,8 +253,15 @@ class Dashboard_donation extends Component {
   //   AsyncStorage.clear();
   //   navigation.navigate('LogIn');
   // };
-  comment = item => {
+  comment = async (item) => {
     // this.modalizeRefComment.current.open();
+
+    var token = await AsyncStorage.getItem('token');
+    console.log('Comment token: ',token);
+    if (token == null || token == '') {
+      this.props.navigation.navigate('LogIn');
+    } else {
+
     console.log(item);
     this.setState(
       {
@@ -265,6 +272,7 @@ class Dashboard_donation extends Component {
       },
       this.commetFetch,
     );
+    }
   };
   commetFetch = async () => {
     var token = await AsyncStorage.getItem('token');

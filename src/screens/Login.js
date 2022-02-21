@@ -242,7 +242,7 @@ else
       fcm_token: 'khkbrER34'
     };
     var response = await API.post('login_with_facebook', logs);
-    //console.log ('fb response: ', response)
+    console.log ('fb response: ', response)
 
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});

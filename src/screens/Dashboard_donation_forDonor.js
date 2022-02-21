@@ -24,6 +24,7 @@ import Icon_3 from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import Selector from '../components/Selector';
 import Picker from '../components/Picker';
+import StarRating from 'react-native-star-rating';
 // import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -60,6 +61,7 @@ class Dashboard_donation_forDonor extends Component {
       ],
       showPicker: false,
       hasLocationPermission: null,
+      starCount: 5
     };
   }
 
@@ -159,10 +161,16 @@ class Dashboard_donation_forDonor extends Component {
       this.props.navigation.navigate('LogIn');
     }
   };
+  onStarRatingPress(rating) {
+    this.setState({
+      starCount: rating
+    });
+  }
   dashboard_donate = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
       user_id: user_id,
+      // search:"Omicron",
       // campaign_name: Title,
     };
     console.log(logs);
@@ -408,6 +416,7 @@ class Dashboard_donation_forDonor extends Component {
         modalCommentVal: item,
         campaign_id: item.campaign_id,
         commentArr: [],
+        starCount: 5,
       },
       this.commetFetch,
     );
@@ -664,8 +673,11 @@ source={{uri: base64Icon}}>
                 fontWeight: 'bold',
               },
             ]}>
-            {item.User_Name}
+            {item.User_Name1}
           </Text>
+
+          
+
           {/* <Text
             style={[
               {
@@ -687,8 +699,24 @@ source={{uri: base64Icon}}>
               marginStart: 18,
             },
           ]}></View>
-        <View style={[{marginStart: 28, width: '60%'}]}>
+        <View style={[{marginStart: 13, width: '60%'}]}>
+          
+          <Text style={[{marginTop: 3, color: '#000', fontWeight: 'bold'}]}>{item.comment_user_name}</Text>
           <Text style={[{marginTop: 3, color: '#000'}]}>{item.comment}</Text>
+          <View
+              style={{
+                marginTop: 10,
+                width: 120,
+              }}>
+                 <StarRating       
+        disabled={false}
+        maxStars={5}
+        rating={parseInt(item.rating)}
+        starSize = {20}
+        // selectedStar={(rating) => this.onStarRatingPress(rating)}
+        fullStarColor={'#ff5c5c'}
+      />
+      </View>
         </View>
       </View>
     );
@@ -708,6 +736,7 @@ source={{uri: base64Icon}}>
         user_id: user_id,
         campaign_id: this.state.campaign_id,
         comment: this.state.comment,
+        rating: String(this.state.starCount)
       };
       var response = await API.post('campaign_comment', logs);
       if (response.status == 'success') {
@@ -716,6 +745,8 @@ source={{uri: base64Icon}}>
           comment: '',
           modalComment: false,
           campaign_id: '',
+          rating: 0,
+          starCount: 5,
         });
       }
     } else {
@@ -943,8 +974,18 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                   marginStart: 10,
                   fontSize: 20,
                 }}>
-                Comment
+                Review
               </Text>
+              {/* <Text
+                style={{
+                  color: '#000',
+                  alignSelf: 'flex-end',
+                  fontWeight: 'bold',
+                  marginRight: 10,
+                  fontSize: 20,
+                }}>
+                CLOSE
+              </Text> */}
             </View>
             <View
               style={{
@@ -952,8 +993,21 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                 justifyContent: 'center',
                 height: '100%',
               }}>
+                 <View
+              style={{
+                justifyContent: 'center',
+                margin: 20,
+              }}>
+                 <StarRating       
+        disabled={false}
+        maxStars={5}
+        rating={this.state.starCount}
+        selectedStar={(rating) => this.onStarRatingPress(rating)}
+        fullStarColor={'#ff5c5c'}
+      />
+      </View>
               <FlatList
-                style={{width: '100%', height: '100%'}}
+                // style={{backgroundColor: 'red'}}
                 keyExtractor={item => item.id.toString()}
                 data={this.state.commentArr}
                 onEndReachedThreshold={0.5}
@@ -986,10 +1040,11 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                         height: 50,
                         padding: 10,
                         borderRadius: 40,
-                        fontSize: 18,
+                        fontSize: 16,
                         color: '#000',
+                        paddingLeft: 15
                       }}
-                      placeholder={'Type Your Comment Here'}
+                      placeholder={'Type your comment here...'}
                       multiline={true}
                       onChangeText={textEntry => {
                         this.commentText(textEntry);

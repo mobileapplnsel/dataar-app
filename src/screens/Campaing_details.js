@@ -80,6 +80,9 @@ class Campaing_details extends Component {
 
       console.log(this.state.cmpData);
     } else {
+      this.setState({
+        isloading: false,
+      });
       Alert.alert(response.status, response.message);
     }
   };
@@ -332,7 +335,8 @@ class Campaing_details extends Component {
                 </TouchableOpacity>
               </View>
               <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Search_screen')}>
                   <Image
                     style={{
                       width: 30,

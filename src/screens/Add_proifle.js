@@ -190,7 +190,8 @@ class add_proifle extends Component {
                 </TouchableOpacity>
               </View>
               <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Search_screen')}>
                   <Image
                     style={{
                       width: 30,

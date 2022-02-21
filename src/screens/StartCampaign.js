@@ -32,7 +32,7 @@ import PickerDob from '../components/Picker';
 import DateTimePicker from '../components/DateTimePicker';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
-
+import Toast from 'react-native-simple-toast';
 const StartCampaign = ({navigation}) => {
   const [Title, setTitle] = useState('');
   const [Description, setDescription] = useState('');
@@ -55,6 +55,7 @@ const StartCampaign = ({navigation}) => {
   const [selectedPANName, setselectedPANName] = useState('Upload supported doc');
   const [selectedPANSource, setselectedPANSource] = useState('');
   const [filebaseString, setfilebaseString] = useState('');
+  const [minEndDate, setminEndDate] = useState('');
   const selectOneFile = async () => {
     //Opening Document Picker for selection of one file
     try {
@@ -190,14 +191,14 @@ const StartCampaign = ({navigation}) => {
     let formatted = moment(date, 'x').format('YYYY-MM-DD');
     console.log('selectedDate', formatted);
     setSdate(formatted);
-    setisStart(false);
+    // setisStart(false);
   };
   const setExpiryend = selectedDate => {
     var date = selectedDate.nativeEvent.timestamp;
     let formatted = moment(date, 'x').format('YYYY-MM-DD');
     console.log('selectedDate', formatted);
     setenddate(formatted);
-    setisEnd(false);
+    // setisEnd(false);
   };
   const upload = () => {
     ImagePicker.openPicker({
@@ -257,13 +258,13 @@ const StartCampaign = ({navigation}) => {
     }
   };
   const startDate = () => {
-    setisStart(true);
+    // setisStart(true);
   };
   const endDate = () => {
-    setisEnd(true);
+    // setisEnd(true);
   };
   const hideDatePicker = () => {
-    setisStart(false);
+    // setisStart(false);
   };
   const fetchkind = async () => {
     var response = await API.post('kind_list');
@@ -284,6 +285,19 @@ const StartCampaign = ({navigation}) => {
       navigation.navigate('User profile');
     } else {
       navigation.navigate('LogIn');
+    }
+  };
+  const ExpiryDatebtnPressed = () => {
+    if (strdate == null)
+    {
+      Toast.show('Please select Start Expiry date first', Toast.LONG)
+    }
+    else
+    {
+      console.log('startDate: ', strdate)
+      setminEndDate(strdate)
+      setisEndPickerVisible(true)
+      
     }
   };
   return (
@@ -408,7 +422,7 @@ const StartCampaign = ({navigation}) => {
                   marginTop={normalize(15)}
                   // onPress={() => setShowPicker(true)}
                   icon={require('../../src/assets/images/calendar.jpg')}
-                  onPress={() => setisEndPickerVisible(true)}
+                  onPress={() => ExpiryDatebtnPressed()}
                 />
               </View>
               <TouchableOpacity style={Styles.campaign_btn_next}>
@@ -550,8 +564,8 @@ const StartCampaign = ({navigation}) => {
       </Container>
       <DateTimePicker
         value={strdate == null ? new Date(moment().toISOString()) : strdate}
-        // maxDate={new Date(moment().toISOString())}
-        minDate={null}
+          maxDate={new Date("2040-12-31")}
+        minDate={new Date("2010-12-31")}
         dateTimePickerVisible={isStartPickerVisible}
         onDateChange={val => setSdate(val)}
         onBackdropPress={() => setisStartPickerVisible(false)}
@@ -559,10 +573,10 @@ const StartCampaign = ({navigation}) => {
       />
       <DateTimePicker
         value={
-          endseldate == null ? new Date(moment().toISOString()) : endseldate
+          endseldate == null ? new Date(String(strdate)) : endseldate
         }
-        maxDate={null}
-        minDate={null}
+         maxDate={new Date("2050-12-31")}
+        minDate={new Date(String(minEndDate))}
         dateTimePickerVisible={isEndPickerVisible}
         onDateChange={val => setenddate(val)}
         onBackdropPress={() => setisEndPickerVisible(false)}
