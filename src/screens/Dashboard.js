@@ -16,6 +16,7 @@ import {
 import API from '../services/api';
 var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const Dashboard = ({navigation}) => {
   const [FirstName, setFirstName] = useState('');
   const [LastName, setLastName] = useState('');
@@ -85,7 +86,7 @@ const Dashboard = ({navigation}) => {
     var token = await AsyncStorage.getItem('token');
     console.log(token);
     if (token != null && token !== '') {
-      navigation.navigate('User profile');
+      navigation.navigate('User_profile_forDonee');
     } else {
       navigation.navigate('LogIn');
     }
@@ -96,7 +97,7 @@ const Dashboard = ({navigation}) => {
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
-          <View style={Styles.dashboard_main_header}>
+          <SafeAreaView style={Styles.dashboard_main_header}>
             <View style={Styles.dashboard_main_headers}>
               <TouchableOpacity onPress={() => navigation.openDrawer()}>
                 <Image
@@ -159,7 +160,7 @@ const Dashboard = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-          </View>
+          </SafeAreaView>
           
           <Text style={Styles.campaign_name_font}>Dashboard</Text>
           <View style={Styles.dashboard_main_btn}>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, ImageBackground, TouchableOpacity, PermissionsAndroid } from 'react-native';
+import { View, Text, ScrollView, ImageBackground, TouchableOpacity, PermissionsAndroid, Alert } from 'react-native';
 import {
   Container,
   Card,

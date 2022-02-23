@@ -16,6 +16,7 @@ import API from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 var Styles = require('../assets/files/Styles');
 import Feather from 'react-native-vector-icons/Feather';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class User_profile extends Component {
   constructor(props) {
     super(props);
@@ -161,7 +162,7 @@ class User_profile extends Component {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -224,7 +225,7 @@ class User_profile extends Component {
                   />
                 </TouchableOpacity> */}
               </View>
-            </View>
+            </SafeAreaView>
             {/* <View style={Styles.profile_main_contain}> */}
             <View>
               <Image
@@ -261,6 +262,7 @@ class User_profile extends Component {
               }}>
               <TextInput
                 placeholder="Password"
+                placeholderTextColor={'grey'}
                 onChangeText={(text) => this.setState({ passwordString: text })}
                 value={this.state.passwordString}
                 style={{
@@ -298,6 +300,7 @@ class User_profile extends Component {
               }}>
               <TextInput
                 placeholder="Confirm Password"
+                placeholderTextColor={'grey'}
                 onChangeText={(text) => this.setState({ confirmPasswordString: text })}
                 value={this.state.confirmPasswordString}
                 style={{

@@ -8,7 +8,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  StyleSheet
+  StyleSheet,
+  ActionSheetIOS,
+  Button,
+  Platform,
 } from 'react-native';
 import {
   Container,
@@ -23,7 +26,7 @@ import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-community/async-storage';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 var pdfpath
 var pdffile
 var filename1 = 'Upload your Pan'
@@ -39,7 +42,8 @@ const Register = ({navigation}) => {
   const [password, setpassword] = useState('');
   const [confirm_password, setConfirmPassword] = useState('');
   const [Otp, setotp] = useState('');
-  const [selectedValue, setselectedValue] = useState('');
+  const [selectedValue, setselectedValue] = useState('Select One');
+  const [selectedValue1, setselectedValue1] = useState('Select One');
   const [selectedsecondValue, setselectedsecondValue] = useState('');
   const [selectedPANSource, setselectedPANSource] = useState('');
   const [selectedPANNumber, setselectedPANNumber] = useState('');
@@ -192,7 +196,31 @@ const Register = ({navigation}) => {
     
   };
 
+  const ActionSheetIOSonPress = () =>
+  ActionSheetIOS.showActionSheetWithOptions(
+    {
+      options: ["Donor", "Donee", "Cancel"],
+       destructiveButtonIndex: 2,
+       title: 'Select One',
+      cancelButtonIndex: 2,
+      userInterfaceStyle: 'dark'
+    },
+    buttonIndex => {
+      if (buttonIndex === 0) {
 
+        setselectedValue('0')
+        setselectedValue1('Donor')
+        
+      } else if (buttonIndex === 1) {
+
+        setselectedValue('1')
+        setselectedValue1('Donee')
+
+      } else if (buttonIndex === 2) {
+        // setResult("🔮");
+      }
+    }
+  );
 
  const selectTrustCertiFile = async () => {
     //Opening Document Picker for selection of one file
@@ -271,7 +299,7 @@ const Register = ({navigation}) => {
       var token = await AsyncStorage.getItem('token');
       console.log("token"+token);
    
-
+      var fcm_token = await AsyncStorage.getItem('FCMtoken');
    
     if (FirstName == '') {
       Alert.alert('First Name', 'Please enter first name');
@@ -303,7 +331,7 @@ const Register = ({navigation}) => {
         usertype: selectedValue,
         device_id: '',
         device_type: 'A',
-        fcm_token:token,
+        fcm_token:fcm_token,
         
 
       };
@@ -366,7 +394,7 @@ const Register = ({navigation}) => {
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
             <ScrollView>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
         <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => navigation.goBack()}>
@@ -398,7 +426,7 @@ const Register = ({navigation}) => {
                   />
                 </TouchableOpacity>
               </View>
-        </View>
+        </SafeAreaView>
           <View style={Styles.login_text_main}>
             <Image
               style={{width: 90, height: 80, marginStart: 30, marginTop: 20}}
@@ -508,15 +536,30 @@ const Register = ({navigation}) => {
               </TouchableOpacity>
             </View>
 
-            {/* <TextInput
-              placeholder="Otp"
-              onChangeText={text => setOtp(text)}
-              style={Styles.login_text_input}
-              keyboardType="number-pad"
-            /> */}
-            {/* <TouchableOpacity>
-            <Text style={Styles.login_text_forget}>Forget Password?</Text>
-          </TouchableOpacity> */}
+            {/* <Text style={{
+                height: 30,
+                width: '100%',
+                alignSelf: 'center',
+                marginTop: -20,
+              }} onPress={ActionSheetIOSonPress} title="Select One" /> */}
+
+
+
+{ Platform.OS === 'ios' ? 
+<TouchableOpacity onPress={() => ActionSheetIOSonPress()}>
+<View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', height: 40,
+      margin: 0,
+      marginTop: 11}}>
+            <View style={{flex:1, maxWidth: 414, backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
+                <Text style={{paddingLeft:13,color: 'gray', fontSize: 16,}}>{selectedValue1}</Text>
+                <View style={{width:15, height:15, justifyContent: 'flex-end', marginRight: 20, marginTop: 0}}>
+                  <Image source={require("../../src/assets/images/down_arrow.png")} style={{width:24, height:24,}} />
+                </View>
+                
+              </View>
+              </View>
+              </TouchableOpacity> 
+:
 
              <Picker
             
@@ -540,7 +583,7 @@ const Register = ({navigation}) => {
               <Picker.Item label="Select one" value=""  />
               <Picker.Item label="Donor" value="0" />
               <Picker.Item label="Donee" value="1" />
-            </Picker>
+            </Picker> }
 
            
            

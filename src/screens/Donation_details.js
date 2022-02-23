@@ -15,6 +15,7 @@ import {Container, Card, CardItem, Body, ListItem} from 'native-base';
 import API from '../services/api';
 var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const Donation_details = ({navigation}) => {
   const [cmpData, setcmpData] = useState([]);

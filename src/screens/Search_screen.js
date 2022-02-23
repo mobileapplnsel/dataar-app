@@ -15,6 +15,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   PermissionsAndroid,
+  
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem} from 'native-base';
 import API from '../services/api';
@@ -26,6 +27,7 @@ import Selector from '../components/Selector';
 import Picker from '../components/Picker';
 import Toast from 'react-native-simple-toast';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -653,7 +655,7 @@ source={{uri: base64Icon}}
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
-           <View style={Styles.dashboard_main_header}>
+           <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -679,7 +681,7 @@ source={{uri: base64Icon}}
               <View style={Styles.dashboard_main_headers}>
                
               </View>
-            </View>
+            </SafeAreaView>
 
           
 

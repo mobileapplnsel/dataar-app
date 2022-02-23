@@ -19,6 +19,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Selector from '../components/Selector';
 import Picker from '../components/Picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class Preference extends Component {
   constructor(props) {
     super(props);
@@ -159,7 +160,7 @@ class Preference extends Component {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -222,7 +223,7 @@ class Preference extends Component {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </SafeAreaView>
             <View>
               <Image
                 style={{

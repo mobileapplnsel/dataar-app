@@ -61,8 +61,9 @@ const CustomSidebarMenu = props => {
   }, []);
   const logout = () => {
     AsyncStorage.clear();
+    signOut()
     props.navigation.navigate('LogIn');
-    // signOut()
+     
     
   };
   const signOut = async () => {

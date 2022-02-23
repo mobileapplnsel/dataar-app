@@ -24,6 +24,7 @@ import Icon_3 from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import Selector from '../components/Selector';
 import Picker from '../components/Picker';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -590,7 +591,7 @@ class Dashboard_donation extends Component {
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
-          <View style={Styles.dashboard_main_header}>
+          <SafeAreaView style={Styles.dashboard_main_header}>
             <View style={Styles.dashboard_main_headers}>
               <TouchableOpacity
                 onPress={() => this.props.navigation.openDrawer()}>
@@ -658,7 +659,7 @@ class Dashboard_donation extends Component {
                 />
               </TouchableOpacity>
             </View>
-          </View>
+          </SafeAreaView>
 
           
 

@@ -8,7 +8,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  StyleSheet
+  StyleSheet,
+  Modal,
+  FlatList,
+  Platform,
   // Picker,
 } from 'react-native';
 import {
@@ -22,7 +25,7 @@ import RadioForm, {
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -56,6 +59,8 @@ const StartCampaign = ({navigation}) => {
   const [selectedPANSource, setselectedPANSource] = useState('');
   const [filebaseString, setfilebaseString] = useState('');
   const [minEndDate, setminEndDate] = useState('');
+  const [seachableModalVisible, setseachableModalVisible] = useState(false);
+  
   const selectOneFile = async () => {
     //Opening Document Picker for selection of one file
     try {
@@ -306,7 +311,7 @@ const StartCampaign = ({navigation}) => {
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
-          <View style={Styles.dashboard_main_header}>
+          <SafeAreaView style={Styles.dashboard_main_header}>
             <View style={Styles.dashboard_main_headers}>
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Image
@@ -368,7 +373,7 @@ const StartCampaign = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-          </View>
+          </SafeAreaView>
           <View style={Styles.login_text_main}>
             <Text style={Styles.campaign_name_font}>Start Campaign</Text>
           </View>
@@ -517,6 +522,27 @@ const StartCampaign = ({navigation}) => {
                 Enter the kind of Donation
               </Text>
               <View style={{justifyContent: 'center'}}>
+
+
+              { Platform.OS === 'ios' ? 
+<TouchableOpacity onPress={() => setseachableModalVisible(true)}>
+<View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', height: 40,
+      margin: 0,
+      marginTop: 11}}>
+            <View style={{flex:1, maxWidth: 414, backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
+                <Text style={{paddingLeft:13,color: 'gray', fontSize: 16,}}>{selectedValue}</Text>
+                <View style={{width:15, height:15, justifyContent: 'flex-end', marginRight: 20, marginTop: 0}}>
+                  <Image source={require("../../src/assets/images/down_arrow.png")} style={{width:24, height:24,}} />
+                </View>
+                
+              </View>
+              </View>
+              </TouchableOpacity> 
+:
+             
+
+
+
                 <Picker
                   selectedValue={selectedValue}
                   style={{
@@ -536,6 +562,9 @@ const StartCampaign = ({navigation}) => {
                     <Picker.Item label={item.kind_name} value={item.kind_id} />
                   ))}
                 </Picker>
+
+                  }
+
                 <TextInput
                   placeholder="Enter Target Quantity"
                   onChangeText={text => setquantity(text)}
@@ -562,6 +591,37 @@ const StartCampaign = ({navigation}) => {
           ) : null}
         </ImageBackground>
       </Container>
+
+
+      
+       {/* <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={this.state.seachableModalVisible}
+                        >
+                            <View style={{ height: 500, marginTop: 112 }}>
+                                <View style={styles.modalStyle}>
+        <FlatList
+          data={this.state.data}
+          renderItem={this.renderSearchableData}
+           keyExtractor={item => item.name}
+          ItemSeparatorComponent={this.renderSeparator}
+        />
+     
+                                </View>
+
+                                <TouchableOpacity onPress={() => { this.setState({ seachableModalVisible: false }) }}>
+                                    <View style={styles.cancelStyle}>
+                                        <Text style={{ fontSize: 20, alignSelf: 'center', marginTop: 16, color: 'white' }}>Cancel</Text>
+                                    </View>
+                                </TouchableOpacity>
+
+                            </View>
+                        </Modal> */}
+
+
+
+
       <DateTimePicker
         value={strdate == null ? new Date(moment().toISOString()) : strdate}
           maxDate={new Date("2040-12-31")}

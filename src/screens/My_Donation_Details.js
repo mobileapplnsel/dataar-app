@@ -28,6 +28,7 @@ import {
 } from 'react-native-table-component';
 import AppPreLoader from '../components/AppPreLoader';
 import Icon_3 from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class Campaing_details extends Component {
   constructor(props) {
     super(props);
@@ -311,7 +312,7 @@ class Campaing_details extends Component {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -374,7 +375,7 @@ class Campaing_details extends Component {
                   />
                 </TouchableOpacity>
               </View> */}
-            </View>
+            </SafeAreaView>
             <ScrollView style={Styles.dashboard_main_contain}>
               <View style={Styles.campaign_details_contain}>
 

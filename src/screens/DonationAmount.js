@@ -29,6 +29,7 @@ import {
 } from 'react-native-table-component';
 import Toast from 'react-native-simple-toast';
 import RazorpayCheckout from 'react-native-razorpay';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class DonationAmount extends Component {
   constructor(props) {
     super(props);
@@ -186,7 +187,7 @@ class DonationAmount extends Component {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.donation_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -252,7 +253,7 @@ class DonationAmount extends Component {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </SafeAreaView>
 
             <Text style={{
     fontSize: 25,

@@ -25,6 +25,7 @@ import Modal from 'react-native-modal';
 import Selector from '../components/Selector';
 import Picker from '../components/Picker';
 import StarRating from 'react-native-star-rating';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -759,7 +760,9 @@ source={{uri: base64Icon}}>
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
-          <View style={Styles.dashboard_main_header}>
+            
+          <SafeAreaView style={Styles.dashboard_main_header}>
+            
             <View style={Styles.dashboard_main_headers}>
               <TouchableOpacity
                 onPress={() => this.props.navigation.openDrawer()}>
@@ -827,7 +830,7 @@ source={{uri: base64Icon}}>
                 />
               </TouchableOpacity>
             </View>
-          </View>
+          </SafeAreaView>
 
           
 

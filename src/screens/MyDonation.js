@@ -33,6 +33,7 @@ import {
   TableWrapper,
   Cell,
 } from 'react-native-table-component';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class View_campaign extends Component {
   constructor(props) {
     super(props);
@@ -294,7 +295,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -361,7 +362,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </SafeAreaView>
             {/* <ScrollView horizontal={true}> */}
             {/* <ScrollView> */}
             {/* <View style={Styles.dashboard_main_contain}> */}

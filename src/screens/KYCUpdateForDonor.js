@@ -12,6 +12,8 @@ import {
   Animated,
   ActivityIndicator,
   StyleSheet,
+  ActionSheetIOS,
+  Platform
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import DocumentPicker from 'react-native-document-picker';
@@ -21,7 +23,7 @@ var Styles = require('../assets/files/Styles');
 import RNFetchBlob from 'rn-fetch-blob';
 import Feather from 'react-native-vector-icons/Feather';
 import {Picker} from '@react-native-picker/picker';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 var pdfpath
 var pdffile
 var filename1 = 'Upload your Pan'
@@ -37,13 +39,13 @@ class User_profile extends Component {
       selectedPANName:'Upload your Pan',
       selectedPANSource:'',
       filebaseString:'',
-      selectedID:'',
+      selectedID:'Address proof',
       selectedKYCNumber:'',
       selectedIDName:'Upload your address proof',
       selectedIDSource:'',
       imagebaseString:'',
       labelName:'',
-      progress: true,
+      progress: false,
 
     };
   }
@@ -221,7 +223,41 @@ selectOneFile = async () => {
     }
   };
   
+ ActionSheetIOSonPress = () =>
+  ActionSheetIOS.showActionSheetWithOptions(
+    {
+      options: ["Aadhaar Card", "Voter Card", "Passport", "Driving License", "Others", "Cancel"],
+       destructiveButtonIndex: 5,
+       title: 'Select Address Proof',
+      cancelButtonIndex: 5,
+      userInterfaceStyle: 'dark'
+    },
+    buttonIndex => {
+      if (buttonIndex === 0) {
 
+        this.setState({selectedID: 'Aadhaar Card'})
+        
+      } else if (buttonIndex === 1) {
+
+        this.setState({selectedID: 'Voter Card'})
+
+      } else if (buttonIndex === 2) {
+
+        this.setState({selectedID: 'Passport'})
+      }
+      else if (buttonIndex === 3) {
+
+        this.setState({selectedID: 'Driving License'})
+
+      } else if (buttonIndex === 4) {
+
+       this.setState({selectedID: 'Others'})
+      }
+       else {
+        // setResult("🔮");
+      }
+    }
+  );
   
 
   render() {
@@ -231,7 +267,7 @@ selectOneFile = async () => {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
             <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -252,7 +288,7 @@ selectOneFile = async () => {
                   </Text>
                 
               </View>
-              </View>
+              </SafeAreaView>
              
               <View style ={{marginTop: 25, marginBottom:20,marginLeft:20,marginRight:20}}>
               <TouchableOpacity
@@ -282,7 +318,21 @@ selectOneFile = async () => {
               keyboardType="default"
 
             />
-                             
+      { Platform.OS === 'ios' ? 
+<TouchableOpacity onPress={() => this.ActionSheetIOSonPress()}>
+<View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', height: 40,
+      margin: 0,
+      marginTop: 15}}>
+            <View style={{flex:1, maxWidth: 414, backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
+                <Text style={{paddingLeft:13,color: 'black', fontSize: 16,}}>{this.state.selectedID}</Text>
+                <View style={{width:15, height:15, justifyContent: 'flex-end', marginRight: 20, marginTop: 0}}>
+                  <Image source={require("../../src/assets/images/down_arrow.png")} style={{width:24, height:24,}} />
+                </View>
+                
+              </View>
+              </View>
+              </TouchableOpacity> 
+:                       
 
 <Picker
 
@@ -308,7 +358,7 @@ onValueChange={
 <Picker.Item label="Driving License" value="Driving License" />
 <Picker.Item label="Others" value="Others" />
 </Picker>
-
+  }
 
 
 
@@ -341,14 +391,14 @@ onValueChange={
 
 
        
-           <ActivityIndicator
+           {/* <ActivityIndicator
             //visibility of Overlay Loading Spinner
             visible={this.state.progress}
             //Text with the Spinner
             textContent={'Loading...'}
             //Text style of the Spinner Text
             textStyle={Styles1.spinnerTextStyle}
-          />
+          /> */}
             
             
             

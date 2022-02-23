@@ -28,7 +28,7 @@ import {
   GraphRequestManager,
   LoginManager,
 } from 'react-native-fbsdk';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {Picker} from '@react-native-picker/picker';
 import AppPreLoader from '../components/AppPreLoader';
 const ForgetPass = ({navigation}) => {
@@ -134,7 +134,7 @@ const ForgetPass = ({navigation}) => {
       <ImageBackground
         source={require('../../src/assets/images/bg.jpg')}
         style={Styles.login_main}>
-        <View style={Styles.dashboard_main_header}>
+        <SafeAreaView style={Styles.dashboard_main_header}>
         <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => navigation.goBack()}>
@@ -167,7 +167,7 @@ const ForgetPass = ({navigation}) => {
                   />
                 </TouchableOpacity>
               </View>
-        </View>
+        </SafeAreaView>
         <View style={Styles.login_text_main}>
           <Image
             style={{width: 90, height: 80, marginStart: 40, marginTop: 20}}

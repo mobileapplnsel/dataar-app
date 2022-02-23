@@ -17,6 +17,7 @@ import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
+import { SafeAreaView } from 'react-native-safe-area-context';
 var Styles = require('../assets/files/Styles');
 class User_profile extends Component {
   constructor(props) {
@@ -150,7 +151,7 @@ class User_profile extends Component {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -213,7 +214,7 @@ class User_profile extends Component {
                   />
                 </TouchableOpacity> */}
               </View>
-            </View>
+            </SafeAreaView>
             {/* <View style={Styles.profile_main_contain}> */}
             <ScrollView>
             <View>

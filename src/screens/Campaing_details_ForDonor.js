@@ -28,6 +28,7 @@ import {
 } from 'react-native-table-component';
 import AppPreLoader from '../components/AppPreLoader';
 import Icon_3 from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class Campaing_details extends Component {
   constructor(props) {
     super(props);

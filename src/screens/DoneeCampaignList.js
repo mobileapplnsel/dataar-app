@@ -19,7 +19,7 @@ import {
 import API from '../services/api';
 var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 class CampaignList extends Component {
   constructor(props) {
     super(props);
@@ -130,7 +130,7 @@ class CampaignList extends Component {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity onPress={() => navigation.openDrawer()}>
                   <Image
@@ -193,7 +193,7 @@ class CampaignList extends Component {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </SafeAreaView>
             
           </ImageBackground>
         </Container>

@@ -31,6 +31,7 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import {Picker} from '@react-native-picker/picker';
 import AppPreLoader from '../components/AppPreLoader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const Login = ({navigation}) => {
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
@@ -64,6 +65,7 @@ const Login = ({navigation}) => {
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log('userInfo', userInfo.user.email);
+      var fcm_token = await AsyncStorage.getItem('FCMtoken');
       if (userInfo.user.email !== '') {
         var logs = {
           firstName: userInfo.user.givenName,
@@ -73,7 +75,7 @@ const Login = ({navigation}) => {
           device_id:'firebasetokenid',
           device_type: 'A',
           usertype: selectedValue,
-          fcm_token:'khkbrER34'
+          fcm_token: fcm_token
         };
         console.log(logs);
         var response = await API.post('login_with_google', logs);
@@ -229,6 +231,8 @@ else
     });
   };
   const fblogin = async (dataval, accessToken) => {
+
+    var fcm_token = await AsyncStorage.getItem('FCMtoken');
     var logs = {
       // fullName: dataval.first_name + ' ' + dataval.last_name,
       firstName: dataval.first_name,
@@ -239,7 +243,7 @@ else
       // usertype: selectedValue,//'1',//selectedValue,
       facebook_id: dataval.id,
       email: '',
-      fcm_token: 'khkbrER34'
+      fcm_token: fcm_token
     };
     var response = await API.post('login_with_facebook', logs);
     console.log ('fb response: ', response)
@@ -325,7 +329,7 @@ else
   };
   const googlelog = async () => {};
   const Login = async () => {
-
+    var fcm_token = await AsyncStorage.getItem('FCMtoken');
     if (Email.trim() == '')
     {
       Alert.alert('Warning', 'Please enter Mobile or Email');
@@ -339,6 +343,7 @@ else
     var logs = {
       username: Email,
       password: password,
+      fcm_token: fcm_token
     };
     var response = await API.post('login', logs);
     // navigation.closeDrawer();
@@ -444,7 +449,7 @@ else
       <ImageBackground
         source={require('../../src/assets/images/bg.jpg')}
         style={Styles.login_main}>
-        <View style={Styles.login_main_header}></View>
+        <SafeAreaView style={Styles.login_main_header}></SafeAreaView>
         <View style={Styles.login_text_main}>
           <Image
             style={{width: 90, height: 80, marginStart: 40, marginTop: 20}}
