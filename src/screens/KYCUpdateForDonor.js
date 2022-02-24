@@ -72,11 +72,11 @@ selectOneFile = async () => {
       
       //Printing the log realted to the file
       
-      // console.log('res : ' + JSON.stringify(res));
-      // console.log('URi : ' + res.uri);
-      // console.log('Type : ' + res.type);
-      // console.log('File Name : ' + res.name);
-      // console.log('File Size : ' + res.size);
+      // console.log('res1 : ' + JSON.stringify(res));
+      // console.log('URi1 : ' + res.uri);
+      // console.log('Type1 : ' + res.type);
+      // console.log('File Name1 : ' + res.name);
+      // console.log('File Size1 : ' + res.size);
       pdfpath = res.uri
       filename1 = res.name
      this.setState({selectedPANName:res.name});

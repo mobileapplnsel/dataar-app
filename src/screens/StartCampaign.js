@@ -50,6 +50,7 @@ const StartCampaign = ({navigation}) => {
   const [selCamp, setselCamp] = useState('');
   const [mode, setMode] = useState('date');
   const [selectedValue, setselectedValue] = useState('');
+  const [selectedKindValue, setselectedKindValue] = useState('Select One');
   const [kind, setkind] = useState([]);
   const [isStartPickerVisible, setisStartPickerVisible] = useState(false);
   const [isEndPickerVisible, setisEndPickerVisible] = useState(false);
@@ -60,6 +61,10 @@ const StartCampaign = ({navigation}) => {
   const [filebaseString, setfilebaseString] = useState('');
   const [minEndDate, setminEndDate] = useState('');
   const [seachableModalVisible, setseachableModalVisible] = useState(false);
+  const [selectType, setselectType] = useState('Select Type');
+  const [selectID, setselectID] = useState('');
+  const [showPicker, setshowPicker] = useState(false);
+  const [ArrPref1, setArrPref1] = useState([]);
   
   const selectOneFile = async () => {
     //Opening Document Picker for selection of one file
@@ -171,6 +176,19 @@ const StartCampaign = ({navigation}) => {
     setselCamp('');
     setamount('');
   };
+  const getPreferences = async () => {
+    var response = await API.post('filter_by_type_list');
+    console.log('filter_by_type_list', response);
+    if (response.status == 'success') {
+      
+      setArrPref1([...response.data])
+      // ArrPref1.push({name: 'All', id: 'all',})
+      console.log(ArrPref1);
+      
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+  };
   const Start_Campaign = () => {
 
      if (selCamp == '2')
@@ -247,7 +265,7 @@ const StartCampaign = ({navigation}) => {
       campaign_image: image,
       campaign_target_amount: amount,
       kind_id: selectedValue,
-      filter_by_type: '1',
+      filter_by_type: selectID,
       zip: pincode,
       campaign_target_qty: quantity,
       supported_doc: filebaseString
@@ -282,6 +300,7 @@ const StartCampaign = ({navigation}) => {
   };
   useEffect(() => {
     fetchkind();
+    getPreferences();
   }, []);
   const user = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -305,6 +324,49 @@ const StartCampaign = ({navigation}) => {
       
     }
   };
+  const renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: '100%',
+          backgroundColor: 'white',
+        }}
+      />
+    );
+  };
+  const renderSearchableData =  (item)  => {
+    console.log('renderSearchableData111 ==> ', item)
+    return (
+      <View>
+        <TouchableOpacity onPress={() => selectItemOnDropDown(item)}>
+        <Text style={{ padding: 10, color: 'white' }}>{item.kind_name} </Text>
+        </TouchableOpacity>
+      </View>
+    );
+   }
+   const selectItemOnDropDown = (item) => 
+  {
+
+console.log('selectItemOnDropDown', item)
+setselectedKindValue(item.kind_name)
+setseachableModalVisible(false)
+setselectedValue(item.kind_id)
+    // if (selectedComboFlag == 'document')
+    // {
+    //   this.setState({ seachableModalVisible: false, selectedParcelType: item.name,})
+    // }
+    
+    //  if (selectedComboFlag == 'domestic')
+    // {
+    //   this.setState({ seachableModalVisible: false, selectedParcelType2: item.name,})
+    // }
+    
+
+    
+
+    
+  }
   return (
     <ScrollView>
       <Container>
@@ -406,6 +468,62 @@ const StartCampaign = ({navigation}) => {
                 onPress={() => upload()}>
                 <Text style={Styles.campaign_text_upload}>Upload image</Text>
               </TouchableOpacity>
+
+              <Selector
+              text={selectType}
+              placeholder="Gender"
+              marginTop={0}
+              onPress={() => setshowPicker(true)}
+              width={'100%'}
+              height={42}
+              imageheight={10}
+              imagewidth={11}
+              backcolor={'#ffff'}
+              borderRadius={10}
+              borderWidth={1}
+              margright={10}
+              marginTop={18}
+              fontcolor={'#A1A1A1'}
+            />
+
+            <PickerDob
+              backgroundColor={'#ffff'}
+              dataList={ArrPref1}
+              modalVisible={showPicker}
+              onBackdropPress={() => setshowPicker(false)}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // this.user_filter(item.name, item.id);
+                      // this.setState({gender: item.name});
+                      // this.setState({showPicker: false});
+                      setshowPicker(false)
+                      setselectType(item.name)
+                      setselectID(item.id)
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                    }}>
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 14,
+                        },
+                        // this.state.genderValue == item.name,
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+
+
               <View style={Styles.user_edit_contain}>
                 <Selector
                   text={strdate ? moment(strdate).format('DD / MM / YYYY') : ''}
@@ -530,7 +648,7 @@ const StartCampaign = ({navigation}) => {
       margin: 0,
       marginTop: 11}}>
             <View style={{flex:1, maxWidth: 414, backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
-                <Text style={{paddingLeft:13,color: 'gray', fontSize: 16,}}>{selectedValue}</Text>
+                <Text style={{paddingLeft:13,color: 'gray', fontSize: 16,}}>{selectedKindValue}</Text>
                 <View style={{width:15, height:15, justifyContent: 'flex-end', marginRight: 20, marginTop: 0}}>
                   <Image source={require("../../src/assets/images/down_arrow.png")} style={{width:24, height:24,}} />
                 </View>
@@ -594,30 +712,43 @@ const StartCampaign = ({navigation}) => {
 
 
       
-       {/* <Modal
+       <Modal
                             animationType="slide"
                             transparent={true}
-                            visible={this.state.seachableModalVisible}
+                            visible={seachableModalVisible}
                         >
                             <View style={{ height: 500, marginTop: 112 }}>
-                                <View style={styles.modalStyle}>
+                                <View style={{
+          height: 232,
+          width: '80%',
+          alignSelf: 'center',
+          marginTop: 100,
+          backgroundColor: '#f55656',
+          borderRadius: 6
+        }}>
         <FlatList
-          data={this.state.data}
-          renderItem={this.renderSearchableData}
-           keyExtractor={item => item.name}
-          ItemSeparatorComponent={this.renderSeparator}
+          data={kind}
+          renderItem={({ item }) => (
+          <View>
+        <TouchableOpacity onPress={() => selectItemOnDropDown(item)}>
+        <Text style={{ padding: 10, color: 'white' }}>{item.kind_name} </Text>
+        </TouchableOpacity>
+      </View>
+      )} 
+           keyExtractor={item => item.kind_id}
+          ItemSeparatorComponent={renderSeparator}
         />
      
                                 </View>
 
-                                <TouchableOpacity onPress={() => { this.setState({ seachableModalVisible: false }) }}>
+                                {/* <TouchableOpacity onPress={() => { this.setState({ seachableModalVisible: false }) }}>
                                     <View style={styles.cancelStyle}>
                                         <Text style={{ fontSize: 20, alignSelf: 'center', marginTop: 16, color: 'white' }}>Cancel</Text>
                                     </View>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
 
                             </View>
-                        </Modal> */}
+                        </Modal>
 
 
 

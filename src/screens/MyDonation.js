@@ -85,6 +85,33 @@ class View_campaign extends Component {
   };
   actualDownload = (pdfurl) => {
     const { dirs } = RNFetchBlob.fs;
+
+    if (Platform.OS === 'ios')
+    {
+      RNFetchBlob.config({
+        fileCache: true,
+        addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        mediaScannable: true,
+        title: `Recipt_And_Thank_You_Letter.pdf`,
+        path: `${dirs.DocumentDir}/test.pdf`,
+        },
+      })
+        .fetch('GET', pdfurl, {})
+        .then((res) => {
+         this.setState({
+           progress: false,
+         })
+         Toast.show('The file saved to '+res.path(),  Toast.LONG)
+          console.log('The file saved to ', res.path());
+        })
+        .catch((e) => {
+          console.log(e)
+        });
+    }
+    else
+    {
    RNFetchBlob.config({
      fileCache: true,
      addAndroidDownloads: {
@@ -106,9 +133,20 @@ class View_campaign extends Component {
      .catch((e) => {
        console.log(e)
      });
+    }
  }
   _onPressButton = async (donation_id) => 
   {
+    if (Platform.OS === 'ios')
+      {
+        this.setState({
+          progress: true,
+          progressName: 'Downloading your reciept'
+        })
+        this.getReciptPDFUrl(donation_id);
+      }
+      else
+      {
          try {
           const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -124,6 +162,7 @@ class View_campaign extends Component {
         } catch (err) {
           console.warn(err);
         }  
+      }
   }
   getReciptPDFUrl = async (donation_id) => {
    
