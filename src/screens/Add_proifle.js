@@ -16,6 +16,7 @@ import API from '../services/api';
 var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class add_proifle extends Component {
   constructor(props) {
     super(props);
@@ -190,7 +191,8 @@ class add_proifle extends Component {
                 </TouchableOpacity>
               </View>
               <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.navigate('Search_screen')}>
                   <Image
                     style={{
                       width: 30,

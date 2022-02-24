@@ -24,6 +24,7 @@ import Icon_3 from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import Selector from '../components/Selector';
 import Picker from '../components/Picker';
+import { SafeAreaView } from 'react-native-safe-area-context';
 // import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -45,7 +46,7 @@ class Dashboard_donation extends Component {
       comment: '',
       campaign_id: '',
       genderValue: '',
-      gender: 'Preference',
+      gender: 'Filter by type',
       ArrPref: [
         {
           pref_name: 'Alljhjh',
@@ -92,6 +93,7 @@ class Dashboard_donation extends Component {
     }
   };
   componentDidMount() {
+    this.getPreferences()
     this.dashboard_donate();
     // this.getuser();
     this.state.hasLocationPermission = PermissionsAndroid.request(
@@ -116,6 +118,21 @@ class Dashboard_donation extends Component {
       console.log('Camera permission denied');
     }
   }
+  getPreferences = async () => {
+    var response = await API.post('filter_by_type_list');
+    console.log('filter_by_type_list', response);
+    if (response.status == 'success') {
+      
+      this.setState({
+        
+        ArrPref: [...response.data],
+      });
+      this.state.ArrPref.push({name: 'All', id: 'all',})
+      console.log(this.state.ArrPref);
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+  };
   like = async (item, index) => {
     var token = await AsyncStorage.getItem('token');
     var user_id = await AsyncStorage.getItem('user_id');
@@ -156,6 +173,8 @@ class Dashboard_donation extends Component {
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log('donation_list response: ',response.data.campaign_data);
+
+      
       this.setState({
         setcmpData: [...response.data.campaign_data],
       });
@@ -164,7 +183,27 @@ class Dashboard_donation extends Component {
       Alert.alert(response.status, response.message);
     }
   };
-
+  dashboard_donate_by_filter = async (id) => {
+    var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+      filter_by_type: id
+      // search:"Omicron",
+      // campaign_name: Title,
+    };
+    console.log(logs);
+    var response = await API.post('donation_list', logs);
+    if (response.status == 'success') {
+      // navigation.navigate('OtpVerify', {mobile: Mobile});
+      console.log('donation_list response: ',response.data.campaign_data);
+      this.setState({
+        setcmpData: [...response.data.campaign_data],
+      });
+      // setcmpData(response.data);
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+  };
   preference_dashboard_donate = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
@@ -195,7 +234,21 @@ class Dashboard_donation extends Component {
       this.preference_dashboard_donate();
     }
   };
-  
+  user_filter = (name, id) => {
+
+    console.log('user_preference1: ', name, id)
+    if (name === 'All') {
+      this.setState({
+        setcmpData: [],
+      });
+      this.dashboard_donate();
+    } else {
+      this.setState({
+        setcmpData: [],
+      });
+      this.dashboard_donate_by_filter(id);
+    }
+  };
   location = () => {
     if (hasLocationPermission) {
       Geolocation.getCurrentPosition(
@@ -253,8 +306,15 @@ class Dashboard_donation extends Component {
   //   AsyncStorage.clear();
   //   navigation.navigate('LogIn');
   // };
-  comment = item => {
+  comment = async (item) => {
     // this.modalizeRefComment.current.open();
+
+    var token = await AsyncStorage.getItem('token');
+    console.log('Comment token: ',token);
+    if (token == null || token == '') {
+      this.props.navigation.navigate('LogIn');
+    } else {
+
     console.log(item);
     this.setState(
       {
@@ -265,6 +325,7 @@ class Dashboard_donation extends Component {
       },
       this.commetFetch,
     );
+    }
   };
   commetFetch = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -582,7 +643,7 @@ class Dashboard_donation extends Component {
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
-          <View style={Styles.dashboard_main_header}>
+          <SafeAreaView style={Styles.dashboard_main_header}>
             <View style={Styles.dashboard_main_headers}>
               <TouchableOpacity
                 onPress={() => this.props.navigation.openDrawer()}>
@@ -650,7 +711,7 @@ class Dashboard_donation extends Component {
                 />
               </TouchableOpacity>
             </View>
-          </View>
+          </SafeAreaView>
 
           
 
@@ -669,7 +730,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
 </Image> 
 </View> */}
 
-<View style={{borderRadius:12, backgroundColor: 'null', flex: 1, marginTop: -20, alignSelf: 'center'}}>
+<View style={{borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: -20, alignSelf: 'center'}}>
 <Image style={{
     resizeMode: 'contain', alignSelf: 'center', height: 200, borderRadius: 4, width: 300
 }}
@@ -717,8 +778,8 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                 return (
                   <TouchableOpacity
                     onPress={() => {
-                      this.user_preference(item.pref_name);
-                      this.setState({gender: item.pref_name});
+                      this.user_filter(item.name, item.id);
+                      this.setState({gender: item.name});
                       this.setState({showPicker: false});
                     }}
                     style={{
@@ -732,9 +793,9 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                           fontSize: 14,
                           lineHeight: 14,
                         },
-                        this.state.genderValue == item.pref_name,
+                        this.state.genderValue == item.name,
                       ]}>
-                      {item.pref_name}
+                      {item.name}
                     </Text>
                   </TouchableOpacity>
                 );

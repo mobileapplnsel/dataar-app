@@ -1,12 +1,22 @@
 import React from 'react';
-import {Text, View, ImageBackground} from 'react-native';
+import {Text, View, ImageBackground, Alert} from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
+import messaging from '@react-native-firebase/messaging';
 const splash = ({navigation}) => {
-  React.useEffect(() => {
+  React.useEffect( async () => {
     // Fcn.init();
     LoginReg();
+    
   }, []);
   const LoginReg = async () => {
+    var unsubscribe = messaging().onMessage(async remoteMessage => {
+      Alert.alert( JSON.stringify(remoteMessage.notification.title), JSON.stringify(remoteMessage.notification.body));
+    });
+    var token = await messaging().getToken();
+    console.log('FCM token11: ', token)
+    AsyncStorage.setItem('FCMtoken', token);
+
+    
     var token = await AsyncStorage.getItem('token');
     var user_type =await AsyncStorage.getItem('user_type');
     setTimeout(() => {

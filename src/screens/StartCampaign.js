@@ -8,7 +8,10 @@ import {
   TouchableOpacity,
   ScrollView,
   Alert,
-  StyleSheet
+  StyleSheet,
+  Modal,
+  FlatList,
+  Platform,
   // Picker,
 } from 'react-native';
 import {
@@ -22,7 +25,7 @@ import RadioForm, {
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 import AsyncStorage from '@react-native-community/async-storage';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -32,7 +35,7 @@ import PickerDob from '../components/Picker';
 import DateTimePicker from '../components/DateTimePicker';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
-
+import Toast from 'react-native-simple-toast';
 const StartCampaign = ({navigation}) => {
   const [Title, setTitle] = useState('');
   const [Description, setDescription] = useState('');
@@ -47,6 +50,7 @@ const StartCampaign = ({navigation}) => {
   const [selCamp, setselCamp] = useState('');
   const [mode, setMode] = useState('date');
   const [selectedValue, setselectedValue] = useState('');
+  const [selectedKindValue, setselectedKindValue] = useState('Select One');
   const [kind, setkind] = useState([]);
   const [isStartPickerVisible, setisStartPickerVisible] = useState(false);
   const [isEndPickerVisible, setisEndPickerVisible] = useState(false);
@@ -55,6 +59,13 @@ const StartCampaign = ({navigation}) => {
   const [selectedPANName, setselectedPANName] = useState('Upload supported doc');
   const [selectedPANSource, setselectedPANSource] = useState('');
   const [filebaseString, setfilebaseString] = useState('');
+  const [minEndDate, setminEndDate] = useState('');
+  const [seachableModalVisible, setseachableModalVisible] = useState(false);
+  const [selectType, setselectType] = useState('Select Type');
+  const [selectID, setselectID] = useState('');
+  const [showPicker, setshowPicker] = useState(false);
+  const [ArrPref1, setArrPref1] = useState([]);
+  
   const selectOneFile = async () => {
     //Opening Document Picker for selection of one file
     try {
@@ -165,6 +176,19 @@ const StartCampaign = ({navigation}) => {
     setselCamp('');
     setamount('');
   };
+  const getPreferences = async () => {
+    var response = await API.post('filter_by_type_list');
+    console.log('filter_by_type_list', response);
+    if (response.status == 'success') {
+      
+      setArrPref1([...response.data])
+      // ArrPref1.push({name: 'All', id: 'all',})
+      console.log(ArrPref1);
+      
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+  };
   const Start_Campaign = () => {
 
      if (selCamp == '2')
@@ -190,14 +214,14 @@ const StartCampaign = ({navigation}) => {
     let formatted = moment(date, 'x').format('YYYY-MM-DD');
     console.log('selectedDate', formatted);
     setSdate(formatted);
-    setisStart(false);
+    // setisStart(false);
   };
   const setExpiryend = selectedDate => {
     var date = selectedDate.nativeEvent.timestamp;
     let formatted = moment(date, 'x').format('YYYY-MM-DD');
     console.log('selectedDate', formatted);
     setenddate(formatted);
-    setisEnd(false);
+    // setisEnd(false);
   };
   const upload = () => {
     ImagePicker.openPicker({
@@ -241,7 +265,7 @@ const StartCampaign = ({navigation}) => {
       campaign_image: image,
       campaign_target_amount: amount,
       kind_id: selectedValue,
-      filter_by_type: '1',
+      filter_by_type: selectID,
       zip: pincode,
       campaign_target_qty: quantity,
       supported_doc: filebaseString
@@ -257,13 +281,13 @@ const StartCampaign = ({navigation}) => {
     }
   };
   const startDate = () => {
-    setisStart(true);
+    // setisStart(true);
   };
   const endDate = () => {
-    setisEnd(true);
+    // setisEnd(true);
   };
   const hideDatePicker = () => {
-    setisStart(false);
+    // setisStart(false);
   };
   const fetchkind = async () => {
     var response = await API.post('kind_list');
@@ -276,6 +300,7 @@ const StartCampaign = ({navigation}) => {
   };
   useEffect(() => {
     fetchkind();
+    getPreferences();
   }, []);
   const user = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -286,13 +311,69 @@ const StartCampaign = ({navigation}) => {
       navigation.navigate('LogIn');
     }
   };
+  const ExpiryDatebtnPressed = () => {
+    if (strdate == null)
+    {
+      Toast.show('Please select Start Expiry date first', Toast.LONG)
+    }
+    else
+    {
+      console.log('startDate: ', strdate)
+      setminEndDate(strdate)
+      setisEndPickerVisible(true)
+      
+    }
+  };
+  const renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: '100%',
+          backgroundColor: 'white',
+        }}
+      />
+    );
+  };
+  const renderSearchableData =  (item)  => {
+    console.log('renderSearchableData111 ==> ', item)
+    return (
+      <View>
+        <TouchableOpacity onPress={() => selectItemOnDropDown(item)}>
+        <Text style={{ padding: 10, color: 'white' }}>{item.kind_name} </Text>
+        </TouchableOpacity>
+      </View>
+    );
+   }
+   const selectItemOnDropDown = (item) => 
+  {
+
+console.log('selectItemOnDropDown', item)
+setselectedKindValue(item.kind_name)
+setseachableModalVisible(false)
+setselectedValue(item.kind_id)
+    // if (selectedComboFlag == 'document')
+    // {
+    //   this.setState({ seachableModalVisible: false, selectedParcelType: item.name,})
+    // }
+    
+    //  if (selectedComboFlag == 'domestic')
+    // {
+    //   this.setState({ seachableModalVisible: false, selectedParcelType2: item.name,})
+    // }
+    
+
+    
+
+    
+  }
   return (
     <ScrollView>
       <Container>
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
-          <View style={Styles.dashboard_main_header}>
+          <SafeAreaView style={Styles.dashboard_main_header}>
             <View style={Styles.dashboard_main_headers}>
               <TouchableOpacity onPress={() => navigation.goBack()}>
                 <Image
@@ -354,7 +435,7 @@ const StartCampaign = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-          </View>
+          </SafeAreaView>
           <View style={Styles.login_text_main}>
             <Text style={Styles.campaign_name_font}>Start Campaign</Text>
           </View>
@@ -387,6 +468,62 @@ const StartCampaign = ({navigation}) => {
                 onPress={() => upload()}>
                 <Text style={Styles.campaign_text_upload}>Upload image</Text>
               </TouchableOpacity>
+
+              <Selector
+              text={selectType}
+              placeholder="Gender"
+              marginTop={0}
+              onPress={() => setshowPicker(true)}
+              width={'100%'}
+              height={42}
+              imageheight={10}
+              imagewidth={11}
+              backcolor={'#ffff'}
+              borderRadius={10}
+              borderWidth={1}
+              margright={10}
+              marginTop={18}
+              fontcolor={'#A1A1A1'}
+            />
+
+            <PickerDob
+              backgroundColor={'#ffff'}
+              dataList={ArrPref1}
+              modalVisible={showPicker}
+              onBackdropPress={() => setshowPicker(false)}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // this.user_filter(item.name, item.id);
+                      // this.setState({gender: item.name});
+                      // this.setState({showPicker: false});
+                      setshowPicker(false)
+                      setselectType(item.name)
+                      setselectID(item.id)
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                    }}>
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 14,
+                        },
+                        // this.state.genderValue == item.name,
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+
+
               <View style={Styles.user_edit_contain}>
                 <Selector
                   text={strdate ? moment(strdate).format('DD / MM / YYYY') : ''}
@@ -408,7 +545,7 @@ const StartCampaign = ({navigation}) => {
                   marginTop={normalize(15)}
                   // onPress={() => setShowPicker(true)}
                   icon={require('../../src/assets/images/calendar.jpg')}
-                  onPress={() => setisEndPickerVisible(true)}
+                  onPress={() => ExpiryDatebtnPressed()}
                 />
               </View>
               <TouchableOpacity style={Styles.campaign_btn_next}>
@@ -503,6 +640,27 @@ const StartCampaign = ({navigation}) => {
                 Enter the kind of Donation
               </Text>
               <View style={{justifyContent: 'center'}}>
+
+
+              { Platform.OS === 'ios' ? 
+<TouchableOpacity onPress={() => setseachableModalVisible(true)}>
+<View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', height: 40,
+      margin: 0,
+      marginTop: 11}}>
+            <View style={{flex:1, maxWidth: 414, backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
+                <Text style={{paddingLeft:13,color: 'gray', fontSize: 16,}}>{selectedKindValue}</Text>
+                <View style={{width:15, height:15, justifyContent: 'flex-end', marginRight: 20, marginTop: 0}}>
+                  <Image source={require("../../src/assets/images/down_arrow.png")} style={{width:24, height:24,}} />
+                </View>
+                
+              </View>
+              </View>
+              </TouchableOpacity> 
+:
+             
+
+
+
                 <Picker
                   selectedValue={selectedValue}
                   style={{
@@ -522,6 +680,9 @@ const StartCampaign = ({navigation}) => {
                     <Picker.Item label={item.kind_name} value={item.kind_id} />
                   ))}
                 </Picker>
+
+                  }
+
                 <TextInput
                   placeholder="Enter Target Quantity"
                   onChangeText={text => setquantity(text)}
@@ -548,10 +709,54 @@ const StartCampaign = ({navigation}) => {
           ) : null}
         </ImageBackground>
       </Container>
+
+
+      
+       <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={seachableModalVisible}
+                        >
+                            <View style={{ height: 500, marginTop: 112 }}>
+                                <View style={{
+          height: 232,
+          width: '80%',
+          alignSelf: 'center',
+          marginTop: 100,
+          backgroundColor: '#f55656',
+          borderRadius: 6
+        }}>
+        <FlatList
+          data={kind}
+          renderItem={({ item }) => (
+          <View>
+        <TouchableOpacity onPress={() => selectItemOnDropDown(item)}>
+        <Text style={{ padding: 10, color: 'white' }}>{item.kind_name} </Text>
+        </TouchableOpacity>
+      </View>
+      )} 
+           keyExtractor={item => item.kind_id}
+          ItemSeparatorComponent={renderSeparator}
+        />
+     
+                                </View>
+
+                                {/* <TouchableOpacity onPress={() => { this.setState({ seachableModalVisible: false }) }}>
+                                    <View style={styles.cancelStyle}>
+                                        <Text style={{ fontSize: 20, alignSelf: 'center', marginTop: 16, color: 'white' }}>Cancel</Text>
+                                    </View>
+                                </TouchableOpacity> */}
+
+                            </View>
+                        </Modal>
+
+
+
+
       <DateTimePicker
         value={strdate == null ? new Date(moment().toISOString()) : strdate}
-        // maxDate={new Date(moment().toISOString())}
-        minDate={null}
+          maxDate={new Date("2040-12-31")}
+        minDate={new Date("2010-12-31")}
         dateTimePickerVisible={isStartPickerVisible}
         onDateChange={val => setSdate(val)}
         onBackdropPress={() => setisStartPickerVisible(false)}
@@ -559,10 +764,10 @@ const StartCampaign = ({navigation}) => {
       />
       <DateTimePicker
         value={
-          endseldate == null ? new Date(moment().toISOString()) : endseldate
+          endseldate == null ? new Date(String(strdate)) : endseldate
         }
-        maxDate={null}
-        minDate={null}
+         maxDate={new Date("2050-12-31")}
+        minDate={new Date(String(minEndDate))}
         dateTimePickerVisible={isEndPickerVisible}
         onDateChange={val => setenddate(val)}
         onBackdropPress={() => setisEndPickerVisible(false)}

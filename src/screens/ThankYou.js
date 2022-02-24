@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, ScrollView, ImageBackground, TouchableOpacity, PermissionsAndroid } from 'react-native';
+import { View, Text, ScrollView, ImageBackground, TouchableOpacity, PermissionsAndroid, Alert, Platform } from 'react-native';
 import {
   Container,
   Card,
   CardItem,
+  
   // TextInput,
 } from 'native-base';
 import API from '../services/api';
 import RNFetchBlob from 'rn-fetch-blob';
+import Toast from 'react-native-simple-toast';
 var Styles = require('../assets/files/Styles');
 class Search_screen extends Component {
   constructor(props) {
@@ -43,36 +45,73 @@ class Search_screen extends Component {
     }
     _onPressButton = async () => 
     {
-           try {
-            const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
-            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-              this.actualDownload();
-            } else {
-              Alert.alert('Permission Denied!', 'You need to give storage permission to download the file');
-            }
-          } catch (err) {
-            console.warn(err);
-          }  
+
+      if (Platform.OS === 'ios')
+      {
+        this.actualDownload()
+      }
+      else
+      {
+        try {
+          const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            this.actualDownload();
+          } else {
+            Alert.alert('Permission Denied!', 'You need to give storage permission to download the file');
+          }
+        } catch (err) {
+          console.warn(err);
+        }
+      }
+
+      
     }
     actualDownload = () => {
       const { dirs } = RNFetchBlob.fs;
-     RNFetchBlob.config({
-       fileCache: true,
-       addAndroidDownloads: {
-       useDownloadManager: true,
-       notification: true,
-       mediaScannable: true,
-       title: `Recipt_And_Thank_You_Letter.pdf`,
-       path: `${dirs.DownloadDir}/test.pdf`,
-       },
-     })
-       .fetch('GET', this.state.pdfurl, {})
-       .then((res) => {
-         console.log('The file saved to ', res.path());
-       })
-       .catch((e) => {
-         console.log(e)
-       });
+      if (Platform.OS === 'ios')
+      {
+        RNFetchBlob.config({
+          fileCache: true,
+          addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          mediaScannable: true,
+          title: `Recipt_And_Thank_You_Letter.pdf`,
+          path: `${dirs.DocumentDir}/test.pdf`,
+          },
+        })
+          .fetch('GET', this.state.pdfurl, {})
+          .then((res) => {
+           Toast.show('The file saved to'+res.path(), Toast.LONG)
+            console.log('The file saved to ', res.path());
+          })
+          .catch((e) => {
+            console.log(e)
+          });
+      }
+      else
+      {
+        RNFetchBlob.config({
+          fileCache: true,
+          addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          mediaScannable: true,
+          title: `Recipt_And_Thank_You_Letter.pdf`,
+          path: `${dirs.DownloadDir}/test.pdf`,
+          },
+        })
+          .fetch('GET', this.state.pdfurl, {})
+          .then((res) => {
+           Toast.show('The file saved to'+res.path(), Toast.LONG)
+            console.log('The file saved to ', res.path());
+          })
+          .catch((e) => {
+            console.log(e)
+          });
+      }
+
+     
    }
   render() {
     return (

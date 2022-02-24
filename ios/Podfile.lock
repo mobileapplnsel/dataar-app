@@ -29,6 +29,34 @@ PODS:
     - FBSDKShareKit/Share (= 8.2.0)
   - FBSDKShareKit/Share (8.2.0):
     - FBSDKCoreKit (~> 8.2.0)
+  - Firebase/CoreOnly (8.12.1):
+    - FirebaseCore (= 8.12.1)
+  - Firebase/Messaging (8.12.1):
+    - Firebase/CoreOnly
+    - FirebaseMessaging (~> 8.12.0)
+  - FirebaseCore (8.12.1):
+    - FirebaseCoreDiagnostics (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
+  - FirebaseCoreDiagnostics (8.12.0):
+    - GoogleDataTransport (~> 9.1)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Logger (~> 7.7)
+    - nanopb (~> 2.30908.0)
+  - FirebaseInstallations (8.12.0):
+    - FirebaseCore (~> 8.0)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/UserDefaults (~> 7.7)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - FirebaseMessaging (8.12.0):
+    - FirebaseCore (~> 8.0)
+    - FirebaseInstallations (~> 8.0)
+    - GoogleDataTransport (~> 9.1)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.7)
+    - GoogleUtilities/Environment (~> 7.7)
+    - GoogleUtilities/Reachability (~> 7.7)
+    - GoogleUtilities/UserDefaults (~> 7.7)
+    - nanopb (~> 2.30908.0)
   - Flipper (0.75.1):
     - Flipper-Folly (~> 2.5)
     - Flipper-RSocket (~> 1.3)
@@ -76,16 +104,44 @@ PODS:
     - FlipperKit/Core
     - FlipperKit/FlipperKitNetworkPlugin
   - glog (0.3.5)
+  - GoogleDataTransport (9.1.2):
+    - GoogleUtilities/Environment (~> 7.2)
+    - nanopb (~> 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
   - GoogleSignIn (5.0.2):
     - AppAuth (~> 1.2)
     - GTMAppAuth (~> 1.0)
     - GTMSessionFetcher/Core (~> 1.1)
+  - GoogleUtilities/AppDelegateSwizzler (7.7.0):
+    - GoogleUtilities/Environment
+    - GoogleUtilities/Logger
+    - GoogleUtilities/Network
+  - GoogleUtilities/Environment (7.7.0):
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/Logger (7.7.0):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/Network (7.7.0):
+    - GoogleUtilities/Logger
+    - "GoogleUtilities/NSData+zlib"
+    - GoogleUtilities/Reachability
+  - "GoogleUtilities/NSData+zlib (7.7.0)"
+  - GoogleUtilities/Reachability (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilities/UserDefaults (7.7.0):
+    - GoogleUtilities/Logger
   - GTMAppAuth (1.2.2):
     - AppAuth/Core (~> 1.4)
     - GTMSessionFetcher/Core (~> 1.5)
   - GTMSessionFetcher/Core (1.6.1)
   - libevent (2.1.12)
+  - nanopb (2.30908.0):
+    - nanopb/decode (= 2.30908.0)
+    - nanopb/encode (= 2.30908.0)
+  - nanopb/decode (2.30908.0)
+  - nanopb/encode (2.30908.0)
   - OpenSSL-Universal (1.1.180)
+  - PromisesObjC (2.0.0)
+  - razorpay-pod (1.1.18)
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
     - DoubleConversion
@@ -299,6 +355,9 @@ PODS:
     - React
   - react-native-geolocation-service (5.3.0-beta.2):
     - React
+  - react-native-razorpay (2.2.8):
+    - razorpay-pod
+    - React
   - react-native-safe-area-context (3.2.0):
     - React-Core
   - react-native-simple-toast (1.1.3):
@@ -368,6 +427,8 @@ PODS:
     - React-cxxreact (= 0.64.2)
     - React-jsi (= 0.64.2)
     - React-perflogger (= 0.64.2)
+  - rn-fetch-blob (0.12.0):
+    - React-Core
   - RNCAsyncStorage (1.12.1):
     - React-Core
   - RNCCheckbox (0.5.8):
@@ -376,6 +437,13 @@ PODS:
     - React-Core
   - RNDateTimePicker (3.5.2):
     - React-Core
+  - RNFBApp (14.5.0):
+    - Firebase/CoreOnly (= 8.12.1)
+    - React-Core
+  - RNFBMessaging (14.5.0):
+    - Firebase/Messaging (= 8.12.1)
+    - React-Core
+    - RNFBApp
   - RNGestureHandler (1.10.3):
     - React-Core
   - RNGoogleSignin (6.0.1):
@@ -471,6 +539,7 @@ DEPENDENCIES:
   - react-native-document-picker (from `../node_modules/react-native-document-picker`)
   - react-native-fbsdk (from `../node_modules/react-native-fbsdk`)
   - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
+  - react-native-razorpay (from `../node_modules/react-native-razorpay`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-simple-toast (from `../node_modules/react-native-simple-toast`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -485,10 +554,13 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - rn-fetch-blob (from `../node_modules/rn-fetch-blob`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
+  - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
+  - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - "RNGoogleSignin (from `../node_modules/@react-native-google-signin/google-signin`)"
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
@@ -505,6 +577,11 @@ SPEC REPOS:
     - FBSDKCoreKit
     - FBSDKLoginKit
     - FBSDKShareKit
+    - Firebase
+    - FirebaseCore
+    - FirebaseCoreDiagnostics
+    - FirebaseInstallations
+    - FirebaseMessaging
     - Flipper
     - Flipper-DoubleConversion
     - Flipper-Folly
@@ -512,11 +589,16 @@ SPEC REPOS:
     - Flipper-PeerTalk
     - Flipper-RSocket
     - FlipperKit
+    - GoogleDataTransport
     - GoogleSignIn
+    - GoogleUtilities
     - GTMAppAuth
     - GTMSessionFetcher
     - libevent
+    - nanopb
     - OpenSSL-Universal
+    - PromisesObjC
+    - razorpay-pod
     - Toast
     - TOCropViewController
     - YogaKit
@@ -560,6 +642,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fbsdk"
   react-native-geolocation-service:
     :path: "../node_modules/react-native-geolocation-service"
+  react-native-razorpay:
+    :path: "../node_modules/react-native-razorpay"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-simple-toast:
@@ -588,6 +672,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  rn-fetch-blob:
+    :path: "../node_modules/rn-fetch-blob"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-community/async-storage"
   RNCCheckbox:
@@ -596,6 +682,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-picker/picker"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
+  RNFBApp:
+    :path: "../node_modules/@react-native-firebase/app"
+  RNFBMessaging:
+    :path: "../node_modules/@react-native-firebase/messaging"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNGoogleSignin:
@@ -617,10 +707,15 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: ba4a997eef194b9772aa42d218afd993e1a76eb9
+  FBReactNativeSpec: 24bf7be4c5c288feb945cd11605ee81f89eaa1e4
   FBSDKCoreKit: 4afd6ff53d8133a433dbcda44451c9498f8c6ce4
   FBSDKLoginKit: 7181765f2524d7ebf82d9629066c8e6caafc99d0
   FBSDKShareKit: 0c0d51b3af47075a85ed9bea0e28b2fc70e3594b
+  Firebase: 580d09e8edafc3073ebf09c03fd42e4d80d35fe9
+  FirebaseCore: 8138de860a90ca7eec5e324da5788fb0ebf1d93c
+  FirebaseCoreDiagnostics: 3b40dfadef5b90433a60ae01f01e90fe87aa76aa
+  FirebaseInstallations: 25764cf322e77f99449395870a65b2bef88e1545
+  FirebaseMessaging: 23db8bf05585e929ada8af0f0968933c25252808
   Flipper: d3da1aa199aad94455ae725e9f3aa43f3ec17021
   Flipper-DoubleConversion: 38631e41ef4f9b12861c67d17cb5518d06badc41
   Flipper-Folly: 755929a4f851b2fb2c347d533a23f191b008554c
@@ -629,11 +724,16 @@ SPEC CHECKSUMS:
   Flipper-RSocket: 127954abe8b162fcaf68d2134d34dc2bd7076154
   FlipperKit: 8a20b5c5fcf9436cac58551dc049867247f64b00
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
+  GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
+  GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   GTMAppAuth: ad5c2b70b9a8689e1a04033c9369c4915bfcbe89
   GTMSessionFetcher: 36689134877faeb055b27dfa4ccc9ceaa42e029e
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
+  PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
+  razorpay-pod: 9aca3a303ef2f9281232c2f742fc6de937679500
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
   RCTTypeSafety: c1f31d19349c6b53085766359caac425926fafaa
@@ -646,11 +746,12 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
   react-native-date-picker: 96a07ca27a6225da8a3935324d85046028456b0f
-  react-native-document-picker: aa3fd58d5fcc1fdbf6939510b9407d16377f5832
+  react-native-document-picker: f1b5398801b332c77bc62ae0eae2116f49bdff26
   react-native-fbsdk: 8e92c7a334fd8d9c2b5d8b8fcd7ae2c314161099
   react-native-geolocation-service: 94c7d2ffdbbf4dd431241e0c8e37d491ebd41430
-  react-native-safe-area-context: e471852c5ed67eea4b10c5d9d43c1cebae3b231d
-  react-native-simple-toast: b986e6c1befdc211af3df1bae293278a44e32990
+  react-native-razorpay: 6796178680164b4716b9cbdacdda5da98781fb0a
+  react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
+  react-native-simple-toast: bf002828cf816775a6809f7a9ec3907509bce11f
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
   React-RCTAnimation: 6a2e76ab50c6f25b428d81b76a5a45351c4d77aa
@@ -663,10 +764,13 @@ SPEC CHECKSUMS:
   React-RCTVibration: 24600e3b1aaa77126989bc58b6747509a1ba14f3
   React-runtimeexecutor: a9904c6d0218fb9f8b19d6dd88607225927668f9
   ReactCommon: 149906e01aa51142707a10665185db879898e966
-  RNCAsyncStorage: cb9a623793918c6699586281f0b51cbc38f046f9
-  RNCCheckbox: 7d36e3a79b7301e8b126c5136cc449af65d9cdab
+  rn-fetch-blob: f065bb7ab7fb48dd002629f8bdcb0336602d3cba
+  RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
+  RNCCheckbox: 6bd119c26c6eb8264a29d59ff66cb70a14de3349
   RNCPicker: 6724ab5fcca83c34fe1f18a89baa13e9885f0393
-  RNDateTimePicker: c9911be59b1f8670b9f244b85af3a7c295e175ed
+  RNDateTimePicker: 7658208086d86d09e1627b5c34ba0cf237c60140
+  RNFBApp: 06c8447270d295edc431bccd55970d8711a07a42
+  RNFBMessaging: 8e3575bb0303b43a852bf5decbe99c3272035048
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNGoogleSignin: e64616a4080cf7d83f4b292fad82d174587444e2
   RNImageCropPicker: 35a3ceb837446fa11547704709bb22b5fac6d584
@@ -678,6 +782,6 @@ SPEC CHECKSUMS:
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: f7e2e784c69e53edf9bd17c7efe03863a3432e82
+PODFILE CHECKSUM: 213a9d53e2cf530dba5bcd7dabdcde47cbf74c61
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.11.2

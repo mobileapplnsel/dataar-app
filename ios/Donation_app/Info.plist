@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Donation_app</string>
+	<string>Dataar</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -35,22 +35,36 @@
 			</dict>
 		</dict>
 	</dict>
+  
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>fb585891535730438</string>
+    </array>
+    </dict>
+  </array>
+  <key>FacebookAppID</key>
+  <string>585891535730438</string>
+  <key>FacebookClientToken</key>
+  <string>2f9ebca2cc324728a6f95704c84610a7</string>
+  <key>FacebookDisplayName</key>
+  <string>Dataar</string>
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+    <string>fbapi</string>
+    <string>fb-messenger-share-api</string>
+  </array>
+  
+	<key>NSCameraUsageDescription</key>
+	<string>Dataar requires access to the Camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Dataar requires access to the Microphone</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Dataar requires access to the photo library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -73,5 +87,19 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

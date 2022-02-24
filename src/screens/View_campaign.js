@@ -20,6 +20,7 @@ import {
 import API from '../services/api';
 var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Table,
   Row,
@@ -241,7 +242,7 @@ source={{uri: base64Icon}}>
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -308,7 +309,7 @@ source={{uri: base64Icon}}>
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </SafeAreaView>
             {/* <ScrollView horizontal={true}> */}
             {/* <ScrollView> */}
             {/* <View style={Styles.dashboard_main_contain}> */}

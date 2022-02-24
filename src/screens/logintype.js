@@ -31,6 +31,7 @@ import {
 
 import {Picker} from '@react-native-picker/picker';
 import AppPreLoader from '../components/AppPreLoader';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const logintype = ({route, navigation}) => {
   const [Email, setemail] = useState('');
   const [googToken, setgoogleToken] = useState('');

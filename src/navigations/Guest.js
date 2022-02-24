@@ -33,6 +33,7 @@ import DonationDetails from '../screens/DonationDetails';
 import Search_screen from '../screens/Search_screen';
 import Preference from '../screens/Preference';
 import logintype from '../screens/logintype';
+import My_Donation_Details from '../screens/My_Donation_Details';
 import {navigationRef} from './Route';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -170,6 +171,14 @@ const HomeStackScreenForDonerOnly = ({navigation}) => (
         headerShown: false,
       }}
     />
+    <HomeStack_nav.Screen
+      name="My_Donation_Details"
+      component={My_Donation_Details}
+      options={{
+        headerShown: false,
+      }}
+    />
+    
     <HomeStack_nav.Screen
       name="MyDonation"
       component={MyDonation}
@@ -437,6 +446,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="Campaing_details_ForDonor" component={Campaing_details_ForDonor} />
     <AuthStack.Screen name="KYCUpdateForDonee" component={KYCUpdateForDonee} />
     <AuthStack.Screen name="KYCUpdateForDonor" component={KYCUpdateForDonor} />
+    <AuthStack.Screen name="My_Donation_Details" component={My_Donation_Details} />
     <AuthStack.Screen name="ThankYou" component={ThankYou} />
     
     <HomeStack_nav.Screen

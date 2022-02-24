@@ -24,6 +24,9 @@ import Icon_3 from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import Selector from '../components/Selector';
 import Picker from '../components/Picker';
+import StarRating from 'react-native-star-rating';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-simple-toast';
 // import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -35,6 +38,7 @@ class Dashboard_donation_forDonor extends Component {
     super(props);
 
     this.state = {
+
       setcmpData: [],
       isWish: '',
       modalComment: false,
@@ -45,21 +49,27 @@ class Dashboard_donation_forDonor extends Component {
       comment: '',
       campaign_id: '',
       genderValue: '',
+      genderValue1: '',
       pan_number: '',
       kyc_verified: '',
       gender: 'Preference',
+      gender1: 'Filter by type',
       ArrPref: [
-        {
-          pref_name: 'Alljhjh',
-          id: 'all',
-        },
         {
           pref_name: 'By Preference',
           id: 'by preference',
         },
+        {
+          pref_name: 'All',
+          id: 'all',
+        },
+        
       ],
+      ArrPref1: [],
       showPicker: false,
+      showPicker1: false,
       hasLocationPermission: null,
+      starCount: 5
     };
   }
 
@@ -93,8 +103,24 @@ class Dashboard_donation_forDonor extends Component {
       Alert.alert(response.status, response.message);
     }
   };
+  getPreferences = async () => {
+    var response = await API.post('filter_by_type_list');
+    console.log('filter_by_type_list', response);
+    if (response.status == 'success') {
+      
+      this.setState({
+        
+        ArrPref1: [...response.data],
+      });
+      this.state.ArrPref1.push({name: 'All', id: 'all',})
+      console.log(this.state.ArrPref1);
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+  };
   componentDidMount() {
     this.dashboard_donate();
+    this.getPreferences()
     // this.getuser();
     this.state.hasLocationPermission = PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -159,10 +185,16 @@ class Dashboard_donation_forDonor extends Component {
       this.props.navigation.navigate('LogIn');
     }
   };
+  onStarRatingPress(rating) {
+    this.setState({
+      starCount: rating
+    });
+  }
   dashboard_donate = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
       user_id: user_id,
+      // search:"Omicron",
       // campaign_name: Title,
     };
     console.log(logs);
@@ -170,6 +202,39 @@ class Dashboard_donation_forDonor extends Component {
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log('donation_list response: ',response.data.campaign_data);
+
+      if ([...response.data.campaign_data] == 0)
+      {
+        Toast.show('No Campaign found', Toast.LONG)
+      }
+
+      this.setState({
+        setcmpData: [...response.data.campaign_data],
+      });
+      // setcmpData(response.data);
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+  };
+  dashboard_donate_by_filter = async (id) => {
+    var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+      filter_by_type: id
+      // search:"Omicron",
+      // campaign_name: Title,
+    };
+    console.log(logs);
+    var response = await API.post('donation_list', logs);
+    if (response.status == 'success') {
+      // navigation.navigate('OtpVerify', {mobile: Mobile});
+      console.log('donation_list response: ',response.data.campaign_data);
+
+      if ([...response.data.campaign_data] == 0)
+      {
+        Toast.show('No Campaign found', Toast.LONG)
+      }
+
       this.setState({
         setcmpData: [...response.data.campaign_data],
       });
@@ -188,6 +253,11 @@ class Dashboard_donation_forDonor extends Component {
     var response = await API.post('donation_list_by_preference', logs);
     if (response.status == 'success') {
       console.log(response);
+      if ([...response.data.campaign_data] == 0)
+      {
+        Toast.show('No Campaign found', Toast.LONG)
+      }
+
       this.setState({
         setcmpData: [...response.data.campaign_data],
       });
@@ -197,7 +267,9 @@ class Dashboard_donation_forDonor extends Component {
     }
   };
   user_preference = prefer_name => {
-    if (prefer_name === 'all') {
+
+    console.log('user_preference: ', prefer_name)
+    if (prefer_name === 'All') {
       this.setState({
         setcmpData: [],
       });
@@ -207,6 +279,22 @@ class Dashboard_donation_forDonor extends Component {
         setcmpData: [],
       });
       this.preference_dashboard_donate();
+    }
+  };
+
+  user_filter = (name, id) => {
+
+    console.log('user_preference: ', name, id)
+    if (name === 'All') {
+      this.setState({
+        setcmpData: [],
+      });
+      this.dashboard_donate();
+    } else {
+      this.setState({
+        setcmpData: [],
+      });
+      this.dashboard_donate_by_filter(id);
     }
   };
   
@@ -408,6 +496,7 @@ class Dashboard_donation_forDonor extends Component {
         modalCommentVal: item,
         campaign_id: item.campaign_id,
         commentArr: [],
+        starCount: 5,
       },
       this.commetFetch,
     );
@@ -664,8 +753,11 @@ source={{uri: base64Icon}}>
                 fontWeight: 'bold',
               },
             ]}>
-            {item.User_Name}
+            {item.User_Name1}
           </Text>
+
+          
+
           {/* <Text
             style={[
               {
@@ -687,8 +779,24 @@ source={{uri: base64Icon}}>
               marginStart: 18,
             },
           ]}></View>
-        <View style={[{marginStart: 28, width: '60%'}]}>
+        <View style={[{marginStart: 13, width: '60%'}]}>
+          
+          <Text style={[{marginTop: 3, color: '#000', fontWeight: 'bold'}]}>{item.comment_user_name}</Text>
           <Text style={[{marginTop: 3, color: '#000'}]}>{item.comment}</Text>
+          <View
+              style={{
+                marginTop: 10,
+                width: 120,
+              }}>
+                 <StarRating       
+        disabled={false}
+        maxStars={5}
+        rating={parseInt(item.rating)}
+        starSize = {20}
+        // selectedStar={(rating) => this.onStarRatingPress(rating)}
+        fullStarColor={'#ff5c5c'}
+      />
+      </View>
         </View>
       </View>
     );
@@ -708,6 +816,7 @@ source={{uri: base64Icon}}>
         user_id: user_id,
         campaign_id: this.state.campaign_id,
         comment: this.state.comment,
+        rating: String(this.state.starCount)
       };
       var response = await API.post('campaign_comment', logs);
       if (response.status == 'success') {
@@ -716,6 +825,8 @@ source={{uri: base64Icon}}>
           comment: '',
           modalComment: false,
           campaign_id: '',
+          rating: 0,
+          starCount: 5,
         });
       }
     } else {
@@ -728,7 +839,9 @@ source={{uri: base64Icon}}>
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
-          <View style={Styles.dashboard_main_header}>
+            
+          <SafeAreaView style={Styles.dashboard_main_header}>
+            
             <View style={Styles.dashboard_main_headers}>
               <TouchableOpacity
                 onPress={() => this.props.navigation.openDrawer()}>
@@ -796,7 +909,7 @@ source={{uri: base64Icon}}>
                 />
               </TouchableOpacity>
             </View>
-          </View>
+          </SafeAreaView>
 
           
 
@@ -829,7 +942,9 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
             </View>
           </CardItem>
         </Card>
-
+        <View style={{flexDirection: 'row', justifyContent: 'space-between',
+    alignItems: 'center',}}>
+        <View style={{width: '49%'}}>
             <Selector
               text={this.state.gender}
               placeholder="Gender"
@@ -858,6 +973,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                       this.user_preference(item.pref_name);
                       this.setState({gender: item.pref_name});
                       this.setState({showPicker: false});
+
                     }}
                     style={{
                       paddingVertical: 12,
@@ -878,6 +994,61 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                 );
               }}
             />
+ </View>
+
+ <View style={{width: '49%', }}>
+ <Selector
+                text={this.state.gender1}
+                placeholder="Preference"
+                
+                onPress={() => this.setState({showPicker1: true})}
+                width={'100%'}
+                height={42}
+                imageheight={10}
+                imagewidth={11}
+                backcolor={'#ffff'}
+                borderRadius={10}
+                borderWidth={1}
+                margright={10}
+                fontcolor={'#A1A1A1'}
+              />
+
+<Picker
+              backgroundColor={'#ffff'}
+              dataList={this.state.ArrPref1}
+              modalVisible={this.state.showPicker1}
+              onBackdropPress={() => this.setState({showPicker1: false})}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                     // this.prefArr.push(item.pref_id);
+                     this.user_filter(item.name, item.id);
+                      this.setState({gender1: item.name});
+                      this.setState({showPicker1: false});
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                    }}>
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 14,
+                        },
+                        this.state.genderValue1 == item.name,
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+ </View>
+            
+             </View>
             <FlatList
               data={this.state.setcmpData}
               renderItem={this.renderlog}
@@ -943,8 +1114,18 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                   marginStart: 10,
                   fontSize: 20,
                 }}>
-                Comment
+                Review
               </Text>
+              {/* <Text
+                style={{
+                  color: '#000',
+                  alignSelf: 'flex-end',
+                  fontWeight: 'bold',
+                  marginRight: 10,
+                  fontSize: 20,
+                }}>
+                CLOSE
+              </Text> */}
             </View>
             <View
               style={{
@@ -952,8 +1133,21 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                 justifyContent: 'center',
                 height: '100%',
               }}>
+                 <View
+              style={{
+                justifyContent: 'center',
+                margin: 20,
+              }}>
+                 <StarRating       
+        disabled={false}
+        maxStars={5}
+        rating={this.state.starCount}
+        selectedStar={(rating) => this.onStarRatingPress(rating)}
+        fullStarColor={'#ff5c5c'}
+      />
+      </View>
               <FlatList
-                style={{width: '100%', height: '100%'}}
+                // style={{backgroundColor: 'red'}}
                 keyExtractor={item => item.id.toString()}
                 data={this.state.commentArr}
                 onEndReachedThreshold={0.5}
@@ -986,10 +1180,11 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                         height: 50,
                         padding: 10,
                         borderRadius: 40,
-                        fontSize: 18,
+                        fontSize: 16,
                         color: '#000',
+                        paddingLeft: 15
                       }}
-                      placeholder={'Type Your Comment Here'}
+                      placeholder={'Type your comment here...'}
                       multiline={true}
                       onChangeText={textEntry => {
                         this.commentText(textEntry);

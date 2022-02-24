@@ -312,7 +312,7 @@ class Campaing_details extends Component {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -375,7 +375,7 @@ class Campaing_details extends Component {
                   />
                 </TouchableOpacity>
               </View> */}
-            </View>
+            </SafeAreaView>
             <ScrollView style={Styles.dashboard_main_contain}>
               <View style={Styles.campaign_details_contain}>
 

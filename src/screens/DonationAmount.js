@@ -29,6 +29,7 @@ import {
 } from 'react-native-table-component';
 import Toast from 'react-native-simple-toast';
 import RazorpayCheckout from 'react-native-razorpay';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class DonationAmount extends Component {
   constructor(props) {
     super(props);
@@ -108,7 +109,7 @@ class DonationAmount extends Component {
       description: 'Credits towards consultation',
       image: 'https://i.imgur.com/3g7nmJC.png',
       currency: 'INR',
-      key: 'rzp_live_6JxkAJpOaUUuG4',
+      key: 'rzp_test_Aabh2L4rXsWHju', // rzp_test_Aabh2L4rXsWHju rzp_live_6JxkAJpOaUUuG4
       amount: this.state.Amount * 100,
       name: this.state.fname + ' ' + this.state.lname,
       prefill: {
@@ -186,7 +187,7 @@ class DonationAmount extends Component {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.donation_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -252,7 +253,7 @@ class DonationAmount extends Component {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </SafeAreaView>
 
             <Text style={{
     fontSize: 25,

@@ -824,7 +824,7 @@ module.exports = StyleSheet.create({
     fontWeight: '700',
   },
   sub_text_font1:{
-    fontSize: 17,
+    fontSize: 15,
     // alignSelf: 'center',
     // color: '#ffff',
     fontWeight: '500',
@@ -1045,6 +1045,7 @@ module.exports = StyleSheet.create({
     marginTop: 20,
     color: '#f55656',
     alignSelf: 'center',
+    borderRadius: 6
   },
   donation_sub: {
     // flex: 1,

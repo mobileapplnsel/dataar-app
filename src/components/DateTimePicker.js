@@ -100,8 +100,8 @@ export default function DateTimePicker(props) {
               backgroundColor: '#ffff',
             }}
             mode={props.mode}
-            // minimumDate={props.minDate}
-            // maximumDate={props.maxDate}
+            minimumDate={props.minDate}
+            maximumDate={props.maxDate}
           />
         ) : (
           <DatePicker

@@ -15,6 +15,7 @@ import API from '../services/api';
 var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const OtpVerify = ({route, navigation}) => {
   const [Mobile, setMobile] = useState('');
   const [LastName, setLastName] = useState();

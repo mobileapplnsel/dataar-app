@@ -19,6 +19,8 @@ import ImagePicker from 'react-native-image-crop-picker';
 import Selector from '../components/Selector';
 import Picker from '../components/Picker';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-simple-toast';
 class Preference extends Component {
   constructor(props) {
     super(props);
@@ -87,8 +89,15 @@ class Preference extends Component {
   addpreference = async () => {
     var token = await AsyncStorage.getItem('token');
     var user_id = await AsyncStorage.getItem('user_id');
-    console.log('prefArr', this.prefArr);
+    console.log('prefArr1', this.prefArr);
     var unique = [...new Set(this.prefArr.map(item => item))];
+
+    if(this.prefArr.length == 0)
+    {
+      Toast.show('Please select a preference', Toast.LONG)
+    }
+    else
+    {
     var logs = {
       user_id: user_id,
       preferences: unique,
@@ -96,8 +105,11 @@ class Preference extends Component {
     var response = await API.post('add_preference', logs);
     console.log(response);
     if (response.status == 'success') {
-      Alert.alert(response.status, response.message);
+     // Alert.alert(response.status, response.message);
+      Toast.show(response.message, Toast.LONG)
+      this.prefer_list();
     }
+  }
   };
   user = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -108,7 +120,24 @@ class Preference extends Component {
       this.props.navigation.navigate('LogIn');
     }
   };
-  delete = async () => {};
+  delete = async (item) => {
+    var token = await AsyncStorage.getItem('token');
+    console.log(item);
+    var logs = {
+      pref_id: item.id,
+    };
+    if (token != null && token !== '') {
+      var response = await API.post('delete_preference', logs);
+      console.log('delete response: ',response);
+      if (response.status == 'success') {
+       // Alert.alert(response.status, response.message);
+        Toast.show(response.message, Toast.LONG)
+        this.prefer_list();
+      }
+      
+    } else {
+    }
+  };
   prefer_list = async () => {
     var token = await AsyncStorage.getItem('token');
     var user_id = await AsyncStorage.getItem('user_id');
@@ -118,19 +147,36 @@ class Preference extends Component {
     };
     if (token != null && token !== '') {
       var response = await API.post('preference_list_by_user', logs);
-      this.setState({
-        setcmpData: [...response.data],
-      });
-      console.log(response);
+      console.log('preference_list_by_user: ',response);
+      if (response.status == 'success') {
+        this.setState({
+          setcmpData: [...response.data],
+        });
+      }
+      else if (response.status == 'warning')
+      {
+        this.setState({
+          setcmpData: [],
+        });
+        Toast.show(response.message, Toast.LONG)
+        //Alert.alert(response.status, response.message);
+       // this.prefer_list();
+      }
+      else
+      {
+
+      }
+      
+      
     } else {
     }
   };
   renderlog = ({item, index}) => {
     return (
       <View
-        style={{flex: 1, marginStart: 10, marginEnd: 10}}
+        style={{flex: 1, marginStart: 10, marginEnd: 10,}}
         key={item.donation_id}>
-        <Card style={{overflow: 'hidden'}}>
+        <Card style={{overflow: 'hidden', }}>
           <CardItem>
             <View
               style={{
@@ -143,7 +189,7 @@ class Preference extends Component {
                   {item.selected_pref_name}
                 </Text>
               </View>
-              <TouchableOpacity onPress={() => this.delete()}>
+              <TouchableOpacity onPress={() => this.delete(item)}>
                 <AntDesign name="delete" size={20} />
               </TouchableOpacity>
             </View>
@@ -155,11 +201,11 @@ class Preference extends Component {
   render() {
     return (
       <Container>
-        <ScrollView>
+        {/* <ScrollView> */}
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -222,7 +268,7 @@ class Preference extends Component {
                   />
                 </TouchableOpacity>
               </View>
-            </View>
+            </SafeAreaView>
             <View>
               <Image
                 style={{
@@ -237,7 +283,10 @@ class Preference extends Component {
               />
               <Text style={Styles.user_kyc_font}>User Preference</Text>
             </View>
+            <View>
+            <View>
             <List style={Styles.profile_main_contain}>
+            
               <Selector
                 text={this.state.gender}
                 placeholder="Preference"
@@ -254,7 +303,28 @@ class Preference extends Component {
                 fontcolor={'#A1A1A1'}
               />
             </List>
+            </View>
+            
+            <TouchableOpacity
+              style={[
+                Styles.donate_btn_now,
+                {
+                  marginTop: 95,
+                  alignSelf: 'center',
+                  marginBottom: 20,
+                },
+              ]}
+              onPress={() => this.addpreference()}>
+              <Text style={Styles.donate_btn_text}>Add Preference</Text>
+            </TouchableOpacity>
 
+
+            <FlatList
+              data={this.state.setcmpData}
+              renderItem={this.renderlog}
+              keyExtractor={(item, id) => id.toString()}
+            />
+            </View>
             <Picker
               backgroundColor={'#ffff'}
               dataList={this.state.ArrPref}
@@ -287,24 +357,8 @@ class Preference extends Component {
                 );
               }}
             />
-            <TouchableOpacity
-              style={[
-                Styles.donate_btn_now,
-                {
-                  alignSelf: 'center',
-                  marginBottom: 20,
-                },
-              ]}
-              onPress={() => this.addpreference()}>
-              <Text style={Styles.donate_btn_text}>Add Preference</Text>
-            </TouchableOpacity>
-            <FlatList
-              data={this.state.setcmpData}
-              renderItem={this.renderlog}
-              keyExtractor={(item, id) => id.toString()}
-            />
           </ImageBackground>
-        </ScrollView>
+        {/* </ScrollView> */}
       </Container>
     );
   }

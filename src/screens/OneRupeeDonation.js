@@ -34,6 +34,7 @@ import {
 import RazorpayCheckout from 'react-native-razorpay';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const selectOneFile = async () => {
   //Opening Document Picker for selection of one file
   try {
@@ -228,7 +229,7 @@ console.log('target amount')
       description: 'Credits towards consultation',
       image: 'https://i.imgur.com/3g7nmJC.png',
       currency: 'INR',
-      key: 'rzp_live_6JxkAJpOaUUuG4', // rzp_test_Aabh2L4rXsWHju
+      key: 'rzp_test_Aabh2L4rXsWHju', // rzp_test_Aabh2L4rXsWHju 'rzp_live_6JxkAJpOaUUuG4'
       amount: this.state.targetAmount * 100,
       name: this.state.fname + ' ' + this.state.lname,
       prefill: {
@@ -261,7 +262,7 @@ console.log('target amount')
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.donation_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('Dashboard_donation_forDonor')}>
@@ -327,7 +328,7 @@ console.log('target amount')
                   />
                 </TouchableOpacity>
               </View> */}
-            </View>
+            </SafeAreaView>
 
             <ScrollView>
 

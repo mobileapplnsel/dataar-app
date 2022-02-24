@@ -24,6 +24,7 @@ import RadioForm, {
   RadioButtonInput,
   RadioButtonLabel,
 } from 'react-native-simple-radio-button';
+import { SafeAreaView } from 'react-native-safe-area-context';
 class DonationPayment extends Component {
   constructor(props) {
     super(props);
