@@ -94,13 +94,13 @@ const StartCampaign = ({navigation}) => {
       setselectedPANName(res.name);
       setselectedPANSource(res.uri);
      
-       RNFetchBlob.fs
-          .readFile(res.uri, 'base64')
-          .then((data) => {
-            setfilebaseString(data)
-            console.log('base : ' +data);
-           })
-          .catch((err) => { console.log('err : ' +err);});
+      //  RNFetchBlob.fs
+      //     .readFile(res.uri, 'base64')
+      //     .then((data) => {
+      //       setfilebaseString(data)
+      //       console.log('base : ' +data);
+      //      })
+      //     .catch((err) => { console.log('err : ' +err);});
        
        
       //Setting the state to show single file attributes
@@ -268,7 +268,7 @@ const StartCampaign = ({navigation}) => {
       filter_by_type: selectID,
       zip: pincode,
       campaign_target_qty: quantity,
-      supported_doc: filebaseString
+      supported_doc: selectedPANSource
     };
     console.log(logs);
     var response = await API.post('add_campaign', logs);

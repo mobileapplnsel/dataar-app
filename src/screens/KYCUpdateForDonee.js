@@ -86,13 +86,13 @@ class User_profile extends Component {
      this.setState({selectedPANName:res.name});
      this.setState({selectedPANSource:res.uri});
      
-       RNFetchBlob.fs
-          .readFile(res.uri, 'base64')
-          .then((data) => {
-            this.setState({filebaseString:data})
-            console.log('base : ' +data);
-           })
-          .catch((err) => { console.log('err : ' +err);});
+      //  RNFetchBlob.fs
+      //     .readFile(res.uri, 'base64')
+      //     .then((data) => {
+      //       this.setState({filebaseString:data})
+      //       console.log('base : ' +data);
+      //      })
+      //     .catch((err) => { console.log('err : ' +err);});
        
        
       //Setting the state to show single file attributes
@@ -137,13 +137,13 @@ class User_profile extends Component {
       filename1 = res.name
       this.setState({selectedIDName:res.name});
       this.setState({selectedIDSource:res.uri}); 
-       RNFetchBlob.fs
-          .readFile(res.uri, 'base64')
-          .then((data) => {
-            this.setState({imagebaseString:data})
-            console.log('base1 : ' +data);
-           })
-          .catch((err) => { console.log('err : ' +err);});
+      //  RNFetchBlob.fs
+      //     .readFile(res.uri, 'base64')
+      //     .then((data) => {
+      //       this.setState({imagebaseString:data})
+      //       console.log('base1 : ' +data);
+      //      })
+      //     .catch((err) => { console.log('err : ' +err);});
        
       //Setting the state to show single file attributes
      
@@ -192,13 +192,13 @@ class User_profile extends Component {
      this.setState({selectedTrustFileName:res.name});
       this.setState({selectedTrustFileSource:res.uri});
      
-       RNFetchBlob.fs
-          .readFile(res.uri, 'base64')
-          .then((data) => {
-           this.setState({certificateTrustFileName:data}) 
-            console.log('base : ' +data);
-           })
-          .catch((err) => { console.log('err : ' +err);});
+      //  RNFetchBlob.fs
+      //     .readFile(res.uri, 'base64')
+      //     .then((data) => {
+      //      this.setState({certificateTrustFileName:data}) 
+      //       console.log('base : ' +data);
+      //      })
+      //     .catch((err) => { console.log('err : ' +err);});
        
        
       //Setting the state to show single file attributes
@@ -256,13 +256,13 @@ class User_profile extends Component {
       var logs = {
         user_id: user_id,
         kycfile_type: 'base64',
-        kyc_file: this.state.filebaseString,
+        kyc_file: this.state.selectedPANSource,
         pan_number: this.state.selectedPANNumber,
         address_proof_type: this.state.selectedID,
         address_proof_number: this.state.selectedKYCNumber,
-        kyc_address_file: this.state.imagebaseString,
+        kyc_address_file: this.state.selectedIDSource,
         donee_type: this.state.selectedsecondValue,
-        trust_certificate_file: this.state.certificateTrustFileName,
+        trust_certificate_file: this.state.selectedTrustFileSource,
         website_link: this.state.websiteLink,
         };
       // formdata.append('firstname', FirstName);
