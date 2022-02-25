@@ -130,7 +130,7 @@ const Dashboard = ({navigation}) => {
               </TouchableOpacity>
             </View>
             <View style={Styles.dashboard_main_headers}>
-              <TouchableOpacity>
+              {/* <TouchableOpacity>
                 <Image
                   style={{
                     width: 30,
@@ -143,7 +143,7 @@ const Dashboard = ({navigation}) => {
                   source={require('../../src/assets/images/search.png')}
                   // resizeMode="contain"dashboard_main_btn
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity onPress={() => user()}>
                 <Image
                   style={{

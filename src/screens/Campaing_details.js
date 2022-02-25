@@ -336,7 +336,7 @@ class Campaing_details extends Component {
                 </TouchableOpacity>
               </View>
               <View style={Styles.dashboard_main_headers}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Search_screen')}>
                   <Image
                     style={{
@@ -365,7 +365,7 @@ class Campaing_details extends Component {
                     source={require('../../src/assets/images/user.png')}
                     // resizeMode="contain"dashboard_main_btn
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </SafeAreaView>
             <ScrollView style={Styles.dashboard_main_contain}>

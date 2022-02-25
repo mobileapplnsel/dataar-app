@@ -368,8 +368,9 @@ setselectedValue(item.kind_id)
     
   }
   return (
-    <ScrollView>
+   
       <Container>
+         <ScrollView>
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
@@ -405,7 +406,7 @@ setselectedValue(item.kind_id)
               </TouchableOpacity>
             </View>
             <View style={Styles.dashboard_main_headers}>
-              <TouchableOpacity>
+              {/* <TouchableOpacity>
                 <Image
                   style={{
                     width: 30,
@@ -433,13 +434,15 @@ setselectedValue(item.kind_id)
                   source={require('../../src/assets/images/user.png')}
                   // resizeMode="contain"dashboard_main_btn
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
           </SafeAreaView>
+          
           <View style={Styles.login_text_main}>
             <Text style={Styles.campaign_name_font}>Start Campaign</Text>
           </View>
           {isNext == 0 ? (
+            <ScrollView>
             <View style={Styles.login_text_input_contain}>
               <Text style={Styles.campaign_text_font}>Step 1</Text>
               <TextInput
@@ -555,9 +558,11 @@ setselectedValue(item.kind_id)
                   Next
                 </Text>
               </TouchableOpacity>
+              <View style={{marginBottom: 20}}></View>
             </View>
+           </ScrollView>
           ) : null}
-
+ 
           {isNext == 1 ? (
             <View style={Styles.login_text_input_contain}>
               <Text style={Styles.campaign_text_font}>Step 2</Text>
@@ -708,11 +713,8 @@ setselectedValue(item.kind_id)
             </View>
           ) : null}
         </ImageBackground>
-      </Container>
-
-
-      
-       <Modal
+        </ScrollView>
+        <Modal
                             animationType="slide"
                             transparent={true}
                             visible={seachableModalVisible}
@@ -773,7 +775,12 @@ setselectedValue(item.kind_id)
         onBackdropPress={() => setisEndPickerVisible(false)}
         onPressDone={() => setisEndPickerVisible(false)}
       />
-    </ScrollView>
+      </Container>
+
+
+      
+      
+   
   );
 };
 

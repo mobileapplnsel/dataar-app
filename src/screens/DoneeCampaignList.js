@@ -162,7 +162,7 @@ class CampaignList extends Component {
                 </TouchableOpacity>
               </View>
               <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                   <Image
                     style={{
                       width: 30,
@@ -191,7 +191,7 @@ class CampaignList extends Component {
                     source={require('../../src/assets/images/user.png')}
                     // resizeMode="contain"dashboard_main_btn
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </SafeAreaView>
             

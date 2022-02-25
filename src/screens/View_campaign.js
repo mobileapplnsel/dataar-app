@@ -279,7 +279,7 @@ source={{uri: base64Icon}}>
                   </Text>
               </View>
               <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                   <Image
                     style={{
                       width: 30,
@@ -307,7 +307,7 @@ source={{uri: base64Icon}}>
                     source={require('../../src/assets/images/user.png')}
                     // resizeMode="contain"dashboard_main_btn
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </SafeAreaView>
             {/* <ScrollView horizontal={true}> */}

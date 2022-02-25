@@ -184,7 +184,7 @@ class User_profile extends Component {
                 </TouchableOpacity>
               </View>
               <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                   <Image
                     style={{
                       width: 30,
@@ -197,7 +197,7 @@ class User_profile extends Component {
                     source={require('../../src/assets/images/search.png')}
                     // resizeMode="contain"dashboard_main_btn
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate('')}>
                   <Image
                     style={{
