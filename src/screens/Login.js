@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Alert,
   Platform,
+  BackHandler
 } from 'react-native';
 import {
   Container,
@@ -52,14 +53,41 @@ const Login = ({navigation}) => {
   };
   // const contextType = AuthContext;
   useEffect(() => {
+
     GoogleSignin.configure({
       scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
       webClientId:
         '104839958051-nlpuvn6mk2bnh1aujqi58o0nqvqul2ll.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
       offlineAccess: false, // if you want to access Google API on behalf of the user FROM YOUR SERVER
       forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
-    });
+    })
+
+    if (Platform.OS === 'android') {
+     BackHandler.addEventListener('hardwareBackPress', backBtnPressed)
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+     
+    }
+    
   }, []);
+  const onBackPress = () => {
+    return true;
+  };
+   const backBtnPressed = () => {
+    
+    Alert.alert(
+      'Warning',
+      'Do you want to close the app?', // <- this part is optional, you can pass an empty string
+      [
+        {text: 'NO', onPress: () => console.log('No')},
+        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        
+      ],
+      {cancelable: false},
+    )
+    return true;
+  };
   const signIngoo = async () => {
     try {
       await GoogleSignin.hasPlayServices();
@@ -341,7 +369,7 @@ else
     else
     {
     var logs = {
-      username: Email,
+      username: Email.trim(),
       password: password,
       fcm_token: fcm_token
     };

@@ -14,7 +14,38 @@ export default class API {
   postWithoutHeader(endpoint, params) {
     return this.httpRequestWithoutHeader('POST', this.baseUrl + endpoint, params);
   }
-
+  postWithFormData(endpoint, params) {
+    return this.httpRequestWithFormData('POST', this.baseUrl + endpoint, params);
+  }
+  httpRequestWithFormData(method, url, params) {
+    console.log(params);
+    
+    return new Promise(async (resolve, reject) => {
+      console.log('enter111');
+      var token = await AsyncStorage.getItem('token');
+      console.log(JSON.stringify(params));
+      let options = {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'multipart/form-data',
+          Authorization: 'Bearer ' + token,
+        },
+        method: method,
+        body: params,
+      };
+      console.log(url, options);
+      // console.log(options);
+      fetch(url, options)
+        .then(response => response.json())
+        .then(responseJson => {
+          resolve(responseJson);
+          console.log(responseJson);
+        })
+        .catch(error => {
+          reject(error);
+        }); //to catch the errors if any
+    });
+  }
   httpRequest(method, url, params) {
     console.log(params);
     // return new Promise(async (resolve, reject) => {

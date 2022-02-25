@@ -38,14 +38,17 @@ class User_profile extends Component {
       selectedValue:'',
       selectedPANName:'Upload your Pan',
       selectedPANSource:'',
+      selectedPANType:'',
       filebaseString:'',
       selectedID:'Address proof',
       selectedKYCNumber:'',
       selectedIDName:'Upload your address proof',
       selectedIDSource:'',
+      selectedIDType:'',
       imagebaseString:'',
       labelName:'',
       progress: false,
+      selectedPANNumber: ''
 
     };
   }
@@ -81,6 +84,7 @@ selectOneFile = async () => {
       filename1 = res.name
      this.setState({selectedPANName:res.name});
      this.setState({selectedPANSource:res.uri});
+     this.setState({selectedPANType:res.type});
      
       //  RNFetchBlob.fs
       //     .readFile(res.uri, 'base64')
@@ -131,8 +135,9 @@ selectOneFile = async () => {
       console.log('File Size : ' + res.size);
       pdfpath = res.uri
       filename1 = res.name
-      this.setState({selectedIDName:res.name});
-      this.setState({selectedIDSource:res.uri}); 
+      this.setState({selectedIDName: res.name});
+      this.setState({selectedIDSource: res.uri}); 
+      this.setState({selectedIDType: res.type}); 
       //  RNFetchBlob.fs
       //     .readFile(res.uri, 'base64')
       //     .then((data) => {
@@ -164,13 +169,6 @@ selectOneFile = async () => {
   submit = async () => {
     var formdata = new FormData();
     var user_id = await AsyncStorage.getItem('user_id');
-    
-    console.log(user_id);
-     console.log( this.state.selectedID);
-   
-    
-      
-   
   
    if (this.state.selectedPANSource == '') {
     Alert.alert('Alert', 'Please upload your Pan');
@@ -187,28 +185,22 @@ selectOneFile = async () => {
   }
   
      else {
-      var logs = {
-        user_id: user_id,
-        kycfile_type: 'base64',
-        kyc_file: this.state.selectedPANSource,
-        pan_number: this.state.selectedPANNumber,
-        address_proof_type: this.state.selectedID,
-        address_proof_number: this.state.selectedKYCNumber,
-        kyc_address_file: this.state.selectedIDSource,
-        donee_type: '',
-        trust_certificate_file: '',
-        website_link: '',
-        };
-      // formdata.append('firstname', FirstName);
-      // formdata.append('lastname', LastName);
-      // formdata.append('email', Email);
-      // formdata.append('phone', Mobile);
-      // formdata.append('password', password);
-      // formdata.append('usertype', Otp);
-    
+
+      formdata.append('user_id', user_id);
+      formdata.append('kycfile_type', 'base64');
+      formdata.append('kyc_file', {uri: this.state.selectedPANSource, name: this.state.selectedPANName, type: this.state.selectedPANType});
+      formdata.append('pan_number', this.state.selectedPANNumber);
+      formdata.append('address_proof_type', this.state.selectedID);
+      formdata.append('address_proof_number', this.state.selectedKYCNumber);
+      formdata.append('kyc_address_file', {uri: this.state.selectedIDSource, name: this.state.selectedIDName, type: this.state.selectedIDType});
+      formdata.append('donee_type', '');
+      formdata.append('trust_certificate_file', '');
+      formdata.append('website_link', '');
+
+      console.log('update kyc for Donor payload: ', JSON.stringify(formdata))
   
   
-      var response = await API.post('update_kyc', logs);
+      var response = await API.postWithFormData('update_kyc', formdata);
       if (response.status == 'success') {
   
         // need to add kyc uploadation function here

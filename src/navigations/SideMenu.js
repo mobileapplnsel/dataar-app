@@ -58,10 +58,11 @@ const CustomSidebarMenu = props => {
     setUser_Type(user_Type);
     setToken(token);
     console.log('user_id:::', user_id);
+    console.log('user_Type:::', user_Type);
   }, []);
   const logout = () => {
     AsyncStorage.clear();
-    signOut()
+     signOut()
     props.navigation.navigate('LogIn');
      
     

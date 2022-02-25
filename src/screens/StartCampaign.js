@@ -57,7 +57,11 @@ const StartCampaign = ({navigation}) => {
   const [strdate, setSdate] = useState(null);
   const [endseldate, setenddate] = useState(null);
   const [selectedPANName, setselectedPANName] = useState('Upload supported doc');
+  const [selectedCampaignImage, setselectedCampaignImage] = useState('Upload Campaign Image');
+  const [selectedCampaignImageSource, setselectedCampaignImageSource] = useState('');
+  const [selectedCampaignImageType, setselectedCampaignImageType] = useState('');
   const [selectedPANSource, setselectedPANSource] = useState('');
+  const [selectedPANType, setselectedPANType] = useState('');
   const [filebaseString, setfilebaseString] = useState('');
   const [minEndDate, setminEndDate] = useState('');
   const [seachableModalVisible, setseachableModalVisible] = useState(false);
@@ -71,39 +75,41 @@ const StartCampaign = ({navigation}) => {
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
-        //There can me more options as well
-        // DocumentPicker.types.allFiles
-        // DocumentPicker.types.images
-        // DocumentPicker.types.plainText
-        // DocumentPicker.types.audio
-        // DocumentPicker.types.pdf
+       
       });
-  
-      
-               
-      
-      //Printing the log realted to the file
-      
-      console.log('res : ' + JSON.stringify(res));
-      console.log('URi : ' + res.uri);
-      console.log('Type : ' + res.type);
-      console.log('File Name : ' + res.name);
-      console.log('File Size : ' + res.size);
-      // pdfpath = res.uri
-      // filename1 = res.name
       setselectedPANName(res.name);
       setselectedPANSource(res.uri);
+      setselectedPANType(res.type)
      
-      //  RNFetchBlob.fs
-      //     .readFile(res.uri, 'base64')
-      //     .then((data) => {
-      //       setfilebaseString(data)
-      //       console.log('base : ' +data);
-      //      })
-      //     .catch((err) => { console.log('err : ' +err);});
-       
-       
-      //Setting the state to show single file attributes
+    } catch (err) {
+      //Handling any exception (If any)
+      if (DocumentPicker.isCancel(err)) {
+        //If user canceled the document selection
+        alert('Canceled from single doc picker');
+      } else {
+        //For Unknown Error
+        alert('Unknown Error: ' + JSON.stringify(err));
+        throw err;
+      }
+    }
+  };
+  const selectOneFile1 = async () => {
+    //Opening Document Picker for selection of one file
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images],
+      });
+
+      // console.log('res : ' + JSON.stringify(res));
+      // console.log('URi : ' + res.uri);
+      // console.log('Type : ' + res.type);
+      // console.log('File Name : ' + res.name);
+      // console.log('File Size : ' + res.size);
+     
+      setselectedCampaignImage(res.name);
+      setselectedCampaignImageSource(res.uri);
+      setselectedCampaignImageType(res.type);
+      
      
     } catch (err) {
       //Handling any exception (If any)
@@ -133,7 +139,7 @@ const StartCampaign = ({navigation}) => {
       Alert.alert('Title', 'Please add Title');
     } else if (Description == '') {
       Alert.alert('Description', 'Please add Description');
-    } else if (image == '') {
+    } else if (selectedCampaignImageSource == '') {
       Alert.alert('Image', 'Please add Image');
     } else if (strdate == null) {
       Alert.alert('Start Date', 'Please add Start Date');
@@ -229,10 +235,10 @@ const StartCampaign = ({navigation}) => {
       compressImageMaxHeight: 500,
       compressImageQuality: 0.5,
       cropping: true,
-      includeBase64: true,
+      includeBase64: false,
     }).then(image => {
       imageUpload(image);
-      // console.log(image);
+       console.log(image);
     });
   };
   const imageUpload = image => {
@@ -247,38 +253,74 @@ const StartCampaign = ({navigation}) => {
     setImagetype(image.mime);
     // console.log(image.path);
   };
-  const Start_CampaignNow = async () => {
-    // var token = await AsyncStorage.getItem('token');
-    var user_id = await AsyncStorage.getItem('user_id');
+  const Start_CampaignNow = () => {
+    var formdata = new FormData();
+    // var user_id = await AsyncStorage.getItem('user_id');
+    // console.log('selectedValue', selectedValue);
 
-    // if (amount == '') {
-    //   Alert.alert('Medical Detail', 'Medical Detail Successfully');
+    // var logs = {
+    //   user_id: user_id,
+    //   campaign_name: Title,
+    //   donation_mode: selCamp,
+    //   campaign_details: Description,
+    //   campaign_start_date: strdate,
+    //   campaign_end_date: endseldate,
+    //   campaign_image: image,
+    //   campaign_target_amount: amount,
+    //   kind_id: selectedValue,
+    //   filter_by_type: selectID,
+    //   zip: pincode,
+    //   campaign_target_qty: quantity,
+    //   supported_doc: selectedPANSource
+    // };
+
+
+    formdata.append('user_id', '1');
+    formdata.append('campaign_name', 'Title');
+    formdata.append('donation_mode', selCamp);
+    formdata.append('campaign_details', Description);
+    formdata.append('campaign_start_date', strdate);
+    formdata.append('campaign_end_date', endseldate);
+    formdata.append('campaign_image', {uri: selectedCampaignImageSource, name: selectedCampaignImage, type: selectedCampaignImageType});
+    formdata.append('campaign_target_amount', amount);
+    formdata.append('kind_id', selectedValue);
+    formdata.append('filter_by_type', selectID);
+    formdata.append('zip', pincode);
+    formdata.append('campaign_target_qty', quantity);
+    formdata.append('supported_doc', {uri: selectedPANSource, name: selectedPANName, type: selectedPANType});
+
+    console.log('Start campaign parameters: ', JSON.stringify(formdata))
+
+    fetch('https://dev.solutionsfinder.co.uk/dataar/api/add_campaign', {
+      method: 'POST',
+      headers: {
+        Accept: '*/*',
+         'Content-Type': 'multipart/form-data',
+        Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMTEwIiwiZmlyc3RfbmFtZSI6IkNsaWVudDIiLCJsYXN0X25hbWUiOiJEb25lZTEiLCJlbWFpbCI6ImNsaWVudGRvbmVlQHlvcG1haWwuY29tIiwiQVBJX1RJTUUiOjE2NDU3ODM0Nzl9.JFpGei49NSS8DehLkSgLoC6LuXqV1vLSI6uFwUYzGKk',
+      },
+      body: formdata
+
+  })
+      .then((response) => { 
+        console.log('Start campaign response: ', response)
+          // loginUserSuccess(dispatch, response)
+      })
+      .catch((ERROR) => {
+        console.log('Start campaign response ERROR: ', ERROR)
+          // loginUserFailed(dispatch, response)
+      })
+
+    // var response = await API.postWithFormData('add_campaign', formdata);
+
+    // console.log('Start campaign response: ', response)
+
+    // if (response.status == 'success') {
+    //   navigation.navigate('Dashboard');
+    //   Alert.alert(response.status, response.message);
+    // } else {
+    //   Alert.alert(response.status, response.message);
+    //   navigation.navigate('Dashboard');
     // }
-    console.log('selectedValue', selectedValue);
-    var logs = {
-      user_id: user_id,
-      campaign_name: Title,
-      donation_mode: selCamp,
-      campaign_details: Description,
-      campaign_start_date: strdate,
-      campaign_end_date: endseldate,
-      campaign_image: image,
-      campaign_target_amount: amount,
-      kind_id: selectedValue,
-      filter_by_type: selectID,
-      zip: pincode,
-      campaign_target_qty: quantity,
-      supported_doc: selectedPANSource
-    };
-    console.log(logs);
-    var response = await API.post('add_campaign', logs);
-    if (response.status == 'success') {
-      navigation.navigate('Dashboard');
-      Alert.alert(response.status, response.message);
-    } else {
-      Alert.alert(response.status, response.message);
-      navigation.navigate('Dashboard');
-    }
   };
   const startDate = () => {
     // setisStart(true);
@@ -466,11 +508,37 @@ setselectedValue(item.kind_id)
                 keyboardType="number-pad"
                 placeholderTextColor='grey'
               />
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={Styles.campaign_btn_upload_image}
                 onPress={() => upload()}>
                 <Text style={Styles.campaign_text_upload}>Upload image</Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+
+<TouchableOpacity
+          activeOpacity={0.5}
+          onPress={selectOneFile1}>
+            <View style={ {
+  alignItems: 'center',
+  flexDirection: 'row',
+  //backgroundColor: '#DDDDDD',
+  paddingTop: 20,
+  paddingBottom: 10,
+  alignSelf: 'center'
+}}> 
+          <Text style={{marginRight: 10, fontSize: 17}}>
+            {selectedCampaignImage}
+          </Text>
+          <Image
+            source={{
+              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
+            }}
+            style={Styles1.imageIconStyle}
+          />
+          </View>
+        </TouchableOpacity>
+       
+
+        <Text style={Styles1.warningHint}>{'Only Image format is acceptable'}</Text>
 
               <Selector
               text={selectType}
