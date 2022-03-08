@@ -34,6 +34,7 @@ import Search_screen from '../screens/Search_screen';
 import Preference from '../screens/Preference';
 import logintype from '../screens/logintype';
 import My_Donation_Details from '../screens/My_Donation_Details';
+import CamapignAdded from '../screens/CamapignAdded';
 import {navigationRef} from './Route';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -330,6 +331,13 @@ const HomeStackScreenDonee = ({navigation}) => (
       }}
     />
     <HomeStack_nav.Screen
+      name="CamapignAdded"
+      component={CamapignAdded}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <HomeStack_nav.Screen
       name="KYCUpdateForDonee"
       component={KYCUpdateForDonee}
       options={{
@@ -429,6 +437,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="OneRupeeDonation" component={OneRupeeDonation} />
     <AuthStack.Screen name="Manage_Account" component={Manage_Account} />
     <AuthStack.Screen name="Manage_AccountforDonee" component={Manage_AccountforDonee} />
+    <AuthStack.Screen name="CamapignAdded" component={CamapignAdded} />
     <AuthStack.Screen name="User_profile" component={User_profile} />
     <AuthStack.Screen name="User_profile_forDonee" component={User_profile_forDonee} />
     <AuthStack.Screen name="SignUp" component={RegisterScreen} />

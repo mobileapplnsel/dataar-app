@@ -133,7 +133,7 @@ class Dashboard_donation extends Component {
         campaign_id: item.campaign_id,
         // comment: '',
       };
-      console.log(logs);
+      console.log('like for search logs: ',logs);
       var response = await API.post('add_to_favourite', logs);
       if (response.status == 'success') {
        
@@ -413,7 +413,7 @@ class Dashboard_donation extends Component {
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
 }}
-source={{uri: base64Icon}}
+source={{uri: item.campaign_image}}
 // source={require('../../src/assets/images/21-Free-Banner-Templates-for-Photoshop-and-Illustrator.jpg')}
 >
 </Image> 

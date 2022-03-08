@@ -20,8 +20,28 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb585891535730438</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>FacebookAppID</key>
+	<string>585891535730438</string>
+	<key>FacebookClientToken</key>
+	<string>2f9ebca2cc324728a6f95704c84610a7</string>
+	<key>FacebookDisplayName</key>
+	<string>Dataar</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbapi</string>
+		<string>fb-messenger-share-api</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -35,28 +55,6 @@
 			</dict>
 		</dict>
 	</dict>
-  
-  <key>CFBundleURLTypes</key>
-  <array>
-    <dict>
-    <key>CFBundleURLSchemes</key>
-    <array>
-      <string>fb585891535730438</string>
-    </array>
-    </dict>
-  </array>
-  <key>FacebookAppID</key>
-  <string>585891535730438</string>
-  <key>FacebookClientToken</key>
-  <string>2f9ebca2cc324728a6f95704c84610a7</string>
-  <key>FacebookDisplayName</key>
-  <string>Dataar</string>
-  <key>LSApplicationQueriesSchemes</key>
-  <array>
-    <string>fbapi</string>
-    <string>fb-messenger-share-api</string>
-  </array>
-  
 	<key>NSCameraUsageDescription</key>
 	<string>Dataar requires access to the Camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -65,6 +63,10 @@
 	<string>Dataar requires access to the Microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Dataar requires access to the photo library</string>
+	<key>Privacy – Camera Usage Description</key>
+	<string>Dataar wants to access your device's Camera</string>
+	<key>Privacy – Photo Library Additions Usage Description</key>
+	<string>Dataar wants to access your devices's Photo Library</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

@@ -358,7 +358,7 @@ class Dashboard_donation extends Component {
 
     var base64String = item.campaign_image
     var base64Icon = 'data:image/png;base64,'+base64String
-    // console.log('base64Icon: ', base64Icon)
+     console.log('base64Icon: ', base64String)
 
     const wish = item.like_status == 1 ? true : false;
     console.log(wish);
@@ -411,7 +411,7 @@ class Dashboard_donation extends Component {
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
 }}
-source={{uri: base64Icon}}
+source={{uri: item.campaign_image}}
 // source={require('../../src/assets/images/21-Free-Banner-Templates-for-Photoshop-and-Illustrator.jpg')}
 >
 </Image> 

@@ -557,11 +557,11 @@ class Dashboard_donation_forDonor extends Component {
         // progressStatus =
         //   (parseInt(0) / parseInt(item.campaign_target_amount)) * 100;
            progressStatus = 0.00
-        amountpaind = 0 + ' of ' + item.campaign_target_amount;
+        amountpaind = 0 + ' of ' + item.campaign_target_qty;
       } else {
         progressStatus =
           (parseInt(item.total_donation_quantity) /
-            parseInt(item.campaign_target_amount)) *
+            parseInt(item.campaign_target_qty)) *
           100;
           progressStatus = parseFloat(progressStatus).toFixed(2)
           console.log('progressStatus:::::', progressStatus)
@@ -574,7 +574,7 @@ class Dashboard_donation_forDonor extends Component {
             progressStatus = 100
           }
         amountpaind =
-          item.total_donation_quantity + ' of ' + item.campaign_target_amount;
+          item.total_donation_quantity + ' of ' + item.campaign_target_qty;
       }
     }
 
@@ -624,13 +624,13 @@ class Dashboard_donation_forDonor extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: -6}}>
+              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: 1}}>
 <Image style={{
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
 }}
 
-source={{uri: base64Icon}}>
+source={{uri: item.campaign_image}}>
 {/* source={require('../../src/assets/images/daatar_banner.jpg')}> */}
 
 </Image> 
@@ -638,7 +638,7 @@ source={{uri: base64Icon}}>
 
 
 
-              <View style={{flexDirection: 'row', marginTop: -25}}>
+              <View style={{flexDirection: 'row', marginTop: 1}}>
                 <Text style={Styles.doner_title_font}>
                   {item.campaign_details}
                 </Text>

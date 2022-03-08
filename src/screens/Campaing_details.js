@@ -75,7 +75,7 @@ class Campaing_details extends Component {
       this.setState({
         cmpData: [...response.data.donations],
         capmain_details: [...response.data.capmain_details],
-        campaignImageURI: base64Icon,
+        campaignImageURI: base64String,
         isloading: false,
       });
 

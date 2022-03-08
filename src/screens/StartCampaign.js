@@ -36,6 +36,13 @@ import DateTimePicker from '../components/DateTimePicker';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import Toast from 'react-native-simple-toast';
+import {
+  launchCamera,
+  launchImageLibrary
+} from 'react-native-image-picker';
+
+
+  
 const StartCampaign = ({navigation}) => {
   const [Title, setTitle] = useState('');
   const [Description, setDescription] = useState('');
@@ -69,6 +76,126 @@ const StartCampaign = ({navigation}) => {
   const [selectID, setselectID] = useState('');
   const [showPicker, setshowPicker] = useState(false);
   const [ArrPref1, setArrPref1] = useState([]);
+  const [filePath, setFilePath] = useState({});
+
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'App needs camera permission',
+          },
+        );
+        // If CAMERA Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    } else return true;
+  };
+
+  const requestExternalWritePermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'External Storage Write Permission',
+            message: 'App needs write permission',
+          },
+        );
+        // If WRITE_EXTERNAL_STORAGE Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        alert('Write permission err', err);
+      }
+      return false;
+    } else return true;
+  };
+
+  const captureImage = async (type) => {
+    let options = {
+      mediaType: type,
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+      videoQuality: 'low',
+      durationLimit: 30, //Video max duration in seconds
+      saveToPhotos: true,
+    };
+    let isCameraPermitted = await requestCameraPermission();
+    let isStoragePermitted = await requestExternalWritePermission();
+    if (isCameraPermitted && isStoragePermitted) {
+      launchCamera(options, (response) => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          alert('User cancelled camera picker');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          alert('Camera not available on device');
+          return;
+        } else if (response.errorCode == 'permission') {
+          alert('Permission not satisfied');
+          return;
+        } else if (response.errorCode == 'others') {
+          alert(response.errorMessage);
+          return;
+        }
+        console.log('base641 -> ', response.assets);
+        console.log('uri -> ', response.uri);
+        console.log('width -> ', response.width);
+        console.log('height -> ', response.height);
+        console.log('fileSize -> ', response.fileSize);
+        console.log('type -> ', response.type);
+        console.log('fileName -> ', response.fileName);
+        setFilePath(response);
+      });
+    }
+  };
+  
+  const chooseFile = async () => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+    };
+    launchImageLibrary(options, (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        alert('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        alert('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        alert('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        alert(response.errorMessage);
+        return;
+      }
+
+      setselectedCampaignImage(response.assets['0']['fileName']);
+      setselectedCampaignImageSource(response.assets['0']['uri']);
+      setselectedCampaignImageType(response.assets['0']['type']);
+
+      // console.log('base64 -> ', response.assets['0']['fileName']);
+      // console.log('uri -> ', response.uri);
+      // console.log('width -> ', response.width);
+      // console.log('height -> ', response.height);
+      // console.log('fileSize -> ', response.fileSize);
+      // console.log('type -> ', response.type);
+      // console.log('fileName -> ', response.fileName);
+      setFilePath(response);
+    });
+  };
   
   const selectOneFile = async () => {
     //Opening Document Picker for selection of one file
@@ -253,28 +380,8 @@ const StartCampaign = ({navigation}) => {
     setImagetype(image.mime);
     // console.log(image.path);
   };
-  const Start_CampaignNow = () => {
+  const Start_CampaignNow1 = () => {
     var formdata = new FormData();
-    // var user_id = await AsyncStorage.getItem('user_id');
-    // console.log('selectedValue', selectedValue);
-
-    // var logs = {
-    //   user_id: user_id,
-    //   campaign_name: Title,
-    //   donation_mode: selCamp,
-    //   campaign_details: Description,
-    //   campaign_start_date: strdate,
-    //   campaign_end_date: endseldate,
-    //   campaign_image: image,
-    //   campaign_target_amount: amount,
-    //   kind_id: selectedValue,
-    //   filter_by_type: selectID,
-    //   zip: pincode,
-    //   campaign_target_qty: quantity,
-    //   supported_doc: selectedPANSource
-    // };
-
-
     formdata.append('user_id', '1');
     formdata.append('campaign_name', 'Title');
     formdata.append('donation_mode', selCamp);
@@ -321,6 +428,71 @@ const StartCampaign = ({navigation}) => {
     //   Alert.alert(response.status, response.message);
     //   navigation.navigate('Dashboard');
     // }
+  };
+  const Start_CampaignNow = async () => {
+    var user_id = await AsyncStorage.getItem('user_id');
+    var formdata = new FormData();
+    if (selCamp == 2) 
+    {
+      formdata.append('user_id', user_id);
+      formdata.append('campaign_name', Title);
+      formdata.append('donation_mode', selCamp);
+      formdata.append('campaign_details', Description);
+      formdata.append('campaign_start_date', String(strdate));
+      formdata.append('campaign_end_date', String(endseldate));
+       formdata.append('campaign_image', {uri: selectedCampaignImageSource, name: selectedCampaignImage, type: selectedCampaignImageType});
+      formdata.append('campaign_target_amount', amount);
+      formdata.append('kind_id', selectedValue);
+      formdata.append('filter_by_type', selectID);
+      formdata.append('zip', pincode);
+      formdata.append('campaign_target_qty', quantity);
+    }
+    else
+    {
+      formdata.append('user_id', user_id);
+      formdata.append('campaign_name', Title);
+      formdata.append('donation_mode', selCamp);
+      formdata.append('campaign_details', Description);
+      formdata.append('campaign_start_date', String(strdate));
+      formdata.append('campaign_end_date', String(endseldate));
+       formdata.append('campaign_image', {uri: selectedCampaignImageSource, name: selectedCampaignImage, type: selectedCampaignImageType});
+      formdata.append('campaign_target_amount', amount);
+      formdata.append('kind_id', selectedValue);
+      formdata.append('filter_by_type', selectID);
+      formdata.append('zip', pincode);
+      formdata.append('campaign_target_qty', quantity);
+       formdata.append('supported_doc', {uri: selectedPANSource, name: selectedPANName, type: selectedPANType});
+    }
+    
+
+
+
+    //  formdata.append('campaign_name', 'Title');
+    // formdata.append('donation_mode', selCamp);
+    // formdata.append('campaign_details', Description);
+    // formdata.append('campaign_start_date', strdate);
+    // formdata.append('campaign_end_date', endseldate);
+    // formdata.append('campaign_image', {uri: selectedCampaignImageSource, name: selectedCampaignImage, type: selectedCampaignImageType});
+    // formdata.append('campaign_target_amount', amount);
+    // formdata.append('kind_id', selectedValue);
+    // formdata.append('filter_by_type', selectID);
+    // formdata.append('zip', pincode);
+    // formdata.append('campaign_target_qty', quantity);
+    // formdata.append('supported_doc', {uri: selectedPANSource, name: selectedPANName, type: selectedPANType});
+
+    console.log('Start campaign parametersForDonee: ', JSON.stringify(formdata))
+
+     var response = await API.postWithFormData('add_campaign', formdata);
+
+     console.log('Start campaign response: ', response)
+
+    if (response.status == 'success') {
+      navigation.navigate('Dashboard');
+      Alert.alert(response.status, response.message);
+    } else {
+      Alert.alert(response.status, response.message);
+      navigation.navigate('Dashboard');
+    }
   };
   const startDate = () => {
     // setisStart(true);
@@ -514,7 +686,7 @@ setselectedValue(item.kind_id)
                 <Text style={Styles.campaign_text_upload}>Upload image</Text>
               </TouchableOpacity> */}
 
-<TouchableOpacity
+{ Platform.OS === 'android' ? <TouchableOpacity
           activeOpacity={0.5}
           onPress={selectOneFile1}>
             <View style={ {
@@ -536,7 +708,39 @@ setselectedValue(item.kind_id)
           />
           </View>
         </TouchableOpacity>
+
+:
+
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={chooseFile}>
+            <View style={ {
+  alignItems: 'center',
+  flexDirection: 'row',
+  //backgroundColor: '#DDDDDD',
+  paddingTop: 20,
+  paddingBottom: 10,
+  alignSelf: 'center'
+}}> 
+          <Text style={{marginRight: 10, fontSize: 17}}>
+            {selectedCampaignImage}
+          </Text>
+          <Image
+            source={{
+              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
+            }}
+            style={Styles1.imageIconStyle}
+          />
+          </View>
+        </TouchableOpacity> }
        
+
+        {/* <TouchableOpacity
+          activeOpacity={0.5}
+          style={Styles1.buttonStyle1}
+          onPress={() => chooseFile('photo')}>
+          <Text style={Styles1.textStyle}>Choose Image</Text>
+        </TouchableOpacity> */}
 
         <Text style={Styles1.warningHint}>{'Only Image format is acceptable'}</Text>
 
@@ -880,6 +1084,18 @@ imageIconStyle: {
   height: 20,
   width: 20,
   resizeMode: 'stretch',
+},
+buttonStyle1: {
+  alignItems: 'center',
+  backgroundColor: '#DDDDDD',
+  padding: 5,
+  marginVertical: 10,
+  width: 250,
+},
+textStyle: {
+  padding: 10,
+  color: 'black',
+  textAlign: 'center',
 },
 })
 export default StartCampaign;

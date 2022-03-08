@@ -73,7 +73,7 @@ class Campaing_details extends Component {
       // }
       var base64String = response.data.capmain_details[0]['campaign_image']
       var base64Icon = 'data:image/png;base64,'+base64String
-      this.setState({campaignImageURI: base64Icon})
+      this.setState({campaignImageURI: base64String})
 
 
       this.setState({
