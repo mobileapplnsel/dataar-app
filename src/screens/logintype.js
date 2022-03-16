@@ -40,14 +40,27 @@ const logintype = ({route, navigation}) => {
   const [isSelect, setisSelect] = useState(false);
   const [isloading, setisloading] = useState(false);
   const [userId, setuserId] = useState('');
-
+  const [selecttypeerror, setselecttypeerror] = useState('');
+  
   // const contextType = AuthContext;
   useEffect(() => {
     const {user_id} = route.params;
     setuserId(user_id);
   }, []);
+  const setselectValueMethod = async (dataval) => {
+    setselectedValue(dataval)
+    setselecttypeerror('')
+  }
 
   const Login = async (dataval, accessToken) => {
+
+    if (selectedValue == '')
+    {
+setselecttypeerror('Please choose a type')
+    }
+else
+{
+
     var logs = {
       user_id: userId,
       usertype: selectedValue,
@@ -86,6 +99,7 @@ const logintype = ({route, navigation}) => {
     } else {
       Alert.alert(response.status, response.message);
     }
+  }
   };
 
   if (isloading) {
@@ -116,13 +130,19 @@ const logintype = ({route, navigation}) => {
               borderWidth: 1,
             }}
             onValueChange={(itemValue, itemIndex) =>
-              setselectedValue(itemValue)
+              setselectValueMethod(itemValue)
             }>
             <Picker.Item label="Select one" value="" />
             <Picker.Item label="Donor" value="0" />
             <Picker.Item label="Donee" value="1" />
           </Picker>
-
+          <Text style={{
+    marginTop: -5,
+    color: 'red',
+    fontSize: 11,
+    marginBottom: 5,
+    marginLeft: 24,
+}}>{selecttypeerror}</Text>
           <TouchableOpacity
             style={Styles.login_btn_forget}
             onPress={() => Login()}>

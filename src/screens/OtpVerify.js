@@ -48,7 +48,7 @@ else
       Toast.show(response.message, Toast.LONG)
     }
    else if (response.token != '') {
-      Toast.show('The OTP has been sent to the registered email, please check and provide the same', Toast.LONG)
+      Toast.show('You have successfully Registered and Logged In on Dataar App', Toast.LONG)
       if (response.user_type == 0) {
         console.log(response.token);
         await AsyncStorage.setItem('token', String(response.token));

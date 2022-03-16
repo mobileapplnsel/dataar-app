@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, {Component, useEffect, useState} from 'react';
 import API from '../services/api';
 var Styles = require('../assets/files/Styles');
-
+import { LoginManager } from 'react-native-fbsdk'
 // var styles = require('../../src/assets/files/Styles');
 import {NavigationActions, NavigationEvents} from 'react-navigation';
 //android:roundIcon="@mipmap/ic_launcher_round"
@@ -62,15 +62,18 @@ const CustomSidebarMenu = props => {
   }, []);
   const logout = () => {
     AsyncStorage.clear();
-     signOut()
+    signOut()
     props.navigation.navigate('LogIn');
      
     
   };
+  
   const signOut = async () => {
     try {
-      await GoogleSignin.signOut();
-      props.navigation.navigate('LogIn');
+     // await GoogleSignin.signOut();
+      await GoogleSignin.revokeAccess();
+      LoginManager.logOut()
+     // props.navigation.navigate('LogIn');
    // Remember to remove the user from your app's state as well
     } catch (error) {
 

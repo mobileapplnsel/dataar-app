@@ -15,6 +15,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   PermissionsAndroid,
+  ActivityIndicator
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem} from 'native-base';
 import API from '../services/api';
@@ -59,6 +60,7 @@ class Dashboard_donation extends Component {
       ],
       showPicker: false,
       hasLocationPermission: null,
+      progress: false,
     };
   }
 
@@ -163,6 +165,9 @@ class Dashboard_donation extends Component {
     }
   };
   dashboard_donate = async () => {
+    this.setState({
+      progress:true
+  })
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
       user_id: user_id,
@@ -171,6 +176,9 @@ class Dashboard_donation extends Component {
     console.log(logs);
     var response = await API.post('donation_list', logs);
     if (response.status == 'success') {
+      this.setState({
+        progress:false
+    })
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log('donation_list response: ',response.data.campaign_data);
 
@@ -180,10 +188,16 @@ class Dashboard_donation extends Component {
       });
       // setcmpData(response.data);
     } else {
+      this.setState({
+        progress:false
+    })
       Alert.alert(response.status, response.message);
     }
   };
   dashboard_donate_by_filter = async (id) => {
+
+
+
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
       user_id: user_id,
@@ -191,7 +205,7 @@ class Dashboard_donation extends Component {
       // search:"Omicron",
       // campaign_name: Title,
     };
-    console.log(logs);
+    console.log('dashboard_donate_by_filter::::',logs);
     var response = await API.post('donation_list', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
@@ -209,7 +223,7 @@ class Dashboard_donation extends Component {
     var logs = {
       user_id: user_id,
     };
-    console.log(logs);
+    console.log('donation_list_by_preference: ', logs);
     var response = await API.post('donation_list_by_preference', logs);
     if (response.status == 'success') {
       console.log(response);
@@ -237,7 +251,7 @@ class Dashboard_donation extends Component {
   user_filter = (name, id) => {
 
     console.log('user_preference1: ', name, id)
-    if (name === 'All') {
+    if (name == 'All') {
       this.setState({
         setcmpData: [],
       });
@@ -421,11 +435,21 @@ class Dashboard_donation extends Component {
                   justifyContent: 'space-between',
                   backgroundColor: '#ffff',
                 }}>
-                  <TouchableOpacity
+                  <TouchableOpacity style={{
+                  width: '90%'
+                }}
         onPress={() =>
           this.props.navigation.navigate('LogIn')
         }>
-                <Text style={Styles.doner_name_font}>{item.campaign_name}</Text>
+                <Text style={{
+    fontSize: 16,
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    color: '#000',
+    fontWeight: '700',
+    width: '90%'
+    // paddingTop:40,
+  }}>{item.campaign_name}</Text>
                 </TouchableOpacity>
                 <View style={{flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => this.like(item, index)}>
@@ -452,7 +476,7 @@ class Dashboard_donation extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: -6}}>
+              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: 10}}>
 <Image style={{
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
@@ -464,7 +488,7 @@ class Dashboard_donation extends Component {
 
 </Image> 
 </View>
-              <View style={{flexDirection: 'row', marginTop: -25}}>
+              <View style={{flexDirection: 'row',marginTop: 1}}>
                 <Text style={Styles.doner_title_font}>
                   {item.campaign_details}
                 </Text>
@@ -936,6 +960,31 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
             </View>
           </View>
         </Modal>
+
+        <Modal transparent={true} animationType="none" visible={this.state.progress}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          //  backgroundColor: `rgba(0,0,0,${0.6})`,
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        <View
+          style={{
+            padding: 13,
+            backgroundColor: 'grey',
+            borderRadius: 13,
+            marginTop: '90%'
+          }}
+        >
+          <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
+          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+        </View>
+      </View>
+    </Modal>
       </Container>
     );
   }

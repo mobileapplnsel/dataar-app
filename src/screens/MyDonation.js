@@ -253,20 +253,20 @@ var donation_type = ''
               </View>
 
               <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', marginTop: 0, height: 40,}}>
-            <View style={{width: '50%'}}>
+            <View style={{width: '80%'}}>
 
             <TouchableOpacity
                   onPress={() => this.props.navigation.navigate('My_Donation_Details', {
                     camp_id: item.campaign_id,
                   })}>
-                <Text style={{fontSize: 19,
+                <Text style={{fontSize: 16,
     alignSelf: 'flex-start',
     color: '#000',
     fontWeight: '700',}}>{item.campaign_name}</Text>
               </TouchableOpacity> 
 
             </View>
-            <View style={{width: '50%',}}>
+            <View style={{width: '20%',}}>
             <TouchableOpacity onPress={() => this._onPressButton(item.donation_id)}>
             <Image style={{ marginRight: 20,
     resizeMode: 'contain', height: 40, alignSelf: 'flex-end', borderRadius: 4, width: 40

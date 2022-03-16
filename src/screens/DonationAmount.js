@@ -273,7 +273,7 @@ class DonationAmount extends Component {
                   </Text>
                 ) : (
                   <Text style={Styles.amount_text_font1}>
-                    Target Donation: {this.state.donateAmt} Quantity
+                    Target Donation: {this.state.donateAmt} INR
                   </Text>
                 )}
                 <TextInput

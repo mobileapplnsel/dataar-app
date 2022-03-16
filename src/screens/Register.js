@@ -301,15 +301,15 @@ const Register = ({navigation}) => {
    
       var fcm_token = await AsyncStorage.getItem('FCMtoken');
    
-    if (FirstName == '') {
+    if (FirstName.trim() == '') {
       Alert.alert('First Name', 'Please enter first name');
-    } else if (LastName == '') {
+    } else if (LastName.trim() == '') {
       Alert.alert('Last Name', 'Please enter last name');
-    } else if (Email == '') {
+    } else if (Email.trim() == '') {
       Alert.alert('Email', 'Please enter Email');
-    } else if (Mobile == '') {
+    } else if (Mobile.trim() == '') {
       Alert.alert('Mobile', 'Please enter Mobile');
-    } else if (password == '') {
+    } else if (password.trim() == '') {
       Alert.alert('Password', 'Please enter password');
     }else if(selectedValue ==''){ Alert.alert('select ', 'Please select type');}
     else if (password != confirm_password) {
@@ -323,11 +323,11 @@ const Register = ({navigation}) => {
       password != ''
     ) {
       var logs = {
-        firstname: FirstName,
-        lastname: LastName,
-        email: Email,
-        phone: Mobile,
-        password: password,
+        firstname: FirstName.trim(),
+        lastname: LastName.trim(),
+        email: Email.trim(),
+        phone: Mobile.trim(),
+        password: password.trim(),
         usertype: selectedValue,
         device_id: '',
         device_type: 'A',

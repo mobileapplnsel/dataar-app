@@ -312,10 +312,18 @@ class Preference extends Component {
                   marginTop: 95,
                   alignSelf: 'center',
                   marginBottom: 20,
+                  
                 },
               ]}
               onPress={() => this.addpreference()}>
-              <Text style={Styles.donate_btn_text}>Add Preference</Text>
+              <Text style={{
+    fontSize: 17,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    width: 150,
+    textAlign: 'center',
+  }}>Add Preference</Text>
             </TouchableOpacity>
 
 

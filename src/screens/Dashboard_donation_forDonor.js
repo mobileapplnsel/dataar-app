@@ -15,6 +15,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   PermissionsAndroid,
+  ActivityIndicator
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem} from 'native-base';
 import API from '../services/api';
@@ -69,7 +70,8 @@ class Dashboard_donation_forDonor extends Component {
       showPicker: false,
       showPicker1: false,
       hasLocationPermission: null,
-      starCount: 5
+      starCount: 5,
+      progress: false,
     };
   }
 
@@ -191,6 +193,11 @@ class Dashboard_donation_forDonor extends Component {
     });
   }
   dashboard_donate = async () => {
+
+    this.setState({
+      progress:true
+  })
+
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
       user_id: user_id,
@@ -202,7 +209,9 @@ class Dashboard_donation_forDonor extends Component {
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log('donation_list response: ',response.data.campaign_data);
-
+      this.setState({
+        progress:false
+    })
       if ([...response.data.campaign_data] == 0)
       {
         Toast.show('No Campaign found', Toast.LONG)
@@ -213,6 +222,9 @@ class Dashboard_donation_forDonor extends Component {
       });
       // setcmpData(response.data);
     } else {
+      this.setState({
+        progress:false
+    })
       Alert.alert(response.status, response.message);
     }
   };
@@ -595,9 +607,20 @@ class Dashboard_donation_forDonor extends Component {
                   justifyContent: 'space-between',
                   backgroundColor: '#ffff',
                 }}> 
-                  <TouchableOpacity
+                  <TouchableOpacity style={{
+                  width: '90%'
+                }}
         onPress={() => this.goToCampaignDetails(item, index)}>
-                <Text style={Styles.doner_name_font}>{item.campaign_name}</Text>
+           
+                <Text style={{
+    fontSize: 16,
+    alignSelf: 'flex-start',
+    alignItems: 'center',
+    color: '#000',
+    fontWeight: '700',
+    
+    // paddingTop:40,
+  }}>{item.campaign_name}</Text>
                 </TouchableOpacity>
                 <View style={{flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => this.like(item, index)}>
@@ -615,16 +638,16 @@ class Dashboard_donation_forDonor extends Component {
                       />
                     )}
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.dots()}>
+                  {/* <TouchableOpacity onPress={() => this.dots()}>
                     <Image
                       style={Styles.donation_icon_font}
                       source={require('../../src/assets/images/dots.jpg')}
                       // resizeMode="contain"dashboard_main_btn
                     />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               </View>
-              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: 1}}>
+              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: 10}}>
 <Image style={{
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
@@ -719,11 +742,35 @@ source={{uri: item.campaign_image}}>
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity
+               { item.donation_mode == '1' && <TouchableOpacity
                   style={Styles.donate_btn_now}
                   onPress={() => this.Donate(item)}>
-                  <Text style={Styles.donate_btn_text}>Donate Now</Text>
+                  <Text style={{
+    fontSize: 21,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Donate Now</Text>
                 </TouchableOpacity>
+  }
+
+{ item.donation_mode == '2' && <TouchableOpacity
+                  style={Styles.donate_btn_now}
+                  onPress={() => this.Donate(item)}>
+                  <Text style={{
+    fontSize: 21,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Request</Text>
+                </TouchableOpacity>
+  }
               </View>
             </View>
           </CardItem>
@@ -1208,6 +1255,30 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
             </View>
           </View>
         </Modal>
+        <Modal transparent={true} animationType="none" visible={this.state.progress}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          //  backgroundColor: `rgba(0,0,0,${0.6})`,
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        <View
+          style={{
+            padding: 13,
+            backgroundColor: 'grey',
+            borderRadius: 13,
+            marginTop: '90%'
+          }}
+        >
+          <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
+          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+        </View>
+      </View>
+    </Modal>
       </Container>
     );
   }

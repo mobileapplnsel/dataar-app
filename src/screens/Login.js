@@ -33,6 +33,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import {Picker} from '@react-native-picker/picker';
 import AppPreLoader from '../components/AppPreLoader';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 const Login = ({navigation}) => {
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
@@ -71,6 +72,13 @@ const Login = ({navigation}) => {
     }
     
   }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      setisloading(false);
+console.log('useFocusEffect called: ')
+      
+    })
+  );
   const onBackPress = () => {
     return true;
   };
@@ -90,11 +98,13 @@ const Login = ({navigation}) => {
   };
   const signIngoo = async () => {
     try {
+      
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log('userInfo', userInfo.user.email);
       var fcm_token = await AsyncStorage.getItem('FCMtoken');
       if (userInfo.user.email !== '') {
+        setisloading(true);
         var logs = {
           firstName: userInfo.user.givenName,
           lastName: userInfo.user.familyName,
@@ -130,7 +140,7 @@ const Login = ({navigation}) => {
               );
               var token = await AsyncStorage.getItem('token');
               console.log('token', token);
-              setisloading(true);
+             // setisloading(true);
               if (isLoggedInForOneRupee == 'yes')
         {
           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
@@ -234,6 +244,7 @@ else
                 } else {
                   resolve(result);
                   // console.log(result);
+                  setisloading(true);
                   fblogin(result, accessToken);
                 }
               };
@@ -259,7 +270,7 @@ else
     });
   };
   const fblogin = async (dataval, accessToken) => {
-
+   
     var fcm_token = await AsyncStorage.getItem('FCMtoken');
     var logs = {
       // fullName: dataval.first_name + ' ' + dataval.last_name,
@@ -292,7 +303,7 @@ else
           );
           var token = await AsyncStorage.getItem('token');
           console.log('token', token);
-          setisloading(true);
+          // setisloading(true);
           if (isLoggedInForOneRupee == 'yes')
         {
           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');

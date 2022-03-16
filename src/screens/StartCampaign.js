@@ -12,6 +12,7 @@ import {
   Modal,
   FlatList,
   Platform,
+  PermissionsAndroid
   // Picker,
 } from 'react-native';
 import {
@@ -40,8 +41,8 @@ import {
   launchCamera,
   launchImageLibrary
 } from 'react-native-image-picker';
-
-
+import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
+import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
   
 const StartCampaign = ({navigation}) => {
   const [Title, setTitle] = useState('');
@@ -73,9 +74,12 @@ const StartCampaign = ({navigation}) => {
   const [minEndDate, setminEndDate] = useState('');
   const [seachableModalVisible, setseachableModalVisible] = useState(false);
   const [selectType, setselectType] = useState('Select Type');
+  const [selectImageType, setselectImageType] = useState('Upload Image');
   const [selectID, setselectID] = useState('');
   const [showPicker, setshowPicker] = useState(false);
+  const [showImagePicker, setshowImagePicker] = useState(false);
   const [ArrPref1, setArrPref1] = useState([]);
+  const [ArrImagePicker, setArrImagePicker] = useState([{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}]);
   const [filePath, setFilePath] = useState({});
 
   const requestCameraPermission = async () => {
@@ -119,22 +123,25 @@ const StartCampaign = ({navigation}) => {
 
   const captureImage = async (type) => {
     let options = {
-      mediaType: type,
+      mediaType: 'photo',
       maxWidth: 300,
       maxHeight: 550,
-      quality: 1,
-      videoQuality: 'low',
-      durationLimit: 30, //Video max duration in seconds
-      saveToPhotos: true,
+       quality: 1,
+      // videoQuality: 'low',
+      // durationLimit: 30, //Video max duration in seconds
+      //  saveToPhotos: true,
     };
     let isCameraPermitted = await requestCameraPermission();
     let isStoragePermitted = await requestExternalWritePermission();
+    console.log('isCameraPermitted', isCameraPermitted)
+    console.log('isStoragePermitted', isStoragePermitted)
     if (isCameraPermitted && isStoragePermitted) {
+      
       launchCamera(options, (response) => {
         console.log('Response = ', response);
 
         if (response.didCancel) {
-          alert('User cancelled camera picker');
+          // alert('User cancelled camera picker');
           return;
         } else if (response.errorCode == 'camera_unavailable') {
           alert('Camera not available on device');
@@ -146,14 +153,9 @@ const StartCampaign = ({navigation}) => {
           alert(response.errorMessage);
           return;
         }
-        console.log('base641 -> ', response.assets);
-        console.log('uri -> ', response.uri);
-        console.log('width -> ', response.width);
-        console.log('height -> ', response.height);
-        console.log('fileSize -> ', response.fileSize);
-        console.log('type -> ', response.type);
-        console.log('fileName -> ', response.fileName);
-        setFilePath(response);
+        setselectedCampaignImage(response.assets['0']['fileName']);
+        setselectedCampaignImageSource(response.assets['0']['uri']);
+        setselectedCampaignImageType(response.assets['0']['type']);
       });
     }
   };
@@ -169,7 +171,7 @@ const StartCampaign = ({navigation}) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
-        alert('User cancelled camera picker');
+        // alert('User cancelled camera picker');
         return;
       } else if (response.errorCode == 'camera_unavailable') {
         alert('Camera not available on device');
@@ -212,7 +214,7 @@ const StartCampaign = ({navigation}) => {
       //Handling any exception (If any)
       if (DocumentPicker.isCancel(err)) {
         //If user canceled the document selection
-        alert('Canceled from single doc picker');
+        // alert('Canceled from single doc picker');
       } else {
         //For Unknown Error
         alert('Unknown Error: ' + JSON.stringify(err));
@@ -242,7 +244,7 @@ const StartCampaign = ({navigation}) => {
       //Handling any exception (If any)
       if (DocumentPicker.isCancel(err)) {
         //If user canceled the document selection
-        alert('Canceled from single doc picker');
+        // alert('Canceled from single doc picker');
       } else {
         //For Unknown Error
         alert('Unknown Error: ' + JSON.stringify(err));
@@ -680,13 +682,17 @@ setselectedValue(item.kind_id)
                 keyboardType="number-pad"
                 placeholderTextColor='grey'
               />
-              {/* <TouchableOpacity
-                style={Styles.campaign_btn_upload_image}
-                onPress={() => upload()}>
-                <Text style={Styles.campaign_text_upload}>Upload image</Text>
-              </TouchableOpacity> */}
+             
 
-{ Platform.OS === 'android' ? <TouchableOpacity
+
+
+
+
+
+
+
+
+{/* { Platform.OS === 'android' ? <TouchableOpacity
           activeOpacity={0.5}
           onPress={selectOneFile1}>
             <View style={ {
@@ -732,7 +738,7 @@ setselectedValue(item.kind_id)
             style={Styles1.imageIconStyle}
           />
           </View>
-        </TouchableOpacity> }
+        </TouchableOpacity> } */}
        
 
         {/* <TouchableOpacity
@@ -742,12 +748,128 @@ setselectedValue(item.kind_id)
           <Text style={Styles1.textStyle}>Choose Image</Text>
         </TouchableOpacity> */}
 
-        <Text style={Styles1.warningHint}>{'Only Image format is acceptable'}</Text>
+
+
+<Selector
+              text={selectedCampaignImage}
+              placeholder="Gender"
+              onPress={() => setshowImagePicker(true)}
+              width={'100%'}
+              height={42}
+              imageheight={10}
+              imagewidth={11}
+              backcolor={'#ffff'}
+              borderRadius={10}
+              borderWidth={1}
+              margright={10}
+              marginTop={18}
+              fontcolor={'#A1A1A1'}
+            />
+
+            <PickerDob
+              backgroundColor={'#ffff'}
+              dataList={ArrImagePicker}
+              modalVisible={showImagePicker}
+              onBackdropPress={() => setshowImagePicker(false)}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // this.user_filter(item.name, item.id);
+                      // this.setState({gender: item.name});
+                      // this.setState({showPicker: false});
+
+                      console.log('image pciker item: ', item.name)
+
+                      if (item.name == 'Take Photo')
+                      {
+                        setshowImagePicker(false)
+                        captureImage()
+
+                      }
+                      else
+                      {
+                        setshowImagePicker(false)
+                        
+                         if (Platform.OS === 'android')
+                         {
+                          selectOneFile1()
+                         }
+                         else
+                         {
+                          chooseFile()
+                         }
+         
+
+        {/* <TouchableOpacity
+          activeOpacity={0.5}
+          style={Styles1.buttonStyle1}
+          onPress={() => chooseFile('photo')}>
+          <Text style={Styles1.textStyle}>Choose Image</Text>
+        </TouchableOpacity> */}
+
+
+                      }
+
+                      // setshowPicker(false)
+                      // setselectType(item.name)
+                      // setselectID(item.id)
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                      flexDirection: 'row',
+
+                    }}>
+                      <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 0,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                      tintColor: 'black',
+                      marginEnd: 10
+                    }}
+                    source={item.image}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 30,
+                         // alignSelf: 'center'
+                        },
+                        // this.state.genderValue == item.name,
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+
+
+
+
+
+
+        <Text style={ {
+  marginTop: 5,
+  color: 'green',
+  fontSize: 11,
+  marginBottom: 10,
+  alignSelf: 'center',
+  paddingLeft: -80
+}}>{'Only Image format is acceptable'}</Text>
 
               <Selector
               text={selectType}
               placeholder="Gender"
-              marginTop={0}
               onPress={() => setshowPicker(true)}
               width={'100%'}
               height={42}
