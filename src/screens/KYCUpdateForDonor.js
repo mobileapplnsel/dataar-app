@@ -33,7 +33,8 @@ import {
   launchImageLibrary
 } from 'react-native-image-picker';
 import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
-import GalleryIcon from '../../src/assets/images/outline_description_black_48.png';
+import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
+import DocumentIcon from '../../src/assets/images/outline_description_black_48.png';
 var pdfpath
 var pdffile
 var filename1 = 'Upload your Pan'
@@ -63,7 +64,7 @@ class User_profile extends Component {
       showAddCardImagePicker: false,
       selectedImagePickerType: '',
       progress: false,
-      ArrImagePicker: [{"name": "Take Photo", 'image': cameraIcon}, { "name": "Select Document", 'image': GalleryIcon}],
+      ArrImagePicker: [{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}, { "name": "Select Document", 'image': DocumentIcon}],
     };
   }
   
@@ -169,7 +170,40 @@ class User_profile extends Component {
     }
   };
   
-   chooseFile = async () => {
+  //  chooseFile = async () => {
+  //   let options = {
+  //     mediaType: 'photo',
+  //     maxWidth: 300,
+  //     maxHeight: 550,
+  //     quality: 1,
+  //   };
+  //   launchImageLibrary(options, (response) => {
+  //     console.log('Response = ', response);
+
+  //     if (response.didCancel) {
+  //       // alert('User cancelled camera picker');
+  //       return;
+  //     } else if (response.errorCode == 'camera_unavailable') {
+  //       alert('Camera not available on device');
+  //       return;
+  //     } else if (response.errorCode == 'permission') {
+  //       alert('Permission not satisfied');
+  //       return;
+  //     } else if (response.errorCode == 'others') {
+  //       alert(response.errorMessage);
+  //       return;
+  //     }
+
+  //     setselectedCampaignImage(response.assets['0']['fileName']);
+  //     setselectedCampaignImageSource(response.assets['0']['uri']);
+  //     setselectedCampaignImageType(response.assets['0']['type']);
+
+
+  //     setFilePath(response);
+  //   });
+  // };
+  
+  chooseFile = async (fileType) => {
     let options = {
       mediaType: 'photo',
       maxWidth: 300,
@@ -192,17 +226,28 @@ class User_profile extends Component {
         alert(response.errorMessage);
         return;
       }
+if (fileType == 'Pan')
+{
+  this.setState({selectedPANName: response.assets['0']['fileName']});
+  this.setState({selectedPANSource: response.assets['0']['uri']});
+  this.setState({selectedPANType: response.assets['0']['type']});
+}
+else
+{
+  this.setState({selectedIDName: response.assets['0']['fileName']});
+  this.setState({selectedIDSource: response.assets['0']['uri']});
+  this.setState({selectedIDType: response.assets['0']['type']});
+}
 
-      setselectedCampaignImage(response.assets['0']['fileName']);
-      setselectedCampaignImageSource(response.assets['0']['uri']);
-      setselectedCampaignImageType(response.assets['0']['type']);
+
+      // setselectedCampaignImage(response.assets['0']['fileName']);
+      // setselectedCampaignImageSource(response.assets['0']['uri']);
+      // setselectedCampaignImageType(response.assets['0']['type']);
 
 
-      setFilePath(response);
+      
     });
   };
-  
-  
    selectOneFileForAndroid = async () => {
     try {
       const res = await DocumentPicker.pick({
@@ -256,6 +301,7 @@ selectOneFile = async () => {
      this.setState({selectedPANName:res.name});
      this.setState({selectedPANSource:res.uri});
      this.setState({selectedPANType:res.type});
+     this.setState({showPANCardImagePicker:false});
      
       //  RNFetchBlob.fs
       //     .readFile(res.uri, 'base64')
@@ -309,6 +355,7 @@ selectOneFile = async () => {
       this.setState({selectedIDName: res.name});
       this.setState({selectedIDSource: res.uri}); 
       this.setState({selectedIDType: res.type}); 
+      this.setState({showAddCardImagePicker: false}); 
       //  RNFetchBlob.fs
       //     .readFile(res.uri, 'base64')
       //     .then((data) => {
@@ -339,9 +386,7 @@ selectOneFile = async () => {
 
   submit = async () => {
 
-    this.setState({
-      progress:true
-  })
+   
 
     var formdata = new FormData();
     var user_id = await AsyncStorage.getItem('user_id');
@@ -351,16 +396,20 @@ selectOneFile = async () => {
   } 
  
   else if (this.state.selectedPANNumber== '') {
-    Alert.alert('Alert', 'Please upload your pan number');
+    Alert.alert('Alert', 'Please enter pan number');
   }
   else if (this.state.selectedIDSource == '') {
     Alert.alert('Alert', 'Please upload your address proof ');
   }
-  else if (this.state.selectedKYCNumber== '') {
-    Alert.alert('Alert', 'Please upload your  '+ this.state.selectedID);
+  else if (this.state.selectedID == 'Address proof' || this.state.selectedID == 'Select Address Proof *') {
+    Alert.alert('Alert', 'Please select address proof type');
   }
   
      else {
+
+      this.setState({
+        progress:true
+    })
 
       formdata.append('user_id', user_id);
       formdata.append('kycfile_type', 'base64');
@@ -437,7 +486,7 @@ selectOneFile = async () => {
   render() {
     return (
       <Container>
-        <ScrollView>
+        
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
@@ -463,7 +512,7 @@ selectOneFile = async () => {
                 
               </View>
               </SafeAreaView>
-             
+              <ScrollView>
               <View style ={{marginTop: 25, marginBottom:20,marginLeft:20,marginRight:20}}>
               {/* <TouchableOpacity
           activeOpacity={0.5}
@@ -517,6 +566,11 @@ selectOneFile = async () => {
                         this.captureImage()
 
                       }
+                      else if (item.name == 'Select Document')
+                      {
+                        this.selectOneFile()
+
+                      }
                       else
                       {
                         this.setState({showPANCardImagePicker: false, selectedImagePickerType: 'PAN'})
@@ -527,7 +581,10 @@ selectOneFile = async () => {
                          }
                          else
                          {
-                          this.chooseFile()
+                          setTimeout(() => {
+                            this.chooseFile('Pan')
+                           // this.props.navigation.navigate('start')}
+                         }, 2000);
                          }
          
 
@@ -686,6 +743,11 @@ onValueChange={
                         this.captureImage()
 
                       }
+                      else if (item.name == 'Select Document')
+                      {
+                        this.selectOneFile1()
+
+                      }
                       else
                       {
                         this.setState({showAddCardImagePicker: false, selectedImagePickerType: 'ID'})
@@ -696,7 +758,10 @@ onValueChange={
                          }
                          else
                          {
-                          this.chooseFile()
+                          setTimeout(() => {
+                            this.chooseFile('Address')
+                           // this.props.navigation.navigate('start')}
+                         }, 2000);
                          }
                       }
 
@@ -780,10 +845,10 @@ onValueChange={
               <Text style={Styles.login_text}>SUBMIT</Text>
             </TouchableOpacity>
            </View>
-         
+           </ScrollView>
          
            </ImageBackground>
-        </ScrollView>
+        
         <Modal transparent={true} animationType="none" visible={this.state.progress}>
       <View
         style={{

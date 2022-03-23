@@ -124,6 +124,16 @@ class Dashboard_donation_forDonor extends Component {
     this.dashboard_donate();
     this.getPreferences()
     // this.getuser();
+
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+
+      console.log('focusListener has called!!!!')
+      this.props.navigation.closeDrawer();
+    //   this.dashboard_donate();
+    // this.getPreferences()
+      //Put your Data loading function here instead of my this.loadData()
+    });
+
     this.state.hasLocationPermission = PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
 
@@ -146,6 +156,7 @@ class Dashboard_donation_forDonor extends Component {
       console.log('Camera permission denied');
     }
   }
+  
   goToCampaignDetails = async (item, index) => {
     var token = await AsyncStorage.getItem('token');
     var user_id = await AsyncStorage.getItem('user_id');
@@ -333,6 +344,26 @@ class Dashboard_donation_forDonor extends Component {
       this.props.navigation.navigate('LogIn');
     }
   };
+  ContactDonee = async item => {
+
+    console.log("ContactDonee selected item: ",item);
+
+    this.props.navigation.navigate('DonationInKind', {
+      campaign_id: item.campaign_id,
+      kind_id: item.kind_id,
+    });
+    
+    // Alert.alert(
+    //   'Alert',
+    //   'An email has been sent to your email address, please check and contact the Donee directly.', // <- this part is optional, you can pass an empty string
+    //   [
+    //     {text: 'OK', onPress: () => console.log('cancelled')},
+    //   ],
+    //   {cancelable: false},
+    // )
+
+
+  }
   Donate = async item => {
     var token = await AsyncStorage.getItem('token');
     var kyc_verified = await AsyncStorage.getItem('kyc_verified');
@@ -576,7 +607,6 @@ class Dashboard_donation_forDonor extends Component {
             parseInt(item.campaign_target_qty)) *
           100;
           progressStatus = parseFloat(progressStatus).toFixed(2)
-          console.log('progressStatus:::::', progressStatus)
           if (progressStatus == 'Infinity')
           {
             progressStatus = 0
@@ -591,11 +621,12 @@ class Dashboard_donation_forDonor extends Component {
     }
 
     var base64String = item.campaign_image
-    var base64Icon = 'data:image/png;base64,'+base64String
-     console.log('base64Icon: ', base64Icon)
 
     const wish = item.like_status == 1 ? true : false;
     console.log(wish);
+    var msDiff = new Date(item.campaign_end_date).getTime() - new Date().getTime();    //Future date - current date
+    var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24));
+
     return (
       <View style={{flex: 1}} key={item.donation_id}>
         <Card style={{overflow: 'hidden'}}>
@@ -666,20 +697,20 @@ source={{uri: item.campaign_image}}>
                   {item.campaign_details}
                 </Text>
               </View>
-              <View
+              { item.donation_mode == '1' && <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={Styles.doner_title_font}>{amountpaind}</Text>
                 <Text style={Styles.doner_title_font}>{progressStatus}%</Text>
-              </View>
+              </View> }
               {/* <View> */}
-              <View style={Styles.inner_barpro}>
+              { item.donation_mode == '1' &&  <View style={Styles.inner_barpro}>
                 <Animated.View
                   style={[
                     Styles.inner_bar,
                     {width: parseInt(progressStatus) + '%'},
                   ]}
                 />
-              </View>
+              </View> }
               {/* </View> */}
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -703,7 +734,7 @@ source={{uri: item.campaign_image}}>
                   {item.days} days to go
                 </Text> */}
                  <Text style={Styles.doner_title_font}>
-                  {'5'} days to go
+                  {daysTill30June2035} days left
                 </Text>
               </View>
              
@@ -759,16 +790,16 @@ source={{uri: item.campaign_image}}>
 
 { item.donation_mode == '2' && <TouchableOpacity
                   style={Styles.donate_btn_now}
-                  onPress={() => this.Donate(item)}>
+                  onPress={() => this.ContactDonee(item)}>
                   <Text style={{
-    fontSize: 21,
+    fontSize: 17,
     alignSelf: 'center',
     color: '#ffff',
     fontWeight: '500',
     textAlignVertical: 'center',
     textAlign: 'center',
     marginTop: -4
-  }}>Request</Text>
+  }}>Contact Donee</Text>
                 </TouchableOpacity>
   }
               </View>
@@ -897,7 +928,7 @@ source={{uri: item.campaign_image}}>
                     width: 30,
                     height: 30,
                     marginStart: 10,
-                    // marginTop: 20,
+                     marginTop: 4,
                     backgroundColor: 'transparent',
                     alignSelf: 'center',
                   }}
@@ -1218,18 +1249,19 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                       height: 50,
                       flexDirection: 'row',
                       width: '100%',
-                      borderRadius: 40,
+                      borderRadius: 10,
                     }}>
                     <TextInput
                       style={{
                         flex: 1,
                         backgroundColor: '#e8e3e3',
-                        height: 50,
                         padding: 10,
                         borderRadius: 40,
                         fontSize: 16,
                         color: '#000',
-                        paddingLeft: 15
+                        paddingLeft: 15,
+                        alignSelf: 'center',
+                        marginTop: 5
                       }}
                       placeholder={'Type your comment here...'}
                       multiline={true}
@@ -1261,16 +1293,17 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
           flex: 1,
           alignItems: "center",
           justifyContent: "center",
-          //  backgroundColor: `rgba(0,0,0,${0.6})`,
+          // backgroundColor: `rgba(0,0,0,${0.6})`,
           width: '100%',
-          height: '100%'
+          height: '100%',
+          // marginTop: 400
         }}
       >
         <View
           style={{
             padding: 13,
             backgroundColor: 'grey',
-            borderRadius: 13,
+            borderRadius: 3,
             marginTop: '90%'
           }}
         >

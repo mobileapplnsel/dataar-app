@@ -82,6 +82,21 @@ const Dashboard = ({navigation}) => {
     }
   
   };
+  useEffect(() => {
+    const isFocused = navigation.isFocused();
+
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      console.log('focusListener has called!!!!')
+      navigation.closeDrawer();
+
+  });
+
+  return willFocusSubscription;
+
+   
+    
+  }, []);
+ 
   const user = async () => {
     var token = await AsyncStorage.getItem('token');
     console.log(token);
@@ -105,7 +120,7 @@ const Dashboard = ({navigation}) => {
                     width: 30,
                     height: 30,
                     marginStart: 10,
-                    // marginTop: 20,
+                     marginTop: 4,
                     backgroundColor: 'transparent',
                     alignSelf: 'center',
                     

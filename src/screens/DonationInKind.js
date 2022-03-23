@@ -44,7 +44,8 @@ class DonationAmount extends Component {
       email: '',
       mobile: '',
       image: '',
-      DonatebtnTitleStr: 'Donate'
+      remarksString: '',
+      remarksError: ''
     };
   }
   componentDidMount() {
@@ -68,20 +69,6 @@ class DonationAmount extends Component {
     this.setState({
       Amount: value,
     });
-    
-    if (parseInt(value) > parseInt(this.state.donateAmt))
-    {
-      this.setState({
-        DonatebtnTitleStr: 'Request',
-      });
-    }
-    else
-    {
-      this.setState({
-        DonatebtnTitleStr: 'Donate',
-      });
-    }
-
   };
   getuser = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -109,61 +96,32 @@ class DonationAmount extends Component {
     } else {
     }
   };
-  donate = () => {
-    console.log('this.state.fname + this.state.lname', this.state.fname + ' ' + this.state.lname,)
-    if (this.state.Amount == '')
+  donate = async () => {
+    
+    if (this.state.remarksString.trim() == '')
     {
-      this.setState({amountError: 'Please enter a valid amount'})
+      this.setState({remarksError: 'Please enter note'})
     }
-    else if (this.state.DonatebtnTitleStr == 'Request')
-    {
-      setTimeout(() => {
-      Toast.show('We have sent your request to Admin. Once they approved your will go to be go for donate', Toast.LONG)
-    }, 2000);
-    }
-
+    
    else
    {
-
-    console.log()
-
-    var options = {
-      description: 'Credits towards consultation',
-      image: 'https://i.imgur.com/3g7nmJC.png',
-      currency: 'INR',
-      key: 'rzp_test_Aabh2L4rXsWHju', // rzp_test_Aabh2L4rXsWHju rzp_live_6JxkAJpOaUUuG4
-      amount: this.state.Amount * 100,
-      name: this.state.fname + ' ' + this.state.lname,
-      prefill: {
-        email: this.state.email,
-        contact: this.state.mobile,
-        name: 'Razorpay Software'
-      },
-      theme: {color: '#F37254'},
-      options: {
-        checkout: {
-          name: "Lacme Corp"
-        }
-      }
+    
+      var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+      campaign_id: this.state.campaign_id,
+      message: this.state.remarksString
+    };
+    console.log(logs);
+    var response = await API.post('contact_donee', logs);
+    if (response.status == 'success') {
+      console.log('contact_donee response', response);
+      Toast.show(response.message, Toast.LONG)
+        this.props.navigation.goBack()
+    } else {
+      Alert.alert(response.status, response.message);
     }
-      RazorpayCheckout.open(options).then((data) => {
-      // handle success
-     // alert(`Success: ${data.razorpay_payment_id}`);
-     
-     this.setState({transaction_idd: data.razorpay_payment_id})
-     // alert(`Success: ${data}`);
-      console.log('Success: ', data.razorpay_payment_id)
-      // this.submitDonation()
-      if (this.state.donation_mode == '1') {
-        // this.props.navigation.navigate('DonationPayment');
-        this.startInkind();
-      } else {
-        this.startInkind();
-      }
-    }).catch((error) => {
-      // handle failure
-      alert(`Error: ${error.code} | ${error.description}`);
-    });
+  
    }
     
   };
@@ -202,6 +160,20 @@ class DonationAmount extends Component {
       this.props.navigation.navigate('LogIn');
     }
   };
+  setRemarks = (value) =>
+    {
+
+      if (value.trim() != '')
+        {
+          this.setState({remarksError: '', remarksString: value})
+        }
+        else
+        {
+          this.setState({remarksError: 'Please enter notes', remarksString: value})
+        }
+
+     
+    }
   render() {
     return (
       <ScrollView>
@@ -241,7 +213,7 @@ class DonationAmount extends Component {
                   />
                 </TouchableOpacity>
               </View>
-              <View style={Styles.dashboard_main_headers}>
+              {/* <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity>
                   <Image
                     style={{
@@ -274,45 +246,104 @@ class DonationAmount extends Component {
                     // resizeMode="contain"dashboard_main_btn
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </SafeAreaView>
 
-            <Text style={{
-    fontSize: 25,
-    marginLeft: 10,
-    textAlign:"center",
-    marginTop: 20,
-    marginBottom: 35
-  }}>
-              Target Donation
-            </Text>
+            
 
-            <View style={Styles.donation_sub}>
-              <View style={Styles.amount_main_contain}>
-                {this.state.donation_mode == '1' ? (
-                  <Text style={Styles.amount_text_font1}>
-                    Target Donation: {this.state.donateAmt} INR
-                  </Text>
-                ) : (
-                  <Text style={Styles.amount_text_font1}>
-                    Target Donation: {this.state.donateAmt} INR
-                  </Text>
-                )}
-                <TextInput
-                  placeholder="Enter Donation Amount"
-                  onChangeText={text => this.setAmount(text)}
-                  style={Styles.amount_text_input}
-                  keyboardType="decimal-pad"
-                  placeholderTextColor='grey'
-                />
-                <Text style={Styles1.errorHint}>{this.state.amountError}</Text>
-              </View>
+
+            <View style={{
+    backgroundColor: "#fff",
+        height: 213,
+        // borderRadius: 25,
+        padding: '5%',
+        marginLeft: '5%',
+        marginRight: '5%',
+        marginTop: 20,
+        // alignContent: 'center',
+        // justifyContent: "center",
+        // borderWidth: 1,
+        // borderRadius: 20,
+        // borderColor: '#000',
+        // borderBottomWidth: 0,
+        // shadowColor: '#000000',
+        // shadowOffset: { width: 0, height: 3 },
+        // shadowOpacity: 0.9,
+        // shadowRadius: 20,
+        elevation: 5,
+        width: '90%'
+  }}>
+
+
+<Text style={{paddingLeft:13,color: 'black', fontSize: 13, fontWeight: 'bold'}}>Notes</Text>
+
+<TextInput style={{
+    
+    width: null,
+    marginLeft: 13,
+    borderRadius: 5,
+    marginRight: 13,
+    backgroundColor: 'white',
+    fontSize: 12,
+    height: 130,
+    color: 'black',
+    marginTop: 10,
+    shadowColor: 'grey',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 1,
+      shadowRadius: 3,
+      padding: 5,
+      paddingTop: 5,
+      borderColor: 'grey',
+      borderWidth: .6
+    
+    }}
+                multiline={true}
+     numberOfLines={5}
+     textAlignVertical={'top'}
+     placeholder = 'Write notes ...'
+     onChangeText={text => this.setRemarks(text)}
+               value = {this.state.remarksString}
+                ></TextInput>
+
+<Text style={{
+        marginTop: 3,
+        color: 'red',
+        fontSize: 11,
+        marginBottom: -5,
+        alignSelf: 'flex-start',
+        marginLeft: 13
+    }}>{this.state.remarksError}</Text>
+
+        </View>
+
+        <Text style={{
+          paddingLeft: 17,
+          paddingRight: 17,
+        marginTop: 7,
+        color: 'green',
+        fontSize: 14,
+        marginBottom: 4,
+        alignSelf: 'center',
+    }}>{'Thank you for showing your interest'}</Text>
+              
+              <Text style={{
+          paddingLeft: 17,
+          paddingRight: 17,
+        marginTop: 0,
+        color: 'green',
+        fontSize: 14,
+        marginBottom: 15,
+        alignSelf: 'center',
+        textAlignVertical: 'center',
+        textAlign: 'center'
+    }}>{'Please type your message here and the Donee will contact you for your kind Donation.'}</Text>
               <TouchableOpacity
                 style={Styles.donate_btn}
                 onPress={() => this.donate()}>
-                <Text style={Styles.login_text}>{this.state.DonatebtnTitleStr}</Text>
+                <Text style={Styles.login_text}>Submit</Text>
               </TouchableOpacity>
-            </View>
+
           </ImageBackground>
         </Container>
       </ScrollView>

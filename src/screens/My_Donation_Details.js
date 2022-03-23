@@ -91,7 +91,16 @@ class Campaing_details extends Component {
     this.campaign();
     console.log('campaign', this.props.route.params.camp_id);
   }
+  ContactDonee = async item => {
 
+    console.log("ContactDonee selected item: ",item);
+
+    this.props.navigation.navigate('DonationInKind', {
+      campaign_id: this.state.capmain_details[0]['campaign_id'],
+              kind_id: this.state.capmain_details[0]['kind_id'],
+    });
+    
+  }
   Donate = async item => {
     var token = await AsyncStorage.getItem('token');
     var kyc_verified = await AsyncStorage.getItem('kyc_verified');
@@ -416,11 +425,42 @@ class Campaing_details extends Component {
 {/* onPress={() => this.comment()} */}
                   
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={Styles.donate_btn_now}
                   onPress={() => this.Donate()}>
                   <Text style={Styles.donate_btn_text}>Donate Now</Text>
+                </TouchableOpacity> */}
+
+{ this.state.capmain_details[0]['donation_mode'] == '1' && <TouchableOpacity
+                  style={Styles.donate_btn_now}
+                  onPress={() => this.Donate()}>
+                  <Text style={{
+    fontSize: 21,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Donate Now</Text>
                 </TouchableOpacity>
+  }
+
+{ this.state.capmain_details[0]['donation_mode'] == '2' && <TouchableOpacity
+                  style={Styles.donate_btn_now}
+                  onPress={() => this.ContactDonee()}>
+                  <Text style={{
+    fontSize: 17,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Contact Donee</Text>
+                </TouchableOpacity>
+  }
+
               </View>
 
               <Text style={{ marginStart: 5, fontWeight: 'bold', fontSize: 20, }}>
@@ -504,7 +544,7 @@ class Campaing_details extends Component {
                     {this.state.capmain_details[0]['campaign_target_amount']}
                   </Text>
 
-                  <Text style={{
+                  {/* <Text style={{
                     fontSize: 19,
                     fontWeight: '500',
                     marginTop: 13,
@@ -514,7 +554,7 @@ class Campaing_details extends Component {
                     textDecorationLine: 'underline'
                   }}>
                     Review & Ratings
-                  </Text>
+                  </Text> */}
                 
                 
 

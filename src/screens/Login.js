@@ -54,6 +54,22 @@ const Login = ({navigation}) => {
   };
   // const contextType = AuthContext;
   useEffect(() => {
+    const isFocused = navigation.isFocused();
+
+    const willFocusSubscription = navigation.addListener('focus', () => {
+      console.log('willFocusSubscription called: ')
+        setisloading(false);
+
+      GoogleSignin.configure({
+        scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
+        webClientId:
+          '104839958051-nlpuvn6mk2bnh1aujqi58o0nqvqul2ll.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
+        offlineAccess: false, // if you want to access Google API on behalf of the user FROM YOUR SERVER
+        forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
+      })
+  });
+
+  return willFocusSubscription;
 
     GoogleSignin.configure({
       scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
@@ -72,13 +88,7 @@ const Login = ({navigation}) => {
     }
     
   }, []);
-  useFocusEffect(
-    React.useCallback(() => {
-      setisloading(false);
-console.log('useFocusEffect called: ')
-      
-    })
-  );
+ 
   const onBackPress = () => {
     return true;
   };
@@ -158,7 +168,7 @@ else
 {
               setTimeout(() => {
                 navigation.navigate('Dashboard_donation_forDonor');
-                setisloading(false);
+                // setisloading(false);
                 setselectedValue('');
               }, 1000);
             }
@@ -195,7 +205,7 @@ else
 {
               setTimeout(() => {
                 navigation.navigate('Dashboard');
-                setisloading(false);
+                // setisloading(false);
               }, 1000);
             }
             }
@@ -270,7 +280,7 @@ else
     });
   };
   const fblogin = async (dataval, accessToken) => {
-   
+   setisloading(true);
     var fcm_token = await AsyncStorage.getItem('FCMtoken');
     var logs = {
       // fullName: dataval.first_name + ' ' + dataval.last_name,
@@ -321,7 +331,7 @@ else
 {
           setTimeout(() => {
             navigation.navigate('Dashboard_donation_forDonor');
-            setisloading(false);
+            // setisloading(false);
             setselectedValue('');
           }, 1000);
         }
@@ -352,7 +362,7 @@ else
 {
           setTimeout(() => {
             navigation.navigate('Dashboard');
-            setisloading(false);
+            // setisloading(false);
             setselectedValue('');
           }, 1000);
         }
@@ -419,7 +429,7 @@ else
               campaign_id: '',
               kind_id: '',
             });
-            setisloading(false);
+            // setisloading(false);
     setemail('');
     setpassword(''); 
           }, 1000);
@@ -428,7 +438,7 @@ else
 {
   setTimeout(() => {
     navigation.navigate('Dashboard_donation_forDonor');
-    setisloading(false);
+    // setisloading(false);
     setemail('');
     setpassword('');
   }, 1000);
@@ -462,7 +472,7 @@ else
 // {
         setTimeout(() => {
           navigation.navigate('Dashboard');
-          setisloading(false);
+          // setisloading(false);
           setemail('');
           setpassword('');
         }, 1000);

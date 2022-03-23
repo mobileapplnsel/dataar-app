@@ -31,7 +31,8 @@ import {
   launchImageLibrary
 } from 'react-native-image-picker';
 import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
-import GalleryIcon from '../../src/assets/images/outline_description_black_48.png';
+import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
+import DocumentIcon from '../../src/assets/images/outline_description_black_48.png';
 var pdfpath
 var pdffile
 var filename1 = 'Upload your Pan'
@@ -66,7 +67,7 @@ class User_profile extends Component {
       showAddCardImagePicker: false,
       show80GCardImagePicker: false,
       selectedImagePickerType: '',
-      ArrImagePicker: [{"name": "Take Photo", 'image': cameraIcon}, { "name": "Select Document", 'image': GalleryIcon}],
+      ArrImagePicker: [{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}, { "name": "Select Document", 'image': DocumentIcon}],
 
       
        };
@@ -174,7 +175,7 @@ class User_profile extends Component {
     }
   };
   
-   chooseFile = async () => {
+   chooseFile = async (fileType) => {
     let options = {
       mediaType: 'photo',
       maxWidth: 300,
@@ -197,13 +198,32 @@ class User_profile extends Component {
         alert(response.errorMessage);
         return;
       }
+if (fileType == 'Pan')
+{
+  this.setState({selectedPANName: response.assets['0']['fileName']});
+  this.setState({selectedPANSource: response.assets['0']['uri']});
+  this.setState({selectedPANType: response.assets['0']['type']});
+}
+else if (fileType == 'Address')
+{
+  this.setState({selectedIDName: response.assets['0']['fileName']});
+  this.setState({selectedIDSource: response.assets['0']['uri']});
+  this.setState({selectedIDType: response.assets['0']['type']});
+}
+else
+{
+  this.setState({selectedTrustFileName: response.assets['0']['fileName']});
+  this.setState({selectedTrustFileSource: response.assets['0']['uri']});
+  this.setState({selectedTrustFileType: response.assets['0']['type']});
+}
 
-      setselectedCampaignImage(response.assets['0']['fileName']);
-      setselectedCampaignImageSource(response.assets['0']['uri']);
-      setselectedCampaignImageType(response.assets['0']['type']);
+
+      // setselectedCampaignImage(response.assets['0']['fileName']);
+      // setselectedCampaignImageSource(response.assets['0']['uri']);
+      // setselectedCampaignImageType(response.assets['0']['type']);
 
 
-      setFilePath(response);
+      
     });
   };
   
@@ -263,7 +283,8 @@ class User_profile extends Component {
      this.setState({selectedPANName:res.name});
      this.setState({selectedPANSource:res.uri});
      this.setState({selectedPANType:res.type});
-     
+     this.setState({showPANCardImagePicker:false});
+      
       //  RNFetchBlob.fs
       //     .readFile(res.uri, 'base64')
       //     .then((data) => {
@@ -316,6 +337,10 @@ class User_profile extends Component {
       this.setState({selectedIDName:res.name});
       this.setState({selectedIDSource:res.uri}); 
       this.setState({selectedIDType: res.type}); 
+      this.setState({showAddCardImagePicker: false}); 
+
+      
+     
       //  RNFetchBlob.fs
       //     .readFile(res.uri, 'base64')
       //     .then((data) => {
@@ -371,6 +396,7 @@ class User_profile extends Component {
      this.setState({selectedTrustFileName:res.name});
       this.setState({selectedTrustFileSource:res.uri});
       this.setState({selectedTrustFileType:res.type});
+      this.setState({show80GCardImagePicker: false});
      
       //  RNFetchBlob.fs
       //     .readFile(res.uri, 'base64')
@@ -406,22 +432,28 @@ class User_profile extends Component {
      console.log( this.state.selectedID);
      console.log( this.state.selectedsecondValue);
      console.log(this.state.websiteLink)
-     
-    
+
+
+     if (this.state.selectedsecondValue == "Donee Type")
+      {
+        Alert.alert('What personality type do you belong to ?', 'Please select a type');
+      }
+      else
+      {
       if (this.state.selectedsecondValue == "1")
       {
         if (this.state.selectedPANSource == '') {
-          Alert.alert('Pan', 'Please upload your Pan');
+          Alert.alert('Pan card file', 'Please upload your Pan');
         } 
         else if (this.state.selectedPANNumber== '') {
-          Alert.alert('pan', 'Please upload your pan number');
+          Alert.alert('Pan Number', 'Please enter your pan number');
         }
         else if (this.state.selectedIDSource == '') {
-          Alert.alert('ID', 'Please upload your address proof ');
+          Alert.alert('ID card file', 'Please upload your address proof ');
         }
        
-        else if (this.state.selectedKYCNumber== '') {
-          Alert.alert('kyc', 'Please upload your'+ this.state.selectedID);
+        else if (this.state.selectedID== 'Address proof' || this.state.selectedID == 'Select Address Proof *') {
+          Alert.alert('Address proof Type', 'Please select address proof type');
         }
         // else if (this.state.selectedTrustFileSource== '') {
         //   Alert.alert('kyc', 'Please upload your TrustCertificate');
@@ -452,7 +484,16 @@ class User_profile extends Component {
             formdata.append('address_proof_number', this.state.selectedKYCNumber);
             formdata.append('kyc_address_file', {uri: this.state.selectedIDSource, name: this.state.selectedIDName, type: this.state.selectedIDType});
             formdata.append('donee_type', this.state.selectedsecondValue);
-            formdata.append('trust_certificate_file', {uri: this.state.selectedTrustFileSource, name: this.state.selectedTrustFileName, type: this.state.selectedTrustFileType});
+
+            if (this.state.selectedTrustFileSource == '')
+            {
+              formdata.append('trust_certificate_file', '');
+            }
+            else
+            {
+              formdata.append('trust_certificate_file', {uri: this.state.selectedTrustFileSource, name: this.state.selectedTrustFileName, type: this.state.selectedTrustFileType});
+            }
+            
             formdata.append('website_link', this.state.websiteLink);
         
     
@@ -474,17 +515,17 @@ class User_profile extends Component {
       else
       {
         if (this.state.selectedPANSource == '') {
-          Alert.alert('Pan', 'Please upload your Pan');
+          Alert.alert('Pan card file', 'Please upload your Pan');
         } 
         else if (this.state.selectedPANNumber== '') {
-          Alert.alert('pan', 'Please upload your pan number');
+          Alert.alert('Pan Number', 'Please enter your pan number');
         }
         else if (this.state.selectedIDSource == '') {
-          Alert.alert('ID', 'Please upload your address proof ');
+          Alert.alert('ID card file', 'Please upload your address proof ');
         }
        
-        else if (this.state.selectedKYCNumber== '') {
-          Alert.alert('kyc', 'Please upload your'+ this.state.selectedID);
+        else if (this.state.selectedID== 'Address proof' || this.state.selectedID == 'Select Address Proof *') {
+          Alert.alert('Address type', 'Please select address proof type');
         }      
          else {
           // var logs = {
@@ -508,8 +549,8 @@ class User_profile extends Component {
             formdata.append('address_proof_number', this.state.selectedKYCNumber);
             formdata.append('kyc_address_file', {uri: this.state.selectedIDSource, name: this.state.selectedIDName, type: this.state.selectedIDType});
             formdata.append('donee_type', this.state.selectedsecondValue);
-            formdata.append('trust_certificate_file', {uri: this.state.selectedTrustFileSource, name: this.state.selectedTrustFileName, type: this.state.selectedTrustFileType});
-            formdata.append('website_link', this.state.websiteLink);
+            formdata.append('trust_certificate_file', '');
+            formdata.append('website_link', '');
         
     
     
@@ -529,7 +570,7 @@ class User_profile extends Component {
       }
    
 
-   
+    }
      
   };
 
@@ -593,11 +634,38 @@ class User_profile extends Component {
       }
     }
   );
+  ActionSheetIOSonPress1 = () =>
+  ActionSheetIOS.showActionSheetWithOptions(
+    {  
+      options: ["Bank Statement ", "ITR Acknowlegement ", "Utility Bill ", "Cancel"],
+       destructiveButtonIndex: 3,
+       title: 'Select Address Proof',
+      cancelButtonIndex: 3,
+      userInterfaceStyle: 'dark'
+    },
+    buttonIndex => {
+      if (buttonIndex === 0) {
+
+        this.setState({selectedID: 'Bank Statement'})
+        
+      } else if (buttonIndex === 1) {
+
+        this.setState({selectedID: 'ITR Acknowlegement'})
+
+      } else if (buttonIndex === 2) {
+
+        this.setState({selectedID: 'Utility Bill'})
+      }
+       else {
+        // setResult("🔮");
+      }
+    }
+  );
 
   render() {
     return (
       <Container>
-        <ScrollView>
+        
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
@@ -625,6 +693,7 @@ class User_profile extends Component {
 
 
              </SafeAreaView>
+             <ScrollView>
              <View style ={{marginTop: 25, marginBottom:20,marginLeft:20,marginRight:20}}>
                <Text>Please Select donee Type *</Text>
 
@@ -726,6 +795,10 @@ class User_profile extends Component {
                         this.setState({showPANCardImagePicker: false, selectedImagePickerType: 'PAN'})
                         this.captureImage()
 
+                      } else if (item.name == 'Select Document')
+                      {
+                        this.selectOneFile()
+
                       }
                       else
                       {
@@ -737,7 +810,10 @@ class User_profile extends Component {
                          }
                          else
                          {
-                          this.chooseFile()
+                          setTimeout(() => {
+                            this.chooseFile('Pan')
+                           // this.props.navigation.navigate('start')}
+                         }, 2000);
                          }
          
 
@@ -804,7 +880,23 @@ class User_profile extends Component {
               keyboardType="default"
 
             />
-     { Platform.OS === 'ios' ? 
+     { this.state.selectedsecondValue == "1" && Platform.OS === 'ios' &&
+<TouchableOpacity onPress={() => this.ActionSheetIOSonPress1()}>
+<View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', height: 40,
+      margin: 0,
+      marginTop: 15}}>
+            <View style={{flex:1, maxWidth: 414, backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
+                <Text style={{paddingLeft:13,color: 'black', fontSize: 16,}}>{this.state.selectedID}</Text>
+                <View style={{width:15, height:15, justifyContent: 'flex-end', marginRight: 20, marginTop: 0}}>
+                  <Image source={require("../../src/assets/images/down_arrow.png")} style={{width:24, height:24,}} />
+                </View>
+                
+              </View>
+              </View>
+              </TouchableOpacity> 
+ }
+
+ { this.state.selectedsecondValue == "0" && Platform.OS === 'ios' &&
 <TouchableOpacity onPress={() => this.ActionSheetIOSonPress()}>
 <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', height: 40,
       margin: 0,
@@ -818,7 +910,7 @@ class User_profile extends Component {
               </View>
               </View>
               </TouchableOpacity> 
-: null }                       
+ }                       
 
 { this.state.selectedsecondValue == "1" && Platform.OS === 'android' && <Picker
 
@@ -829,8 +921,8 @@ style={{
   borderColor: '#000',
   alignSelf: 'center',
   borderWidth: 1,
-  marginTop: 7,
-}}
+  marginTop: 7, 
+}} 
 onValueChange={
   (itemValue, itemIndex) => this.setState({selectedID:itemValue})
   // console.log(itemValue)
@@ -916,6 +1008,11 @@ onValueChange={
                         this.captureImage()
 
                       }
+                      else if (item.name == 'Select Document')
+                      {
+                        this.selectOneFile1()
+
+                      }
                       else
                       {
                         this.setState({showAddCardImagePicker: false, selectedImagePickerType: 'ID'})
@@ -926,7 +1023,10 @@ onValueChange={
                          }
                          else
                          {
-                          this.chooseFile()
+                          setTimeout(() => {
+                            this.chooseFile('Address')
+                           // this.props.navigation.navigate('start')}
+                         }, 2000);
                          }
                       }
 
@@ -1044,6 +1144,11 @@ onValueChange={
                         this.captureImage()
 
                       }
+                      else if (item.name == 'Select Document')
+                      {
+                        this.selectTrustCertiFile()
+
+                      }
                       else
                       {
                         this.setState({show80GCardImagePicker: false, selectedImagePickerType: '80G'})
@@ -1054,7 +1159,10 @@ onValueChange={
                          }
                          else
                          {
-                          this.chooseFile()
+                          setTimeout(() => {
+                            this.chooseFile('80G')
+                           // this.props.navigation.navigate('start')}
+                         }, 2000);
                          }
                       }
 
@@ -1135,11 +1243,11 @@ onValueChange={
              
             </View>
 
-        
+            </ScrollView>
             
             {/* </View> */}
           </ImageBackground>
-        </ScrollView>
+        
       </Container>
     );
   }

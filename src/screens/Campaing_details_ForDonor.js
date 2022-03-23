@@ -9,6 +9,8 @@ import {
   ScrollView,
   Alert,
   FlatList,
+  Dimensions,
+  KeyboardAvoidingView
 } from 'react-native';
 import {
   Container,
@@ -29,6 +31,13 @@ import {
 import AppPreLoader from '../components/AppPreLoader';
 import Icon_3 from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import StarRating from 'react-native-star-rating';
+import Modal from 'react-native-modal';
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight =
+  Platform.OS === 'ios'
+    ? Dimensions.get('window').height
+    : Dimensions.get('window').height;
 class Campaing_details extends Component {
   constructor(props) {
     super(props);
@@ -41,9 +50,13 @@ class Campaing_details extends Component {
       isloading: true,
       amount: 0,
       modalComment: false,
+      modalCommentVal: '',
+      commentArr: [],
+      comment: '',
       isVisible: false,
       shareHeight: 360,
-      campaignImageURI: ''
+      campaignImageURI: '',
+      starCount: 5,
     };
   }
   campaign = async () => {
@@ -91,7 +104,16 @@ class Campaing_details extends Component {
     this.campaign();
     console.log('campaign', this.props.route.params.camp_id);
   }
+  ContactDonee = async item => {
 
+    console.log("ContactDonee selected item: ",item);
+
+    this.props.navigation.navigate('DonationInKind', {
+      campaign_id: this.state.capmain_details[0]['campaign_id'],
+              kind_id: this.state.capmain_details[0]['kind_id'],
+    });
+    
+  }
   Donate = async item => {
     var token = await AsyncStorage.getItem('token');
     var kyc_verified = await AsyncStorage.getItem('kyc_verified');
@@ -243,21 +265,53 @@ class Campaing_details extends Component {
       </View>
     );
   };
+  comment = () => {
+    // this.modalizeRefComment.current.open();
+    // console.log(item);
+console.log('comment button clicked!!!!')
+
+    this.setState(
+      {
+        modalComment: true,
+        campaign_id: this.state.camp_id,
+        commentArr: [],
+        starCount: 5,
+      },
+      this.commetFetch,
+    );
+  };
+  commetFetch = async () => {
+    var token = await AsyncStorage.getItem('token');
+    var user_id = await AsyncStorage.getItem('user_id');
+    if (token != null && token !== '') {
+      // navigation.navigate('StartCampaign');
+      var logs = {
+        user_id: user_id,
+        campaign_id: this.state.camp_id,
+      };
+      var response = await API.post('campaign_comments_list', logs);
+      if (response.status == 'success') {
+        this.setState({
+          commentArr: [...response.comments_data],
+        });
+        console.log(this.state.commentArr);
+      } else {
+      }
+    } else {
+    }
+  };
   renderItemComment = ({item, index}) => {
     console.log(item.usr_pos_imgComment);
     return (
       <View
-        style={
-          {
-            backgroundColor: '#fff',
-            marginTop: 10,
-            marginStart: 20,
-            borderRadius: 10,
-            marginBottom: 10,
-            // width: '30%',
-          }
-        }>
-        
+        style={{
+          backgroundColor: '#fff',
+          marginTop: 10,
+          marginStart: 20,
+          borderRadius: 10,
+          marginBottom: 10,
+          // width: '30%',
+        }}>
         <View style={[{flexDirection: 'row', marginTop: -10, marginLeft: 12}]}>
           <Text
             style={[
@@ -268,9 +322,12 @@ class Campaing_details extends Component {
                 fontWeight: 'bold',
               },
             ]}>
-            {item.User_Name}
+            {item.User_Name1}
           </Text>
-          <Text
+
+          
+
+          {/* <Text
             style={[
               {
                 marginTop: 3,
@@ -281,7 +338,7 @@ class Campaing_details extends Component {
             ]}>
             {'@'}
             {item.User_Name}
-          </Text>
+          </Text> */}
         </View>
         <View
           style={[
@@ -291,15 +348,66 @@ class Campaing_details extends Component {
               marginStart: 18,
             },
           ]}></View>
-        <View style={[{marginStart: 28, width: '60%'}]}>
+        <View style={[{marginStart: 13, width: '60%'}]}>
           
-            <Text style={[{marginTop: 3, color: '#000'}]}>
-              {item.user_TagComment}
-            </Text>
+          <Text style={[{marginTop: 3, color: '#000', fontWeight: 'bold'}]}>{item.comment_user_name}</Text>
+          <Text style={[{marginTop: 3, color: '#000'}]}>{item.comment}</Text>
+          <View
+              style={{
+                marginTop: 10,
+                width: 120,
+              }}>
+                 <StarRating       
+        disabled={false}
+        maxStars={5}
+        rating={parseInt(item.rating)}
+        starSize = {20}
+        // selectedStar={(rating) => this.onStarRatingPress(rating)}
+        fullStarColor={'#ff5c5c'}
+      />
+      </View>
         </View>
       </View>
     );
   };
+  commentText = val => {
+    console.log(val);
+    this.setState({
+      comment: val,
+    });
+  };
+  commentSend = async () => {
+    var token = await AsyncStorage.getItem('token');
+    var user_id = await AsyncStorage.getItem('user_id');
+    if (token != null && token !== '') {
+      // navigation.navigate('StartCampaign');
+      var logs = {
+        user_id: user_id,
+        campaign_id: this.state.camp_id,
+        comment: this.state.comment,
+        rating: String(this.state.starCount)
+      };
+      var response = await API.post('campaign_comment', logs);
+      if (response.status == 'success') {
+        console.log(response.status);
+        // Toast.show(response.message, Toast.LONG)
+        this.setState({
+          comment: '',
+          modalComment: false,
+          campaign_id: '',
+          rating: 0,
+          starCount: 5,
+        });
+      }
+    } else {
+      this.props.navigation.navigate('LogIn');
+    }
+  };
+  onStarRatingPress(rating) {
+    this.setState({
+      starCount: rating
+    });
+  }
  
   render() {
     var loaded = this.state.isloading;
@@ -312,7 +420,7 @@ class Campaing_details extends Component {
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
             style={Styles.login_main}>
-            <View style={Styles.dashboard_main_header}>
+            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
                   onPress={() => this.props.navigation.goBack()}>
@@ -343,6 +451,11 @@ class Campaing_details extends Component {
                     // resizeMode="contain"dashboard_main_btn
                   />
                 </TouchableOpacity>
+
+                <Text style={{marginLeft: 24, fontSize: 19, fontWeight: '900', color: 'white', textAlignVertical: 'center'}}>
+                    Campaign Details
+                  </Text>
+
               </View>
               {/* <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity>
@@ -375,7 +488,7 @@ class Campaing_details extends Component {
                   />
                 </TouchableOpacity>
               </View> */}
-            </View>
+            </SafeAreaView>
             <ScrollView style={Styles.dashboard_main_contain}>
               <View style={Styles.campaign_details_contain}>
 
@@ -416,11 +529,43 @@ class Campaing_details extends Component {
 {/* onPress={() => this.comment()} */}
                   
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={Styles.donate_btn_now}
                   onPress={() => this.Donate()}>
                   <Text style={Styles.donate_btn_text}>Donate Now</Text>
+                </TouchableOpacity> */}
+
+                { this.state.capmain_details[0]['donation_mode'] == '1' && <TouchableOpacity
+                  style={Styles.donate_btn_now}
+                  onPress={() => this.Donate()}>
+                  <Text style={{
+    fontSize: 21,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Donate Now</Text>
                 </TouchableOpacity>
+  }
+
+{ this.state.capmain_details[0]['donation_mode'] == '2' && <TouchableOpacity
+                  style={Styles.donate_btn_now}
+                  onPress={() => this.ContactDonee()}>
+                  <Text style={{
+    fontSize: 17,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Contact Donee</Text>
+                </TouchableOpacity>
+  }
+
+
               </View>
 
               <Text style={{ marginStart: 5, fontWeight: 'bold', fontSize: 20, }}>
@@ -471,7 +616,7 @@ class Campaing_details extends Component {
                   </Text>
                 
                 
-                  <Text style={{
+                  { this.state.capmain_details[0]['donation_mode'] == '1' &&  <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -479,10 +624,21 @@ class Campaing_details extends Component {
                     marginEnd: 20,
                   }}>
                     
-                    {'Donation Type: '+this.state.capmain_details[0]['donation_mode']}
-                  </Text>
+                    {'Donation Type: Money'}
+                  </Text> }
 
-                  <Text style={{
+                  { this.state.capmain_details[0]['donation_mode'] == '2' &&  <Text style={{
+                    fontSize: 18,
+                    fontWeight: '500',
+                    marginTop: 13,
+                    marginStart: 20, 
+                    marginEnd: 20,
+                  }}>
+                    
+                    {'Donation Type: In Kind'}
+                  </Text> }
+
+                  { this.state.capmain_details[0]['donation_mode'] == '1' &&  <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -490,10 +646,21 @@ class Campaing_details extends Component {
                     marginEnd: 20,
                   }}>
                     Amount Recived: {this.state.amount}
-                  </Text>
+                  </Text> }
+
+                  { this.state.capmain_details[0]['donation_mode'] == '1' && <Text style={{
+                    fontSize: 18,
+                    fontWeight: '500',
+                    marginTop: 13,
+                    marginStart: 20, 
+                    marginEnd: 20,
+                  }}>
+                    Target Amount:{' '}
+                    {this.state.capmain_details[0]['campaign_target_amount']}
+                  </Text> }
                 
                 
-                  <Text style={{
+                  { this.state.capmain_details[0]['donation_mode'] == '2' && <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -501,21 +668,29 @@ class Campaing_details extends Component {
                     marginEnd: 20,
                   }}>
                     Target Quantity:{' '}
-                    {this.state.capmain_details[0]['campaign_target_amount']}
-                  </Text>
+                    {this.state.capmain_details[0]['campaign_target_qty']}
+                  </Text> }
 
+                  <TouchableOpacity
+                    style={[
+                      {
+                        marginTop: 13,
+                        marginStart: 20, 
+                        marginEnd: 20,
+                        justifyContent: 'center',
+                        width: 170,
+                      },
+                    ]}
+                    onPress={() => this.comment()}>
                   <Text style={{
                     fontSize: 19,
                     fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
                     fontStyle: 'italic',
                     textDecorationLine: 'underline'
                   }}>
                     Review & Ratings
                   </Text>
-                
+                  </TouchableOpacity>
                 
 
                 <Text style={{ marginStart: 5, fontWeight: 'bold', fontSize: 20, marginTop: 14 }}>
@@ -595,9 +770,164 @@ class Campaing_details extends Component {
 
 
             </ScrollView>
+
+            
+
           </ImageBackground>
 
-          
+          <Modal
+          style={{
+            width: deviceWidth,
+            margin: 0,
+            backdropOpacity: 10.7,
+            backgroundColor: '#f2f1ed',
+            marginTop: deviceHeight - 600,
+          }}
+          animationIn={'slideInUp'}
+          backdropOpacity={0.7}
+          backdropColor={'black'}
+          backdropTransitionInTiming={400}
+          backdropTransitionOutTiming={400}
+          hasBackdrop={true}
+          useNativeDriver={true}
+          isVisible={this.state.modalComment}
+          onBackButtonPress={() =>
+            this.setState({
+              modalComment: false,
+              shareHeight: 360,
+            })
+          }
+          onBackdropPress={() =>
+            this.setState({
+              modalComment: false,
+              shareHeight: 360,
+              isVisible: false,
+            })
+          }>
+          <View
+            style={[
+              {
+                backgroundColor: '#f2f1ed',
+                flexDirection: 'column',
+                alignItems: 'center',
+              },
+            ]}>
+            <View
+              style={{
+                flexDirection: 'row',
+                borderBottomWidth: 1,
+                alignItems: 'center',
+                height: 40,
+                width: '100%',
+                backgroundColor: '#ffff',
+                justifyContent: 'center',
+                borderBottomColor: '#d6d6d6',
+              }}>
+              <Text
+                style={{
+                  color: '#000',
+                  textAlign: 'center',
+                  fontWeight: 'bold',
+                  marginStart: 10,
+                  fontSize: 20,
+                }}>
+                Review
+              </Text>
+              {/* <Text
+                style={{
+                  color: '#000',
+                  alignSelf: 'flex-end',
+                  fontWeight: 'bold',
+                  marginRight: 10,
+                  fontSize: 20,
+                }}>
+                CLOSE
+              </Text> */}
+            </View>
+            <View
+              style={{
+                backgroundColor: '#ffff',
+                justifyContent: 'center',
+                height: '100%',
+              }}>
+                 <View
+              style={{
+                justifyContent: 'center',
+                margin: 20,
+              }}>
+                 <StarRating       
+        disabled={false}
+        maxStars={5}
+        rating={this.state.starCount}
+        selectedStar={(rating) => this.onStarRatingPress(rating)}
+        fullStarColor={'#ff5c5c'}
+      />
+      </View>
+              <FlatList
+                // style={{backgroundColor: 'red'}}
+                keyExtractor={item => item.id.toString()}
+                data={this.state.commentArr}
+                onEndReachedThreshold={0.5}
+                renderItem={this.renderItemComment}
+              />
+
+              <KeyboardAvoidingView
+                style={[{marginBottom: 75, backgroundColor: 'transparent'}]}
+                behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+                <View
+                  style={[
+                    {
+                      flexDirection: 'row',
+                      marginBottom: 4,
+                      paddingHorizontal: 20,
+                    },
+                  ]}>
+                  <View
+                    style={{
+                      backgroundColor: '#e8e3e3',
+                      height: 50,
+                      flexDirection: 'row',
+                      width: '100%',
+                      borderRadius: 10,
+                      alignItems: 'center'
+                    }}>
+                    <TextInput
+                      style={{
+                        flex: 1,
+                        backgroundColor: '#e8e3e3',
+                        
+                        padding: 10,
+                        borderRadius: 40,
+                        fontSize: 16,
+                        color: '#000',
+                        paddingLeft: 15,
+                        alignSelf: 'center',
+                        marginTop: 5
+                      }}
+                      placeholder={'Type your comment here...'}
+                      multiline={true}
+                      onChangeText={textEntry => {
+                        this.commentText(textEntry);
+                      }}></TextInput>
+                    <TouchableOpacity
+                      style={{
+                        height: 40,
+                        paddingVertical: 0,
+                        width: 50,
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                      }}
+                      onPress={() => {
+                        this.commentSend();
+                      }}>
+                      <Icon_3 name="ios-send" color="#ff5c5c" size={30} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </KeyboardAvoidingView>
+            </View>
+          </View>
+        </Modal>
         </Container>
       
     );

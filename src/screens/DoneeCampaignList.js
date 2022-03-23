@@ -49,13 +49,13 @@ class CampaignList extends Component {
                       // resizeMode="contain"dashboard_main_btn
                     />
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => dots()}>
+                  {/* <TouchableOpacity onPress={() => dots()}>
                     <Image
                       style={Styles.donation_icon_font}
                       source={require('../../src/assets/images/dots.jpg')}
                       // resizeMode="contain"dashboard_main_btn
                     />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               </View>
               <View style={{flexDirection: 'row'}}>

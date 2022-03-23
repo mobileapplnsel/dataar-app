@@ -32,7 +32,9 @@ class User_profile extends Component {
       iseditablelname: false,
       image: '',
       progress: false,
-      user_id: ''
+      user_id: '',
+      iseditablePin: false,
+      pinCode: ''
 
     };
   }
@@ -82,7 +84,8 @@ class User_profile extends Component {
           mobile: response.data.phone,
           image: response.data.kyc_file,
           progress: false,
-          user_id: user_id
+          user_id: user_id,
+          pinCode: response.data.zipcode
         });
       } else {
         Alert.alert(response.status, response.message);
@@ -103,6 +106,15 @@ class User_profile extends Component {
       iseditablelname: true,
     });
   };
+  Pinedit = () => {
+    console.log('hello world');
+    this.setState({
+      iseditablePin: true,
+  }, () => {
+    this.inputText.focus()
+  });
+    
+  };
   setFirstname = value => {
     this.setState({
       fname: value,
@@ -122,6 +134,10 @@ class User_profile extends Component {
     {
       Alert.alert('Warning', 'Please enter Last Name');
     }
+    else if (this.state.pinCode.trim() == '')
+    {
+      Alert.alert('Warning', 'Please enter PIN code');
+    }
     else
     {
       var logs = {
@@ -129,7 +145,8 @@ class User_profile extends Component {
         firstname: this.state.fname,
         lastname: this.state.lname,
         phone: this.state.mobile,
-        email: this.state.email
+        email: this.state.email,
+        zipcode: this.state.pinCode
       };
       console.log('Update Profile logs: ', logs);
       var response = await API.postWithoutHeader('update_user_profile_info', logs);
@@ -184,7 +201,7 @@ class User_profile extends Component {
                 </TouchableOpacity>
               </View>
               <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
+                {/* <TouchableOpacity>
                   <Image
                     style={{
                       width: 30,
@@ -197,7 +214,7 @@ class User_profile extends Component {
                     source={require('../../src/assets/images/search.png')}
                     // resizeMode="contain"dashboard_main_btn
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 {/* <TouchableOpacity onPress={()=>this.props.navigation.navigate('')}>
                   <Image
                     style={{
@@ -318,6 +335,39 @@ class User_profile extends Component {
                   onChangeText={() => this.setMobile()}
                   value={this.state.mobile}
                   keyboardType="number-pad"></TextInput>
+              </View>
+
+              
+
+              <View style={Styles.profile_main_text_contain}>
+                <Text style={Styles.user_profile_lbtext}>PIN code:</Text>
+                <View style={Styles.user_edit_contain}>
+                <TextInput
+                  style={Styles.user_text_input}
+                  ref ={ref => this.inputText = ref}
+                  placeholder="PIN code"
+                  // editable={this.state.iseditablePin}
+                  autoFocus={this.state.iseditablePin}
+                  onChangeText={(text) => this.setState({
+                    pinCode: text,
+                  })}
+                  value={this.state.pinCode}
+                  keyboardType='number-pad'></TextInput>
+                  <TouchableOpacity
+                    style={Styles.user_edit_profile_lbtext}
+                    onPress={() => this.Pinedit()}>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 21,
+                        marginStart: 12,
+                        marginTop: 20,
+                        backgroundColor: 'transparent',
+                      }}
+                      source={require('../../src/assets/images/penicon.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
               </View>
 
               <TouchableOpacity

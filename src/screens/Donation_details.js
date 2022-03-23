@@ -183,13 +183,13 @@ const Donation_details = ({navigation}) => {
                             // resizeMode="contain"dashboard_main_btn
                           />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => share()}>
+                        {/* <TouchableOpacity onPress={() => share()}>
                           <Image
                             style={Styles.donation_icon_font}
                             source={require('../../src/assets/images/dots.jpg')}
                             // resizeMode="contain"dashboard_main_btn
                           />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                       </View>
                     </View>
                     <View style={{flexDirection: 'column'}}>

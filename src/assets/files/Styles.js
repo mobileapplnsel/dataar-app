@@ -635,6 +635,7 @@ module.exports = StyleSheet.create({
     borderBottomWidth: 1,
      color:'black',
     paddingTop: 20,
+    height: 55
   },
   login_text_font: {
     fontSize: 45,
@@ -1018,7 +1019,8 @@ module.exports = StyleSheet.create({
     borderBottomColor: '#000',
     borderBottomWidth: 1,
     paddingTop: 0,
-    color: 'black'
+    color: 'black',
+    height: 43
   },
   amount_main_contain: {
     // backgroundColor: '#f55656',
@@ -1124,7 +1126,8 @@ module.exports = StyleSheet.create({
     borderBottomColor: '#000',
     borderBottomWidth: 1,
     width: '90%',
-    color: 'black'
+    color: 'black',
+    height: 43
   },
   user_edit_profile_lbtext: {
     width: 45,

@@ -53,6 +53,7 @@ const StartCampaign = ({navigation}) => {
   const [imageType, setImagetype] = useState('');
   const [amount, setamount] = useState('');
   const [quantity, setquantity] = useState('');
+  const [KindMsg, setKindMsg] = useState('');
   const [isNext, setNext] = useState(0);
   const [pincode, setpincode] = useState(0);
   const [selCamp, setselCamp] = useState('');
@@ -124,8 +125,8 @@ const StartCampaign = ({navigation}) => {
   const captureImage = async (type) => {
     let options = {
       mediaType: 'photo',
-      maxWidth: 300,
-      maxHeight: 550,
+      maxWidth: 400,
+      maxHeight: 200,
        quality: 1,
       // videoQuality: 'low',
       // durationLimit: 30, //Video max duration in seconds
@@ -163,11 +164,12 @@ const StartCampaign = ({navigation}) => {
   const chooseFile = async () => {
     let options = {
       mediaType: 'photo',
-      maxWidth: 300,
-      maxHeight: 550,
+      maxWidth: 400,
+      maxHeight: 200,
       quality: 1,
     };
-    launchImageLibrary(options, (response) => {
+    console.log('chooseFile called!!!')
+    launchImageLibrary(options, async (response) => {
       console.log('Response = ', response);
 
       if (response.didCancel) {
@@ -265,16 +267,25 @@ const StartCampaign = ({navigation}) => {
         image === '',
     );
     if (Title == '') {
-      Alert.alert('Title', 'Please add Title');
+      Alert.alert('Title', 'Please add Campaign Title');
     } else if (Description == '') {
-      Alert.alert('Description', 'Please add Description');
-    } else if (selectedCampaignImageSource == '') {
-      Alert.alert('Image', 'Please add Image');
-    } else if (strdate == null) {
-      Alert.alert('Start Date', 'Please add Start Date');
+      Alert.alert('Description', 'Please add Campaign Description');
+    } else if (pincode == 0 || pincode.trim() == '') {
+      Alert.alert('PIN code', 'Please enter PIN where you wish to run your campaign');
+    }
+    
+     else if (selectedCampaignImageSource == '') {
+      Alert.alert('Image', 'Please add a campaign Image');
+    } else if (selectID == '') {
+      Alert.alert('Campaign type', 'Please select a campaign type');
+    }
+     else if (strdate == null) {
+      Alert.alert('Start Expiry Date', 'Please add a Date from that your campaign will start');
     } else if (endseldate == null) {
-      Alert.alert('End Date', 'Please add End Date');
-    } else {
+      Alert.alert('End Expiry Date', 'Please add End Expiry Date of your campaign');
+    }
+    
+     else {
       setNext(1);
       // if (Description == '') {
       //   Alert.alert('Description', 'Please Add Description');
@@ -328,9 +339,15 @@ const StartCampaign = ({navigation}) => {
 
      if (selCamp == '2')
      {
-      if (quantity == '') {
-        Alert.alert('Quantity', 'Please Add Quantity');
-      } else {
+      if (selectedValue == '') {
+        Alert.alert('In Kind Object', 'Please select any of the In Kind object');
+      }
+      else if (quantity.trim() == '') {
+        Alert.alert('Quantity', 'Please enter quantity');
+      } else if (KindMsg.trim() == '') {
+        Alert.alert('Comments', 'Please elaborate your campaign');
+      }
+       else {
         // setNext(3);
         Start_CampaignNow();
       }
@@ -448,6 +465,8 @@ const StartCampaign = ({navigation}) => {
       formdata.append('filter_by_type', selectID);
       formdata.append('zip', pincode);
       formdata.append('campaign_target_qty', quantity);
+      formdata.append('campaign_note', KindMsg);
+      
     }
     else
     {
@@ -586,7 +605,7 @@ setselectedValue(item.kind_id)
   return (
    
       <Container>
-         <ScrollView>
+        
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
@@ -658,6 +677,7 @@ setselectedValue(item.kind_id)
             <Text style={Styles.campaign_name_font}>Start Campaign</Text>
           </View>
           {isNext == 0 ? (
+            <View>
             <ScrollView>
             <View style={Styles.login_text_input_contain}>
               <Text style={Styles.campaign_text_font}>Step 1</Text>
@@ -797,7 +817,11 @@ setselectedValue(item.kind_id)
                          }
                          else
                          {
-                          chooseFile()
+                          setTimeout(() => {
+                            chooseFile()
+                           // this.props.navigation.navigate('start')}
+                         }, 2000);
+                          
                          }
          
 
@@ -866,6 +890,8 @@ setselectedValue(item.kind_id)
   alignSelf: 'center',
   paddingLeft: -80
 }}>{'Only Image format is acceptable'}</Text>
+
+
 
               <Selector
               text={selectType}
@@ -955,6 +981,7 @@ setselectedValue(item.kind_id)
               <View style={{marginBottom: 20}}></View>
             </View>
            </ScrollView>
+           </View>
           ) : null}
  
           {isNext == 1 ? (
@@ -1033,12 +1060,14 @@ setselectedValue(item.kind_id)
             </View>
           ) : null}
           {isNext == 3 ? (
+            
             <View style={Styles.login_text_input_contain}>
+              <ScrollView>
               <Text style={Styles.campaign_text_font}>Step 3</Text>
               <Text style={Styles.campaign_name_font}>
                 Enter the kind of Donation
               </Text>
-              <View style={{justifyContent: 'center'}}>
+              <View style={{justifyContent: 'center', marginTop: 10}}>
 
 
               { Platform.OS === 'ios' ? 
@@ -1082,12 +1111,54 @@ setselectedValue(item.kind_id)
 
                   }
 
-                <TextInput
-                  placeholder="Enter Target Quantity"
+
+<TextInput
+                  placeholder="Please enter quantity"
                   onChangeText={text => setquantity(text)}
-                  style={Styles.campaign_text_input}
+                  style={{
+                    height: 45,
+                    marginLeft: 10,
+                    marginRight: 10,
+                    backgroundColor: '#dcdedc',
+                    height: 45,
+                    // borderBottomColor: '#000',
+                    // borderBottomWidth: 1,
+                    // paddingTop:20,
+                    marginTop: 20,
+                    color: 'black',
+                    borderRadius: 4,
+                    padding: 7
+                  }}
+                  textAlignVertical={'top'}
                   keyboardType="number-pad"
                   placeholderTextColor='grey'
+                
+                  
+                />
+
+                <TextInput
+                  placeholder="Please elaborate about your campaign"
+                  onChangeText={text => setKindMsg(text)}
+                  style={{
+                    height: 45,
+                    marginLeft: 10,
+                    marginRight: 10,
+                    backgroundColor: '#dcdedc',
+                    height: 110,
+                    // borderBottomColor: '#000',
+                    // borderBottomWidth: 1,
+                    // paddingTop:20,
+                    marginTop: 20,
+                    color: 'black',
+                    borderRadius: 4,
+                    padding: 7
+                  }}
+                  textAlignVertical={'top'}
+                  keyboardType="number-pad"
+                  placeholderTextColor='grey'
+                  multiline={true}
+     numberOfLines={5}
+                  
                 />
               </View>
               <View style={Styles.campaign_name_contain}>
@@ -1104,10 +1175,11 @@ setselectedValue(item.kind_id)
                   </Text>
                 </TouchableOpacity>
               </View>
+              </ScrollView>
             </View>
           ) : null}
         </ImageBackground>
-        </ScrollView>
+        
         <Modal
                             animationType="slide"
                             transparent={true}

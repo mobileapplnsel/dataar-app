@@ -26,6 +26,7 @@ import Selector from '../components/Selector';
 import Picker from '../components/Picker';
 import Toast from 'react-native-simple-toast';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import StarRating from 'react-native-star-rating';
 // import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -59,6 +60,7 @@ class Dashboard_donation extends Component {
         },
       ],
       showPicker: false,
+      starCount: 5,
       hasLocationPermission: null,
     };
   }
@@ -246,7 +248,17 @@ class Dashboard_donation extends Component {
       this.props.navigation.navigate('LogIn');
     }
   };
+  ContactDonee = async item => {
 
+    console.log("ContactDonee selected item: ",item);
+
+    this.props.navigation.navigate('DonationInKind', {
+      campaign_id: item.campaign_id,
+      kind_id: item.kind_id,
+    });
+
+
+  }
   OneRupeeDonate = async () => {
     var token = await AsyncStorage.getItem('token');
     console.log(token);
@@ -358,10 +370,12 @@ class Dashboard_donation extends Component {
 
     var base64String = item.campaign_image
     var base64Icon = 'data:image/png;base64,'+base64String
-     console.log('base64Icon: ', base64String)
+    //  console.log('base64Icon: ', base64String)
 
     const wish = item.like_status == 1 ? true : false;
-    console.log(wish);
+    var msDiff = new Date(item.campaign_end_date).getTime() - new Date().getTime();    //Future date - current date
+    var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24));
+    // console.log(wish);
     return (
       <View style={{flex: 1}} key={item.donation_id}>
         <Card style={{overflow: 'hidden'}}>
@@ -375,7 +389,7 @@ class Dashboard_donation extends Component {
                 }}>
                   <TouchableOpacity
         onPress={() =>
-          this.props.navigation.navigate('Campaing_details', {
+          this.props.navigation.navigate('Campaing_details_ForDonor', {
             camp_id: item.campaign_id,
           })
         }>
@@ -397,13 +411,13 @@ class Dashboard_donation extends Component {
                       />
                     )}
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.dots()}>
+                  {/* <TouchableOpacity onPress={() => this.dots()}>
                     <Image
                       style={Styles.donation_icon_font}
                       source={require('../../src/assets/images/dots.jpg')}
                       // resizeMode="contain"dashboard_main_btn
                     />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               </View>
               <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: 6}}>
@@ -421,20 +435,22 @@ source={{uri: item.campaign_image}}
                   {item.campaign_details}
                 </Text>
               </View>
-              <View
+
+             { item.donation_mode == '1' && <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={Styles.doner_title_font}>{amountpaind}</Text>
                 <Text style={Styles.doner_title_font}>{progressStatus}%</Text>
-              </View>
+              </View> }
               {/* <View> */}
-              <View style={Styles.inner_barpro}>
+
+             { item.donation_mode == '1' && <View style={Styles.inner_barpro}>
                 <Animated.View
                   style={[
                     Styles.inner_bar,
                     {width: parseInt(progressStatus) + '%'},
                   ]}
                 />
-              </View>
+              </View> }
               {/* </View> */}
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -458,7 +474,7 @@ source={{uri: item.campaign_image}}
                   {item.days} days to go
                 </Text> */}
                  <Text style={Styles.doner_title_font}>
-                  {'5'} days to go
+                  {daysTill30June2035} days to go
                 </Text>
               </View>
              
@@ -497,11 +513,34 @@ source={{uri: item.campaign_image}}
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity
+                { item.donation_mode == '1' && <TouchableOpacity
                   style={Styles.donate_btn_now}
                   onPress={() => this.Donate(item)}>
-                  <Text style={Styles.donate_btn_text}>Donate Now</Text>
+                  <Text style={{
+    fontSize: 21,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Donate Now</Text>
                 </TouchableOpacity>
+  }
+
+{ item.donation_mode == '2' && <TouchableOpacity
+                  style={Styles.donate_btn_now}
+                  onPress={() => this.ContactDonee(item)}>
+                  <Text style={{
+    fontSize: 17,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Contact Donee</Text>
+                </TouchableOpacity> }
               </View>
             </View>
           </CardItem>
@@ -531,8 +570,11 @@ source={{uri: item.campaign_image}}
                 fontWeight: 'bold',
               },
             ]}>
-            {item.User_Name}
+            {item.User_Name1}
           </Text>
+
+          
+
           {/* <Text
             style={[
               {
@@ -554,8 +596,24 @@ source={{uri: item.campaign_image}}
               marginStart: 18,
             },
           ]}></View>
-        <View style={[{marginStart: 28, width: '60%'}]}>
+        <View style={[{marginStart: 13, width: '60%'}]}>
+          
+          <Text style={[{marginTop: 3, color: '#000', fontWeight: 'bold'}]}>{item.comment_user_name}</Text>
           <Text style={[{marginTop: 3, color: '#000'}]}>{item.comment}</Text>
+          <View
+              style={{
+                marginTop: 10,
+                width: 120,
+              }}>
+                 <StarRating       
+        disabled={false}
+        maxStars={5}
+        rating={parseInt(item.rating)}
+        starSize = {20}
+        // selectedStar={(rating) => this.onStarRatingPress(rating)}
+        fullStarColor={'#ff5c5c'}
+      />
+      </View>
         </View>
       </View>
     );
@@ -575,20 +633,29 @@ source={{uri: item.campaign_image}}
         user_id: user_id,
         campaign_id: this.state.campaign_id,
         comment: this.state.comment,
+        rating: String(this.state.starCount)
       };
       var response = await API.post('campaign_comment', logs);
       if (response.status == 'success') {
         console.log(response.status);
+        // Toast.show(response.message, Toast.LONG)
         this.setState({
           comment: '',
           modalComment: false,
           campaign_id: '',
+          rating: 0,
+          starCount: 5,
         });
       }
     } else {
       this.props.navigation.navigate('LogIn');
     }
   };
+  onStarRatingPress(rating) {
+    this.setState({
+      starCount: rating
+    });
+  }
   render() {
     return (
       <Container>
@@ -612,6 +679,10 @@ source={{uri: item.campaign_image}}
                     // resizeMode="contain"dashboard_main_btn
                   />
                 </TouchableOpacity>
+
+                <Text style={{marginLeft: 24, fontSize: 19, fontWeight: '900', color: 'white', textAlignVertical: 'center'}}>
+                    My Favourite
+                  </Text>
                 {/* <TouchableOpacity>
                   <Image
                     style={{
@@ -733,8 +804,18 @@ source={{uri: item.campaign_image}}
                   marginStart: 10,
                   fontSize: 20,
                 }}>
-                Comment
+                Review
               </Text>
+              {/* <Text
+                style={{
+                  color: '#000',
+                  alignSelf: 'flex-end',
+                  fontWeight: 'bold',
+                  marginRight: 10,
+                  fontSize: 20,
+                }}>
+                CLOSE
+              </Text> */}
             </View>
             <View
               style={{
@@ -742,8 +823,21 @@ source={{uri: item.campaign_image}}
                 justifyContent: 'center',
                 height: '100%',
               }}>
+                 <View
+              style={{
+                justifyContent: 'center',
+                margin: 20,
+              }}>
+                 <StarRating       
+        disabled={false}
+        maxStars={5}
+        rating={this.state.starCount}
+        selectedStar={(rating) => this.onStarRatingPress(rating)}
+        fullStarColor={'#ff5c5c'}
+      />
+      </View>
               <FlatList
-                style={{width: '100%', height: '100%'}}
+                // style={{backgroundColor: 'red'}}
                 keyExtractor={item => item.id.toString()}
                 data={this.state.commentArr}
                 onEndReachedThreshold={0.5}
@@ -767,19 +861,23 @@ source={{uri: item.campaign_image}}
                       height: 50,
                       flexDirection: 'row',
                       width: '100%',
-                      borderRadius: 40,
+                      borderRadius: 10,
+                      alignItems: 'center'
                     }}>
                     <TextInput
                       style={{
                         flex: 1,
                         backgroundColor: '#e8e3e3',
-                        height: 50,
+                        
                         padding: 10,
                         borderRadius: 40,
-                        fontSize: 18,
+                        fontSize: 16,
                         color: '#000',
+                        paddingLeft: 15,
+                        alignSelf: 'center',
+                        marginTop: 5
                       }}
-                      placeholder={'Type Your Comment Here'}
+                      placeholder={'Type your comment here...'}
                       multiline={true}
                       onChangeText={textEntry => {
                         this.commentText(textEntry);
@@ -791,6 +889,7 @@ source={{uri: item.campaign_image}}
                         width: 50,
                         justifyContent: 'center',
                         alignSelf: 'center',
+                        
                       }}
                       onPress={() => {
                         this.commentSend();

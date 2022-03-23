@@ -3,6 +3,7 @@
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import <RNGoogleSignin/RNGoogleSignin.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 @import Firebase;
 
@@ -61,7 +62,7 @@ static void InitializeFlipper(UIApplication *application) {
 BOOL handled = [[FBSDKApplicationDelegate sharedInstance] application:application openURL:url sourceApplication:options[UIApplicationOpenURLOptionsSourceApplicationKey] annotation:options[UIApplicationOpenURLOptionsAnnotationKey]
 ];
 // Add any custom logic here.
-return handled;
+  return handled || [RNGoogleSignin application:application openURL:url options:options];
 }
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
 {

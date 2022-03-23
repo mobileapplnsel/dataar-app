@@ -252,11 +252,11 @@ var donation_type = ''
                 
               </View>
 
-              <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', marginTop: 0, height: 40,}}>
+              <View style={{flexDirection:'row', marginTop: 0, height: 40,}}>
             <View style={{width: '80%'}}>
 
             <TouchableOpacity
-                  onPress={() => this.props.navigation.navigate('My_Donation_Details', {
+                  onPress={() => this.props.navigation.navigate('Campaing_details_ForDonor', {
                     camp_id: item.campaign_id,
                   })}>
                 <Text style={{fontSize: 16,
@@ -266,7 +266,10 @@ var donation_type = ''
               </TouchableOpacity> 
 
             </View>
-            <View style={{width: '20%',}}>
+
+
+
+  {item.kind_id == '0' && <View style={{width: '20%',}}>
             <TouchableOpacity onPress={() => this._onPressButton(item.donation_id)}>
             <Image style={{ marginRight: 20,
     resizeMode: 'contain', height: 40, alignSelf: 'flex-end', borderRadius: 4, width: 40
@@ -274,10 +277,10 @@ var donation_type = ''
 source={require('../../src/assets/images/outline_file_download_black_48.png')}>
 </Image> 
 </TouchableOpacity>
-</View>
-            </View>
+</View> }
+            </View> 
               
-              <View style={{flexDirection: 'row', marginTop: 3}}>
+            {item.kind_id == '0' && <View style={{flexDirection: 'row', marginTop: 3}}>
               <Text style={Styles.doner_title_font_Modified}>
                Amount Paid:   
                 </Text>
@@ -285,7 +288,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                   {'₹' + item.amountpaid}
                 </Text>
               
-              </View>
+              </View> }
 
               <View style={{flexDirection: 'row', marginTop: 3}}>
               <Text style={Styles.doner_title_font_Modified}>
@@ -297,14 +300,14 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
               </View>
              
              
-              <View style={{flexDirection: 'row', marginTop: 3}}>
+              {item.kind_id == '0' && <View style={{flexDirection: 'row', marginTop: 3}}>
               <Text style={Styles.doner_title_font_Modified}>
               Receipt Number:   
                 </Text>
                 <Text style={Styles.doner_title_font}>
                   {item.reciept_no}
                 </Text>
-              </View>
+              </View> }
                 
                 {/* <TouchableOpacity
                   style={{width: '96%',
@@ -370,7 +373,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                     My Donation
                   </Text>
               </View>
-              <View style={Styles.dashboard_main_headers}>
+              {/* <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity>
                   <Image
                     style={{
@@ -400,7 +403,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                     // resizeMode="contain"dashboard_main_btn
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </SafeAreaView>
             {/* <ScrollView horizontal={true}> */}
             {/* <ScrollView> */}

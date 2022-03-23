@@ -237,7 +237,7 @@ class Preference extends Component {
                   />
                 </TouchableOpacity>
               </View>
-              <View style={Styles.dashboard_main_headers}>
+              {/* <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity>
                   <Image
                     style={{
@@ -267,7 +267,7 @@ class Preference extends Component {
                     // resizeMode="contain"dashboard_main_btn
                   />
                 </TouchableOpacity>
-              </View>
+              </View> */}
             </SafeAreaView>
             <View>
               <Image

@@ -98,6 +98,17 @@ class Dashboard_donation extends Component {
     this.getPreferences()
     this.dashboard_donate();
     // this.getuser();
+
+    this.focusListener = this.props.navigation.addListener('focus', () => {
+
+      console.log('focusListener has called!!!!')
+      this.props.navigation.closeDrawer();
+    //   this.dashboard_donate();
+    // this.getPreferences()
+      //Put your Data loading function here instead of my this.loadData()
+    });
+
+
     this.state.hasLocationPermission = PermissionsAndroid.request(
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
 
@@ -300,6 +311,7 @@ class Dashboard_donation extends Component {
       this.props.navigation.navigate('LogIn');
     }
   };
+  
 
   OneRupeeDonate = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -422,6 +434,9 @@ class Dashboard_donation extends Component {
     var base64Icon = 'data:image/png;base64,'+base64String
     // console.log('base64Icon: ', base64Icon)
 
+    var msDiff = new Date(item.campaign_end_date).getTime() - new Date().getTime();    //Future date - current date
+    var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24));
+
     const wish = item.like_status == 1 ? true : false;
     console.log(wish);
     return (
@@ -467,13 +482,13 @@ class Dashboard_donation extends Component {
                       />
                     )}
                   </TouchableOpacity>
-                  <TouchableOpacity onPress={() => this.dots()}>
+                  {/* <TouchableOpacity onPress={() => this.dots()}>
                     <Image
                       style={Styles.donation_icon_font}
                       source={require('../../src/assets/images/dots.jpg')}
                       // resizeMode="contain"dashboard_main_btn
                     />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </View>
               </View>
               <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: 10}}>
@@ -493,20 +508,20 @@ class Dashboard_donation extends Component {
                   {item.campaign_details}
                 </Text>
               </View>
-              <View
+              { item.donation_mode == '1' &&  <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={Styles.doner_title_font}>{amountpaind}</Text>
                 <Text style={Styles.doner_title_font}>{progressStatus}%</Text>
-              </View>
+              </View> }
               {/* <View> */}
-              <View style={Styles.inner_barpro}>
+              { item.donation_mode == '1' &&  <View style={Styles.inner_barpro}>
                 <Animated.View
                   style={[
                     Styles.inner_bar,
                     {width: parseInt(progressStatus) + '%'},
                   ]}
                 />
-              </View>
+              </View> }
               {/* </View> */}
               <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -530,7 +545,7 @@ class Dashboard_donation extends Component {
                   {item.days} days to go
                 </Text> */}
                  <Text style={Styles.doner_title_font}>
-                  {'5'} days to go
+                  {daysTill30June2035} days left
                 </Text>
               </View>
              
@@ -569,11 +584,41 @@ class Dashboard_donation extends Component {
                     </Text>
                   </TouchableOpacity>
                 </View>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={Styles.donate_btn_now}
                   onPress={() => this.Donate(item)}>
                   <Text style={Styles.donate_btn_text}>Donate Now</Text>
+                </TouchableOpacity> */}
+
+{ item.donation_mode == '1' && <TouchableOpacity
+                  style={Styles.donate_btn_now}
+                  onPress={() => this.Donate(item)}>
+                  <Text style={{
+    fontSize: 21,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Donate Now</Text>
                 </TouchableOpacity>
+  }
+
+{ item.donation_mode == '2' && <TouchableOpacity
+                  style={Styles.donate_btn_now}
+                  onPress={() => this.Donate(item)}>
+                  <Text style={{
+    fontSize: 17,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+    textAlignVertical: 'center',
+    textAlign: 'center',
+    marginTop: -4
+  }}>Contact Donee</Text>
+                </TouchableOpacity>
+  }
               </View>
             </View>
           </CardItem>
@@ -676,7 +721,7 @@ class Dashboard_donation extends Component {
                     width: 30,
                     height: 30,
                     marginStart: 10,
-                    // marginTop: 20,
+                     marginTop: 4,
                     backgroundColor: 'transparent',
                     alignSelf: 'center',
                   }}
@@ -705,7 +750,7 @@ class Dashboard_donation extends Component {
 
 
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('Search_screen')}>
+                onPress={() => this.props.navigation.navigate('LogIn')}>
                 <Image
                   style={{
                     width: 30,
@@ -976,7 +1021,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
           style={{
             padding: 13,
             backgroundColor: 'grey',
-            borderRadius: 13,
+            borderRadius: 3,
             marginTop: '90%'
           }}
         >

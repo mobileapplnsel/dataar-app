@@ -20,6 +20,7 @@ import View_campaign from '../screens/View_campaign';
 import Campaing_details from '../screens/Campaing_details';
 import Campaing_details_ForDonor from '../screens/Campaing_details_ForDonor';
 import DonationAmount from '../screens/DonationAmount';
+import DonationInKind from '../screens/DonationInKind';
 import OneRupeeDonation from '../screens/OneRupeeDonation';
 import MyDonation from '../screens/MyDonation';
 import My_Favourite from '../screens/My_Favourite';
@@ -151,6 +152,14 @@ const HomeStackScreenForDonerOnly = ({navigation}) => (
         headerShown: false,
       }}
     />
+    <HomeStack_nav.Screen
+      name="DonationInKind"
+      component={DonationInKind}
+      options={{
+        headerShown: false,
+      }}
+    />
+    
     <HomeStack_nav.Screen
       name="OneRupeeDonation"
       component={OneRupeeDonation}
@@ -358,7 +367,7 @@ const DrawerScreen = () => (
     // initialRouteName="Home"
     drawerPosition="left"
     drawerContent={props => <SideMenu {...props} />}
-    drawerStyle={{width: '90%'}}
+    drawerStyle={{width: '70%'}}
     drawerContentOptions={{
       labelStyle: {
         fontSize: 14,
@@ -382,7 +391,7 @@ const DrawerScreenForDonor = () => (
     // initialRouteName="Home"
     drawerPosition="left"
     drawerContent={props => <SideMenu {...props} />}
-    drawerStyle={{width: '90%'}}
+    drawerStyle={{width: '70%'}}
     drawerContentOptions={{
       labelStyle: {
         fontSize: 14,
@@ -406,7 +415,7 @@ const DrawerScreencamp = () => (
     // initialRouteName="Home"
     drawerPosition="left"
     drawerContent={props => <SideMenu {...props} />}
-    drawerStyle={{width: '90%'}}
+    drawerStyle={{width: '70%'}}
     drawerContentOptions={{
       labelStyle: {
         fontSize: 14,
@@ -455,6 +464,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="Campaing_details_ForDonor" component={Campaing_details_ForDonor} />
     <AuthStack.Screen name="KYCUpdateForDonee" component={KYCUpdateForDonee} />
     <AuthStack.Screen name="KYCUpdateForDonor" component={KYCUpdateForDonor} />
+    <AuthStack.Screen name="DonationInKind" component={DonationInKind} />
     <AuthStack.Screen name="My_Donation_Details" component={My_Donation_Details} />
     <AuthStack.Screen name="ThankYou" component={ThankYou} />
     

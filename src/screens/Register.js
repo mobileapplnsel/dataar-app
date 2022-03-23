@@ -39,6 +39,7 @@ const Register = ({navigation}) => {
   const [LastName, setLastName] = useState('');
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
+  const [Pincode, setPincode] = useState('');
   const [password, setpassword] = useState('');
   const [confirm_password, setConfirmPassword] = useState('');
   const [Otp, setotp] = useState('');
@@ -309,11 +310,18 @@ const Register = ({navigation}) => {
       Alert.alert('Email', 'Please enter Email');
     } else if (Mobile.trim() == '') {
       Alert.alert('Mobile', 'Please enter Mobile');
-    } else if (password.trim() == '') {
+    }
+    else if (Pincode.trim() == '') {
+      Alert.alert('PIN code', 'Please enter PIN code');
+    } 
+    else if (password.trim() == '') {
       Alert.alert('Password', 'Please enter password');
     }else if(selectedValue ==''){ Alert.alert('select ', 'Please select type');}
     else if (password != confirm_password) {
       Alert.alert('Confirm Password', 'Confirm password did not match');
+    }
+    else if (selectedValue == 'Select One') {
+      Alert.alert('Select One', 'Please select a type which you want to be');
     }
      else if (
       FirstName != '' &&
@@ -332,6 +340,7 @@ const Register = ({navigation}) => {
         device_id: '',
         device_type: 'A',
         fcm_token:fcm_token,
+        zipcode: Pincode
         
 
       };
@@ -467,6 +476,15 @@ const Register = ({navigation}) => {
               keyboardType="numeric"
               placeholderTextColor='grey'
             />
+
+<TextInput
+              placeholder="PIN code"
+              onChangeText={text => setPincode(text)}
+              style={Styles.login_text_input}
+              keyboardType="numeric"
+              placeholderTextColor='grey'
+            />
+
             <View
               style={{
                 flexDirection: 'row',
