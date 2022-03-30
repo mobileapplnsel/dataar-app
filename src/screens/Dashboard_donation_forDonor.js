@@ -82,7 +82,7 @@ class Dashboard_donation_forDonor extends Component {
     if (token != null && token !== '') {
       this.props.navigation.navigate('StartCampaign');
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   getuser = async () => {
@@ -166,7 +166,7 @@ class Dashboard_donation_forDonor extends Component {
       })
       
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   like = async (item, index) => {
@@ -195,7 +195,7 @@ class Dashboard_donation_forDonor extends Component {
         });
       }
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   onStarRatingPress(rating) {
@@ -341,7 +341,7 @@ class Dashboard_donation_forDonor extends Component {
     if (token != null && token !== '') {
       // navigation.navigate('StartCampaign');
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   ContactDonee = async item => {
@@ -453,7 +453,7 @@ class Dashboard_donation_forDonor extends Component {
     //   }
     
      else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
 
@@ -513,7 +513,7 @@ class Dashboard_donation_forDonor extends Component {
  
     
      else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
 
 
@@ -570,7 +570,7 @@ class Dashboard_donation_forDonor extends Component {
     if (token != null && token !== '') {
       this.props.navigation.navigate('User profile');
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   renderlog = ({item, index}) => {
@@ -908,7 +908,7 @@ source={{uri: item.campaign_image}}>
         });
       }
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   render() {

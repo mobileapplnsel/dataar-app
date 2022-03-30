@@ -23,16 +23,16 @@ const splash = ({navigation}) => {
        AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
       if (token == null) {
         // console.log('token', AsyncStorage.getItem('token'));
-        navigation.navigate('Dashboard_donation'); // Dashboard_donation
+        navigation.replace('Dashboard_donation'); // Dashboard_donation
        
         // LogIn
       } else {
         // var user_type = AsyncStorage.getItem('user_type');
         console.log(user_type);
         if (user_type === '0') {
-          navigation.navigate('Dashboard_donation_forDonor'); // OtpVerify
+          navigation.replace('Dashboard_donation_forDonor'); // OtpVerify
         } else {
-          navigation.navigate('Dashboard');
+          navigation.replace('Dashboard');
         }
         console.log('user_type', user_type);
         // navigation.navigate('Dashboard_donation');

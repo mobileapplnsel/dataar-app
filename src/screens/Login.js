@@ -111,7 +111,7 @@ const Login = ({navigation}) => {
       
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
-      console.log('userInfo', userInfo.user.email);
+      console.log('userInfooooo', userInfo);
       var fcm_token = await AsyncStorage.getItem('FCMtoken');
       if (userInfo.user.email !== '') {
         setisloading(true);
@@ -155,7 +155,7 @@ const Login = ({navigation}) => {
         {
           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
           setTimeout(() => {
-            navigation.navigate('OneRupeeDonation', {
+            navigation.replace('OneRupeeDonation', {
               donate_amt: '100',
               donation_mode: 'dsadas',
               campaign_id: '',
@@ -167,7 +167,7 @@ const Login = ({navigation}) => {
 else
 {
               setTimeout(() => {
-                navigation.navigate('Dashboard_donation_forDonor');
+                navigation.replace('Dashboard_donation_forDonor');
                 // setisloading(false);
                 setselectedValue('');
               }, 1000);
@@ -192,7 +192,7 @@ else
         {
           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
           setTimeout(() => {
-            navigation.navigate('OneRupeeDonation', {
+            navigation.replace('OneRupeeDonation', {
               donate_amt: '100',
               donation_mode: 'dsadas',
               campaign_id: '',
@@ -204,13 +204,13 @@ else
 else
 {
               setTimeout(() => {
-                navigation.navigate('Dashboard');
+                navigation.replace('Dashboard');
                 // setisloading(false);
               }, 1000);
             }
             }
           } else {
-            navigation.navigate('logintype', {
+            navigation.replace('logintype', {
               user_id: response.userdata[0].user_id,
             });
           }
@@ -318,7 +318,7 @@ else
         {
           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
           setTimeout(() => {
-            navigation.navigate('OneRupeeDonation', {
+            navigation.replace('OneRupeeDonation', {
               donate_amt: '100',
               donation_mode: 'dsadas',
               campaign_id: '',
@@ -330,7 +330,7 @@ else
 else
 {
           setTimeout(() => {
-            navigation.navigate('Dashboard_donation_forDonor');
+            navigation.replace('Dashboard_donation_forDonor');
             // setisloading(false);
             setselectedValue('');
           }, 1000);
@@ -349,7 +349,7 @@ else
         {
           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
           setTimeout(() => {
-            navigation.navigate('OneRupeeDonation', {
+            navigation.replace('OneRupeeDonation', {
               donate_amt: '100',
               donation_mode: 'dsadas',
               campaign_id: '',
@@ -361,14 +361,14 @@ else
 else
 {
           setTimeout(() => {
-            navigation.navigate('Dashboard');
+            navigation.replace('Dashboard');
             // setisloading(false);
             setselectedValue('');
           }, 1000);
         }
         }
       } else {
-        navigation.navigate('logintype', {
+        navigation.replace('logintype', {
           user_id: response.userdata[0].user_id,
         });
       }
@@ -423,7 +423,7 @@ else
         {
           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
           setTimeout(() => {
-            navigation.navigate('OneRupeeDonation', {
+            navigation.replace('OneRupeeDonation', {
               donate_amt: '100',
               donation_mode: 'dsadas',
               campaign_id: '',
@@ -437,7 +437,7 @@ else
 else
 {
   setTimeout(() => {
-    navigation.navigate('Dashboard_donation_forDonor');
+    navigation.replace('Dashboard_donation_forDonor');
     // setisloading(false);
     setemail('');
     setpassword('');
@@ -471,7 +471,7 @@ else
 // else
 // {
         setTimeout(() => {
-          navigation.navigate('Dashboard');
+          navigation.replace('Dashboard');
           // setisloading(false);
           setemail('');
           setpassword('');

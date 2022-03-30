@@ -78,7 +78,7 @@ const Dashboard = ({navigation}) => {
  
     
      else {
-      navigation.navigate('LogIn');
+      navigation.replace('LogIn');
     }
   
   };
@@ -103,7 +103,7 @@ const Dashboard = ({navigation}) => {
     if (token != null && token !== '') {
       navigation.navigate('User_profile_forDonee');
     } else {
-      navigation.navigate('LogIn');
+      navigation.replace('LogIn');
     }
   };
   return (

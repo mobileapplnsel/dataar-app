@@ -63,7 +63,7 @@ const CustomSidebarMenu = props => {
   const logout = () => {
     AsyncStorage.clear();
     signOut()
-    props.navigation.navigate('LogIn');
+    props.navigation.replace('LogIn');
      
     
   };
@@ -136,7 +136,7 @@ const CustomSidebarMenu = props => {
  
     
      else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   
   };

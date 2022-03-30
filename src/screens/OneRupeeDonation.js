@@ -14,6 +14,7 @@ import {
   Dimensions,
   Button, NativeModules, NativeEventEmitter,
   PermissionsAndroid,
+  ActivityIndicator
 } from 'react-native';
 import {
   Container,
@@ -95,6 +96,7 @@ class DonationAmount extends Component {
       amountError: '',
       plantype: 'daily',
       transaction_idd: '',
+      progressActivityIndicator: false
     };
   }
   componentDidMount() {
@@ -243,7 +245,7 @@ console.log('target amount')
       // handle success
      // alert(`Success: ${data.razorpay_payment_id}`);
      
-     this.setState({transaction_idd: data.razorpay_payment_id})
+     this.setState({transaction_idd: data.razorpay_payment_id, progressActivityIndicator: true})
      // alert(`Success: ${data}`);
       console.log('Success: ', data.razorpay_payment_id)
       this.submitDonation()
@@ -407,7 +409,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
               </View>
             </View>
 
-
+            
 
             <View style={Styles.donation_sub}>
               <View style={Styles.amount_main_contain}>
@@ -426,12 +428,21 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                 onPress={() => this._onPressButton()}>
                 <Text style={Styles.login_text}>Donate</Text>
               </TouchableOpacity>
-
-               
+              
+             
              
             </View>
             </ScrollView>
-            
+
+            <ActivityIndicator animating={this.state.progressActivityIndicator} size="large" color="#f55656" style={{opacity:1,
+             position: 'absolute',
+             left: 0,
+             right: 0,
+             top: 0,
+             bottom: 0,
+             alignItems: 'center',
+             justifyContent: 'center'}}  />
+
           </ImageBackground>
         </Container>
       
@@ -489,7 +500,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
       console.log(response);
       if (response.status == 'success') {
         // navigation.navigate('OtpVerify', {mobile: Mobile});
-
+        this.setState({progressActivityIndicator: false})
         this.props.navigation.navigate('ThankYou', {
           donation_id: response.donation_id,
         });
@@ -530,6 +541,7 @@ const Styles1 = StyleSheet.create({
     paddingTop: 0,
     textAlign: 'center',
     textAlignVertical: 'center',
+    color: 'black'
   },
   buttonContainer: {
     margin: 20

@@ -9,7 +9,8 @@ import {
   ScrollView,
   Alert,
   FlatList,
-  StyleSheet
+  StyleSheet,
+  ActivityIndicator
 } from 'react-native';
 import {
   Container,
@@ -44,7 +45,8 @@ class DonationAmount extends Component {
       email: '',
       mobile: '',
       image: '',
-      DonatebtnTitleStr: 'Donate'
+      DonatebtnTitleStr: 'Donate',
+      progressActivityIndicator: false 
     };
   }
   componentDidMount() {
@@ -150,7 +152,7 @@ class DonationAmount extends Component {
       // handle success
      // alert(`Success: ${data.razorpay_payment_id}`);
      
-     this.setState({transaction_idd: data.razorpay_payment_id})
+     this.setState({transaction_idd: data.razorpay_payment_id, progressActivityIndicator: true})
      // alert(`Success: ${data}`);
       console.log('Success: ', data.razorpay_payment_id)
       // this.submitDonation()
@@ -183,7 +185,7 @@ class DonationAmount extends Component {
     if (response.status == 'success') {
       Toast.show(response.message, Toast.LONG)
       // this.props.navigation.navigate('Dashboard_donation_forDonor');
-
+      this.setState({ progressActivityIndicator: false})
       this.props.navigation.navigate('ThankYou', {
         donation_id: response.donation_id,
       });
@@ -312,6 +314,8 @@ class DonationAmount extends Component {
                 onPress={() => this.donate()}>
                 <Text style={Styles.login_text}>{this.state.DonatebtnTitleStr}</Text>
               </TouchableOpacity>
+
+              <ActivityIndicator animating={this.state.progressActivityIndicator} size="large" color="#f55656" style={{opacity:1}}  />
             </View>
           </ImageBackground>
         </Container>

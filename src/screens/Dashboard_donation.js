@@ -71,7 +71,7 @@ class Dashboard_donation extends Component {
     if (token != null && token !== '') {
       this.props.navigation.navigate('StartCampaign');
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   getuser = async () => {
@@ -172,7 +172,7 @@ class Dashboard_donation extends Component {
         });
       }
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   dashboard_donate = async () => {
@@ -294,7 +294,7 @@ class Dashboard_donation extends Component {
     if (token != null && token !== '') {
       // navigation.navigate('StartCampaign');
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   Donate = async item => {
@@ -308,7 +308,7 @@ class Dashboard_donation extends Component {
         kind_id: item.kind_id,
       });
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   
@@ -325,7 +325,7 @@ class Dashboard_donation extends Component {
       });
     } else {
       AsyncStorage.setItem('isLoggedInForOneRupee', 'yes');
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   // const Logout = async () => {
@@ -338,7 +338,7 @@ class Dashboard_donation extends Component {
     var token = await AsyncStorage.getItem('token');
     console.log('Comment token: ',token);
     if (token == null || token == '') {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     } else {
 
     console.log(item);
@@ -379,7 +379,7 @@ class Dashboard_donation extends Component {
     if (token != null && token !== '') {
       this.props.navigation.navigate('User profile');
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   renderlog = ({item, index}) => {
@@ -454,7 +454,7 @@ class Dashboard_donation extends Component {
                   width: '90%'
                 }}
         onPress={() =>
-          this.props.navigation.navigate('LogIn')
+          this.props.navigation.replace('LogIn')
         }>
                 <Text style={{
     fontSize: 16,
@@ -703,7 +703,7 @@ class Dashboard_donation extends Component {
         });
       }
     } else {
-      this.props.navigation.navigate('LogIn');
+      this.props.navigation.replace('LogIn');
     }
   };
   render() {
@@ -750,7 +750,7 @@ class Dashboard_donation extends Component {
 
 
               <TouchableOpacity
-                onPress={() => this.props.navigation.navigate('LogIn')}>
+                onPress={() => this.props.navigation.replace('LogIn')}>
                 <Image
                   style={{
                     width: 30,
