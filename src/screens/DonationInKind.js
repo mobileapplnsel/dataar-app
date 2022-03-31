@@ -116,8 +116,12 @@ class DonationAmount extends Component {
     var response = await API.post('contact_donee', logs);
     if (response.status == 'success') {
       console.log('contact_donee response', response);
-      Toast.show(response.message, Toast.LONG)
-        this.props.navigation.goBack()
+      // Toast.show(response.message, Toast.LONG)
+      Alert.alert('success', response.message, [
+        {text: 'OK', onPress: () => this.props.navigation.goBack()},
+      ],
+      {cancelable: false},);
+        
     } else {
       Alert.alert(response.status, response.message);
     }

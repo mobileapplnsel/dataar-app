@@ -203,14 +203,23 @@ source={{uri: base64Icon}}>
                 </Text>
               </View>
               
-              <View style={{flexDirection: 'row', marginTop: 3}}>
+             { item.donation_mode == '1' && <View style={{flexDirection: 'row', marginTop: 3}}>
               <Text style={Styles.doner_title_font_Modified}>
               Target Amount:   
                 </Text>
                 <Text style={Styles.doner_title_font}>
                   {item.campaign_target_amount}
                 </Text>
-              </View>
+              </View> }
+
+              { item.donation_mode == '2' && <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Target Quantity:   
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.campaign_target_qty}
+                </Text>
+              </View> }
              
              
                 

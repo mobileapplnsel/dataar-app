@@ -508,8 +508,13 @@ const StartCampaign = ({navigation}) => {
      console.log('Start campaign response: ', response)
 
     if (response.status == 'success') {
-      navigation.navigate('Dashboard');
-      Alert.alert(response.status, response.message);
+      
+      // Alert.alert('Alert', 'Campaign added successfully and waiting for admin approval');
+      Alert.alert('success', 'Campaign added successfully and waiting for admin approval.', [
+        {text: 'OK', onPress: () => navigation.navigate('Dashboard')},
+      ],
+      {cancelable: false},);
+      
     } else {
       Alert.alert(response.status, response.message);
       navigation.navigate('Dashboard');
@@ -673,12 +678,14 @@ setselectedValue(item.kind_id)
             </View>
           </SafeAreaView>
           
-          <View style={Styles.login_text_main}>
+          
+          {isNext == 0 ? (
+            <ScrollView>
+
+<View style={Styles.login_text_main}>
             <Text style={Styles.campaign_name_font}>Start Campaign</Text>
           </View>
-          {isNext == 0 ? (
-            <View>
-            <ScrollView>
+
             <View style={Styles.login_text_input_contain}>
               <Text style={Styles.campaign_text_font}>Step 1</Text>
               <TextInput
@@ -981,7 +988,7 @@ setselectedValue(item.kind_id)
               <View style={{marginBottom: 20}}></View>
             </View>
            </ScrollView>
-           </View>
+           
           ) : null}
  
           {isNext == 1 ? (
@@ -1154,7 +1161,7 @@ setselectedValue(item.kind_id)
                     padding: 7
                   }}
                   textAlignVertical={'top'}
-                  keyboardType="number-pad"
+                  // keyboardType = 'name-phone-pad'
                   placeholderTextColor='grey'
                   multiline={true}
      numberOfLines={5}

@@ -402,16 +402,22 @@ class Campaing_details extends Component {
                     Donation Type:{' '}
                     {donation_type}
                   </Text>
-                  <Text style={Styles.sub_text_font1}>
+                 { this.state.capmain_details[0]['donation_mode'] == '1' && <Text style={Styles.sub_text_font1}>
                     {'   '}
                     Amount Recived: {this.state.amount}
-                  </Text>
+                  </Text> }
                 </View>
                 <View style={Styles.campaign_details_text_contain}>
-                  <Text style={Styles.sub_text_font1}>
-                    Target Quantity:{' '}
+                { this.state.capmain_details[0]['donation_mode'] == '1' && <Text style={Styles.sub_text_font1}>
+                    Target Amount:{' '}
                     {this.state.capmain_details[0]['campaign_target_amount']}
-                  </Text>
+                  </Text> }
+
+                  { this.state.capmain_details[0]['donation_mode'] == '2' && <Text style={Styles.sub_text_font1}>
+                    Target Quantity:{' '}
+                    {this.state.capmain_details[0]['campaign_target_qty']}
+                  </Text> }
+
                 </View>
                 {/* <View style={Styles.campaign_details_text_contain}>
                   <Text style={Styles.sub_text_font1}>
@@ -429,11 +435,11 @@ class Campaing_details extends Component {
                   textStyle={{margin: 6, textAlign: 'center'}}
                 />
               </Table> */}
-              <FlatList
+            { this.state.capmain_details[0]['donation_mode'] == '1' &&  <FlatList
                 data={this.state.cmpData}
                 renderItem={this.renderlog1}
                 keyExtractor={(item, id) => id.toString()}
-              />
+              /> }
                <Text style={Styles.sub_text_font1}>
                     
                   </Text>

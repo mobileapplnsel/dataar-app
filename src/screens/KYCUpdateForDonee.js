@@ -13,7 +13,8 @@ import {
   Animated,
   ActionSheetIOS,
   Platform,
-  PermissionsAndroid
+  PermissionsAndroid,
+  ActivityIndicator
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
@@ -62,7 +63,7 @@ class User_profile extends Component {
       certificateTrustFileName:'',
       selectedTrustFileSource:'',
       selectedTrustFileType:'',
-
+      progress: false,
       showPANCardImagePicker: false,
       showAddCardImagePicker: false,
       show80GCardImagePicker: false,
@@ -425,6 +426,8 @@ else
 
 
   submit = async () => {
+
+
     var formdata = new FormData();
     var user_id = await AsyncStorage.getItem('user_id');
     
@@ -475,7 +478,7 @@ else
           //   trust_certificate_file: this.state.selectedTrustFileSource,
           //   website_link: this.state.websiteLink,
           //   };
-    
+    this.setState({progress: true})
             formdata.append('user_id', user_id);
             formdata.append('kycfile_type', 'base64');
             formdata.append('kyc_file', {uri: this.state.selectedPANSource, name: this.state.selectedPANName, type: this.state.selectedPANType});
@@ -500,7 +503,7 @@ else
     
           var response = await API.postWithFormData('update_kyc', formdata);
           if (response.status == 'success') {
-    
+            this.setState({progress: false})
             // need to add kyc uploadation function here
             Alert.alert('success', 'Thank you for submitting your KYC. It is currently under review. We will let you know once your KYC gets approved.', [
               {text: 'OK', onPress: () => this.props.navigation.navigate('Dashboard')},
@@ -508,6 +511,7 @@ else
             {cancelable: false},);
            
           } else {
+            this.setState({progress: false})
             Alert.alert(response.status, response.message);
           }
         }
@@ -1244,7 +1248,14 @@ onValueChange={
             </View>
 
             </ScrollView>
-            
+            <ActivityIndicator animating={this.state.progress} size="large" color="#f55656" style={{opacity:1,
+             position: 'absolute',
+             left: 0,
+             right: 0,
+             top: 0,
+             bottom: 0,
+             alignItems: 'center',
+             justifyContent: 'center'}}  />
             {/* </View> */}
           </ImageBackground>
         
