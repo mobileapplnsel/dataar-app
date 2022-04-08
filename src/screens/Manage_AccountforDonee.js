@@ -10,6 +10,7 @@ import {
   Alert,
   FlatList,
   Animated,
+  Platform
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
@@ -17,6 +18,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 var Styles = require('../assets/files/Styles');
 import Feather from 'react-native-vector-icons/Feather';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import KeyboardManager from 'react-native-keyboard-manager';
 class User_profile extends Component {
   constructor(props) {
     super(props);
@@ -48,6 +50,11 @@ class User_profile extends Component {
     }
   };
   async componentDidMount() {
+
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
+
     // if (AsyncStorage.getItem('token')['_X'] == null) {
     //   //   this.props.navigation.navigate('LogIn');
     // } else {

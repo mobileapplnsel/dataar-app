@@ -34,6 +34,7 @@ import {Picker} from '@react-native-picker/picker';
 import AppPreLoader from '../components/AppPreLoader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import KeyboardManager from 'react-native-keyboard-manager';
 const Login = ({navigation}) => {
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
@@ -55,7 +56,9 @@ const Login = ({navigation}) => {
   // const contextType = AuthContext;
   useEffect(() => {
     const isFocused = navigation.isFocused();
-
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
     const willFocusSubscription = navigation.addListener('focus', () => {
       console.log('willFocusSubscription called: ')
         setisloading(false);
@@ -237,6 +240,7 @@ else
       if (Platform.OS === 'android') {
         LoginManager.setLoginBehavior('web_only');
       }
+      LoginManager.setLoginBehavior('web_only');
       LoginManager.logInWithPermissions(['public_profile', 'email'])
         .then(function (result) {
           console.log(result);

@@ -5,6 +5,7 @@
 #import <React/RCTRootView.h>
 #import <RNGoogleSignin/RNGoogleSignin.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
+#import <UserNotifications/UserNotifications.h>
 @import Firebase;
 
 
@@ -36,6 +37,14 @@ static void InitializeFlipper(UIApplication *application) {
 #endif
   
   [FIRApp configure];
+  
+  UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+  [center requestAuthorizationWithOptions:(UNAuthorizationOptionBadge | UNAuthorizationOptionSound | UNAuthorizationOptionAlert)
+              completionHandler:^(BOOL granted, NSError * _Nullable error) {
+                  if (!error) {
+                      NSLog(@"request succeeded!");
+                  }
+              }];
   
   [[FBSDKApplicationDelegate sharedInstance] application:application
   didFinishLaunchingWithOptions:launchOptions];

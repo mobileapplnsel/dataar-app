@@ -12,7 +12,8 @@ import {
   Modal,
   FlatList,
   Platform,
-  PermissionsAndroid
+  PermissionsAndroid,
+  ActivityIndicator
   // Picker,
 } from 'react-native';
 import {
@@ -43,7 +44,7 @@ import {
 } from 'react-native-image-picker';
 import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
 import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
-  
+import KeyboardManager from 'react-native-keyboard-manager';
 const StartCampaign = ({navigation}) => {
   const [Title, setTitle] = useState('');
   const [Description, setDescription] = useState('');
@@ -82,7 +83,8 @@ const StartCampaign = ({navigation}) => {
   const [ArrPref1, setArrPref1] = useState([]);
   const [ArrImagePicker, setArrImagePicker] = useState([{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}]);
   const [filePath, setFilePath] = useState({});
-
+  const [progress, setprogress] = useState(false);
+  
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -349,6 +351,7 @@ const StartCampaign = ({navigation}) => {
       }
        else {
         // setNext(3);
+        setprogress(true)
         Start_CampaignNow();
       }
      } else if (selCamp == '1')
@@ -357,6 +360,7 @@ const StartCampaign = ({navigation}) => {
         Alert.alert('Amount', 'Please Add Amount');
       } else {
         // setNext(3);
+        setprogress(true)
         Start_CampaignNow();
       }
      }
@@ -508,7 +512,7 @@ const StartCampaign = ({navigation}) => {
      console.log('Start campaign response: ', response)
 
     if (response.status == 'success') {
-      
+      setprogress(false)
       // Alert.alert('Alert', 'Campaign added successfully and waiting for admin approval');
       Alert.alert('success', 'Campaign added successfully and waiting for admin approval.', [
         {text: 'OK', onPress: () => navigation.navigate('Dashboard')},
@@ -516,6 +520,7 @@ const StartCampaign = ({navigation}) => {
       {cancelable: false},);
       
     } else {
+      setprogress(false)
       Alert.alert(response.status, response.message);
       navigation.navigate('Dashboard');
     }
@@ -539,6 +544,9 @@ const StartCampaign = ({navigation}) => {
     }
   };
   useEffect(() => {
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
     fetchkind();
     getPreferences();
   }, []);
@@ -677,7 +685,15 @@ setselectedValue(item.kind_id)
               </TouchableOpacity> */}
             </View>
           </SafeAreaView>
-          
+         { progress && <ActivityIndicator  color={'#f55656'} size="large" style={{
+            position: 'absolute',
+             left: 0,
+             right: 0,
+             top: 0,
+             bottom: 0,
+             alignItems: 'center',
+             justifyContent: 'center'
+          }} /> }
           
           {isNext == 0 ? (
             <ScrollView>
@@ -957,7 +973,7 @@ setselectedValue(item.kind_id)
               <View style={Styles.user_edit_contain}>
                 <Selector
                   text={strdate ? moment(strdate).format('DD / MM / YYYY') : ''}
-                  placeholder="Start Expiry"
+                  placeholder="Start Date"
                   marginTop={normalize(15)}
                   // onPress={() => setShowPicker(true)}
                   icon={require('../../src/assets/images/calendar.jpg')}
@@ -971,7 +987,7 @@ setselectedValue(item.kind_id)
                       ? moment(endseldate).format('DD / MM / YYYY')
                       : ''
                   }
-                  placeholder="End Expiry"
+                  placeholder="Expiry Date"
                   marginTop={normalize(15)}
                   // onPress={() => setShowPicker(true)}
                   icon={require('../../src/assets/images/calendar.jpg')}
@@ -1185,6 +1201,11 @@ setselectedValue(item.kind_id)
               </ScrollView>
             </View>
           ) : null}
+
+
+          
+    
+
         </ImageBackground>
         
         <Modal

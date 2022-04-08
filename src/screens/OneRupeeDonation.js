@@ -14,7 +14,8 @@ import {
   Dimensions,
   Button, NativeModules, NativeEventEmitter,
   PermissionsAndroid,
-  ActivityIndicator
+  ActivityIndicator,
+  Platform
 } from 'react-native';
 import {
   Container,
@@ -36,6 +37,7 @@ import RazorpayCheckout from 'react-native-razorpay';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import KeyboardManager from 'react-native-keyboard-manager';
 const selectOneFile = async () => {
   //Opening Document Picker for selection of one file
   try {
@@ -101,6 +103,9 @@ class DonationAmount extends Component {
   }
   componentDidMount() {
   //  this.campaign();
+  if (Platform.OS === 'ios') {
+    KeyboardManager.setEnable(true);
+  }
     if (AsyncStorage.getItem('token')['_X'] == null) {
       //   this.props.navigation.navigate('LogIn');
     } else {
@@ -331,6 +336,14 @@ console.log('target amount')
                 </TouchableOpacity>
               </View> */}
             </SafeAreaView>
+            { this.state.progressActivityIndicator && <ActivityIndicator size="large" color="#f55656" style={{opacity:1,
+             position: 'absolute',
+             left: 0,
+             right: 0,
+             top: 0,
+             bottom: 0,
+             alignItems: 'center',
+             justifyContent: 'center'}}  /> }
 
             <ScrollView>
 
@@ -432,18 +445,14 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
              
              
             </View>
+            
             </ScrollView>
 
-            <ActivityIndicator animating={this.state.progressActivityIndicator} size="large" color="#f55656" style={{opacity:1,
-             position: 'absolute',
-             left: 0,
-             right: 0,
-             top: 0,
-             bottom: 0,
-             alignItems: 'center',
-             justifyContent: 'center'}}  />
+           
 
           </ImageBackground>
+
+          
         </Container>
       
     );
@@ -489,7 +498,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
     console.log('user_id', user_id);
     var logs = {
       user_id: user_id,
-      campaign_id: '155',
+      campaign_id: '1',
       amountpaid: String(this.state.targetAmount),
       plan_type: this.state.plantype,
       transaction_id: this.state.transaction_idd,

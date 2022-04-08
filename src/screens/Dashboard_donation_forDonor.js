@@ -28,7 +28,7 @@ import Picker from '../components/Picker';
 import StarRating from 'react-native-star-rating';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-simple-toast';
-// import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+ //import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
   Platform.OS === 'ios'
@@ -120,16 +120,17 @@ class Dashboard_donation_forDonor extends Component {
       Alert.alert(response.status, response.message);
     }
   };
-  componentDidMount() {
+  
+  componentDidMount = async () => {
     this.dashboard_donate();
     this.getPreferences()
     // this.getuser();
 
     this.focusListener = this.props.navigation.addListener('focus', () => {
 
-      console.log('focusListener has called!!!!')
+      console.log('focusListener has calle1d!!!!')
       this.props.navigation.closeDrawer();
-    //   this.dashboard_donate();
+       this.dashboard_donate();
     // this.getPreferences()
       //Put your Data loading function here instead of my this.loadData()
     });
@@ -138,9 +139,9 @@ class Dashboard_donation_forDonor extends Component {
       PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
 
       {
-        title: 'Cool Photo App Camera Permission',
+        title: 'Dataar App Camera Permission',
         message:
-          'Cool Photo App needs access to your camera ' +
+          'Dataar App needs access to your camera ' +
           'so you can take awesome pictures.',
         buttonNeutral: 'Ask Me Later',
         buttonNegative: 'Cancel',

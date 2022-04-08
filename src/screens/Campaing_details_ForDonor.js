@@ -602,7 +602,7 @@ console.log('comment button clicked!!!!')
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    Start Date: {this.state.capmain_details[0]['created_at']}
+                    Start Date: {this.state.capmain_details[0]['campaign_start_date']}
                   </Text>
 
                   <Text style={{
@@ -612,7 +612,7 @@ console.log('comment button clicked!!!!')
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    Expiry Date: {this.state.capmain_details[0]['updated_at']}
+                    Expiry Date: {this.state.capmain_details[0]['campaign_end_date']}
                   </Text>
                 
                 

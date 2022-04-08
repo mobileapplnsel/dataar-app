@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
+  Platform
 } from 'react-native';
 import {
   Container,
@@ -16,6 +17,7 @@ var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import KeyboardManager from 'react-native-keyboard-manager';
 const OtpVerify = ({route, navigation}) => {
   const [Mobile, setMobile] = useState('');
   const [LastName, setLastName] = useState();
@@ -24,6 +26,11 @@ const OtpVerify = ({route, navigation}) => {
     setotp(text);
   };
   React.useEffect(() => {
+
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
+    
     const {mobile} = route.params;
     console.log(mobile);
     setMobile(mobile);

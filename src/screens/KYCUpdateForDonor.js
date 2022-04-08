@@ -15,7 +15,7 @@ import {
   Platform,
   PermissionsAndroid,
   Modal,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import DocumentPicker from 'react-native-document-picker';
@@ -32,6 +32,7 @@ import {
   launchCamera,
   launchImageLibrary
 } from 'react-native-image-picker';
+import KeyboardManager from 'react-native-keyboard-manager';
 import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
 import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
 import DocumentIcon from '../../src/assets/images/outline_description_black_48.png';
@@ -69,7 +70,9 @@ class User_profile extends Component {
   }
   
   async componentDidMount() {
-   
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
   }
   requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -563,7 +566,11 @@ selectOneFile = async () => {
                       if (item.name == 'Take Photo')
                       {
                         this.setState({showPANCardImagePicker: false, selectedImagePickerType: 'PAN'})
-                        this.captureImage()
+                        
+                        setTimeout(() => {
+                          this.captureImage()
+                         // this.props.navigation.navigate('start')}
+                       }, 2000);
 
                       }
                       else if (item.name == 'Select Document')

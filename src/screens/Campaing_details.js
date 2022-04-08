@@ -53,7 +53,7 @@ class Campaing_details extends Component {
     var response = await API.post('campaign_details', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
-      console.log(response.data);
+      console.log('response.data: ',response);
       var arr = new Array();
       var amountVal = 0;
       for (var i = 0; i < response.data.donations.length; i++) {
@@ -390,11 +390,11 @@ class Campaing_details extends Component {
 
                 <View style={Styles.campaign_details_date_contain}>
                   <Text style={Styles.sub_text_font1}>
-                    Start Date: {this.state.capmain_details[0]['created_at']}
+                    Start Date: {this.state.capmain_details[0]['campaign_start_date']}
                   </Text>
                   <Text style={Styles.sub_text_font1}>
                     {'   '}
-                    Expiry Date: {this.state.capmain_details[0]['updated_at']}
+                    Expiry Date: {this.state.capmain_details[0]['campaign_end_date']}
                   </Text>
                 </View>
                 <View style={Styles.campaign_details_text_contain}>

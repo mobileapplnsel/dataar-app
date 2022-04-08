@@ -27,6 +27,7 @@ import RNFetchBlob from 'rn-fetch-blob';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import KeyboardManager from 'react-native-keyboard-manager';
 var pdfpath
 var pdffile
 var filename1 = 'Upload your Pan'
@@ -95,6 +96,11 @@ const Register = ({navigation}) => {
   const setconfirmpass = text => {
     setConfirmPassword(text);
   };
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
+  }, []);
   const selectOneFile = async () => {
     //Opening Document Picker for selection of one file
     try {

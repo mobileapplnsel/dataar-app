@@ -11,13 +11,15 @@ import {
   FlatList,
   Animated,
   ActivityIndicator,
-  StyleSheet
+  StyleSheet,
+  Platform
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import KeyboardManager from 'react-native-keyboard-manager';
 var Styles = require('../assets/files/Styles');
 class User_profile extends Component {
   constructor(props) {
@@ -50,6 +52,11 @@ class User_profile extends Component {
     }
   };
   async componentDidMount() {
+
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
+
     if (AsyncStorage.getItem('token')['_X'] == null) {
       //   this.props.navigation.navigate('LogIn');
     } else {

@@ -31,6 +31,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {Picker} from '@react-native-picker/picker';
 import AppPreLoader from '../components/AppPreLoader';
+import KeyboardManager from 'react-native-keyboard-manager';
 const ForgetPass = ({navigation}) => {
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
@@ -49,6 +50,11 @@ const ForgetPass = ({navigation}) => {
   };
   // const contextType = AuthContext;
   useEffect(() => {
+
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
+
     GoogleSignin.configure({
       scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
       webClientId:

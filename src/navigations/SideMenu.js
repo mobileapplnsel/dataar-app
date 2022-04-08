@@ -2,7 +2,12 @@ import PropTypes from 'prop-types';
 import React, {Component, useEffect, useState} from 'react';
 import API from '../services/api';
 var Styles = require('../assets/files/Styles');
-import { LoginManager } from 'react-native-fbsdk'
+import {
+  AccessToken,
+  GraphRequest,
+  GraphRequestManager,
+  LoginManager,
+} from 'react-native-fbsdk';
 // var styles = require('../../src/assets/files/Styles');
 import {NavigationActions, NavigationEvents} from 'react-navigation';
 //android:roundIcon="@mipmap/ic_launcher_round"
@@ -72,7 +77,9 @@ const CustomSidebarMenu = props => {
     try {
      // await GoogleSignin.signOut();
       await GoogleSignin.revokeAccess();
-      LoginManager.logOut()
+      //  LoginManager.logOut()
+     
+      //  FBLogout(AccessToken.getCurrentAccessToken())
      // props.navigation.navigate('LogIn');
    // Remember to remove the user from your app's state as well
     } catch (error) {
@@ -80,6 +87,27 @@ const CustomSidebarMenu = props => {
       console.error(error);
     }
   };
+  const FBLogout = (accessToken) => {
+
+    console.log('accessToken: ', accessToken)
+
+    let logout =
+        new GraphRequest(
+            "me/permissions/",
+            {
+                accessToken: accessToken,
+                httpMethod: 'DELETE'
+            },
+            (error, result) => {
+                if (error) {
+                    console.log('Error fetching data: ' + error.toString());
+                } else {
+                  console.log('success fetching data: ');
+                    LoginManager.logOut();
+                }
+            });
+    new GraphRequestManager().addRequest(logout).start();
+};
   const callToSetCatSubcatValue = () => {
     console.log('callToSetCatSubcatValue called:::');
   };

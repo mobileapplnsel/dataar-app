@@ -34,6 +34,7 @@ import {
 import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
 import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
 import DocumentIcon from '../../src/assets/images/outline_description_black_48.png';
+import KeyboardManager from 'react-native-keyboard-manager';
 var pdfpath
 var pdffile
 var filename1 = 'Upload your Pan'
@@ -75,7 +76,9 @@ class User_profile extends Component {
   }
   
   async componentDidMount() {
-   
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
   }
    requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -544,7 +547,7 @@ else
           //   trust_certificate_file: this.state.selectedTrustFileSource,
           //   website_link: this.state.websiteLink,
           //   };
-    
+          this.setState({progress: true})
             formdata.append('user_id', user_id);
             formdata.append('kycfile_type', 'base64');
             formdata.append('kyc_file', {uri: this.state.selectedPANSource, name: this.state.selectedPANName, type: this.state.selectedPANType});
@@ -560,7 +563,7 @@ else
     
           var response = await API.postWithFormData('update_kyc', formdata);
           if (response.status == 'success') {
-    
+            this.setState({progress: false})
             // need to add kyc uploadation function here
             Alert.alert('success', 'Thank you for submitting your KYC. It is currently under review. We will let you know once your KYC gets approved.', [
               {text: 'OK', onPress: () => this.props.navigation.navigate('Dashboard')},
@@ -568,6 +571,7 @@ else
             {cancelable: false},);
            
           } else {
+            this.setState({progress: false})
             Alert.alert(response.status, response.message);
           }
         }
@@ -1248,14 +1252,14 @@ onValueChange={
             </View>
 
             </ScrollView>
-            <ActivityIndicator animating={this.state.progress} size="large" color="#f55656" style={{opacity:1,
+            { this.state.progress && <ActivityIndicator size="large" color="#f55656" style={{opacity:1,
              position: 'absolute',
              left: 0,
              right: 0,
              top: 0,
              bottom: 0,
              alignItems: 'center',
-             justifyContent: 'center'}}  />
+             justifyContent: 'center'}}  /> }
             {/* </View> */}
           </ImageBackground>
         

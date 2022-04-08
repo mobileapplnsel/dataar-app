@@ -68,27 +68,100 @@ class Search_screen extends Component {
     }
     actualDownload = () => {
       const { dirs } = RNFetchBlob.fs;
+      // if (Platform.OS === 'ios')
+      // {
+      //   RNFetchBlob.config({
+      //     fileCache: true,
+      //     addAndroidDownloads: {
+      //     useDownloadManager: true,
+      //     notification: true,
+      //     mediaScannable: true,
+      //     title: `Recipt_And_Thank_You_Letter.pdf`,
+      //     path: `${dirs.DocumentDir}/test.pdf`,
+      //     },
+      //   })
+      //     .fetch('GET', this.state.pdfurl, {})
+      //     .then((res) => {
+      //      Toast.show('The file saved to'+res.path(), Toast.LONG)
+      //       console.log('The file saved to ', res.path());
+      //     })
+      //     .catch((e) => {
+      //       console.log(e)
+      //     });
+      // }
       if (Platform.OS === 'ios')
-      {
-        RNFetchBlob.config({
-          fileCache: true,
-          addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-          mediaScannable: true,
-          title: `Recipt_And_Thank_You_Letter.pdf`,
-          path: `${dirs.DocumentDir}/test.pdf`,
-          },
-        })
-          .fetch('GET', this.state.pdfurl, {})
-          .then((res) => {
-           Toast.show('The file saved to'+res.path(), Toast.LONG)
-            console.log('The file saved to ', res.path());
-          })
-          .catch((e) => {
-            console.log(e)
-          });
-      }
+    {
+      const { dirs } = RNFetchBlob.fs;
+      const dirToSave = dirs.DocumentDir
+
+      const configfb = {
+        fileCache: true,
+        useDownloadManager: true,
+        notification: true,
+        mediaScannable: true,
+        title: `Recipt_And_Thank_You_Letter.pdf`,
+        path: `${dirToSave}/${`Recipt_And_Thank_You_Letter.pdf`}`,
+    }
+    const configOptions = Platform.select({
+      ios: {
+          fileCache: configfb.fileCache,
+          title: configfb.title,
+          path: configfb.path,
+          appendExt: 'pdf',
+      },
+      android: configfb,
+  });
+
+  console.log('The file saved to 23233', configfb, dirs);
+
+  RNFetchBlob.config(configOptions)
+            .fetch('GET', this.state.pdfurl, {})
+            .then((res) => {
+                if (Platform.OS === "ios") {
+this.setState({
+        progress: false,
+      })
+                    RNFetchBlob.fs.writeFile(configfb.path, res.data, 'base64');
+                    // RNFetchBlob.ios.previewDocument(configfb.path);
+   RNFetchBlob.ios.openDocument(res.data)
+         Toast.show('The file saved to '+res.path(),  Toast.LONG)
+          console.log('The file saved to ', res.path());
+                }
+                
+                console.log('The file saved to ', res);
+            })
+            .catch((e) => {
+              this.setState({
+                progress: false,
+              })
+                console.log('The file saved to ERROR', e.message)
+            });
+    
+
+
+      // RNFetchBlob.config({
+      //   fileCache: true,
+      //   addAndroidDownloads: {
+      //   useDownloadManager: true,
+      //   notification: true,
+      //   mediaScannable: true,
+      //   title: `Recipt_And_Thank_You_Letter.pdf`,
+      //   path: `${dirs.DocumentDir}/test.pdf`,
+      //   },
+      // })
+      //   .fetch('GET', pdfurl, {})
+      //   .then((res) => {
+      //    this.setState({
+      //      progress: false,
+      //    })
+      //    RNFetchBlob.ios.openDocument(res.data)
+      //    Toast.show('The file saved to '+res.path(),  Toast.LONG)
+      //     console.log('The file saved to ', res.path());
+      //   })
+      //   .catch((e) => {
+      //     console.log(e)
+      //   });
+    }
       else
       {
         RNFetchBlob.config({

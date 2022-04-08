@@ -656,6 +656,11 @@ source={{uri: item.campaign_image}}
       starCount: rating
     });
   }
+  backBtnPresses = async () => {
+
+    this.props.navigation.goBack(null);
+    
+  }
   render() {
     return (
       <Container>
@@ -665,7 +670,7 @@ source={{uri: item.campaign_image}}
            <SafeAreaView style={Styles.dashboard_main_header}>
               <View style={Styles.dashboard_main_headers}>
                 <TouchableOpacity
-                  onPress={() => this.props.navigation.goBack()}>
+                  onPress={() => this.backBtnPresses()}>
                   <Image
                     style={{
                       width: 30,

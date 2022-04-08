@@ -9,7 +9,8 @@ import {
   ScrollView,
   Alert,
   FlatList,
-  StyleSheet
+  StyleSheet,
+  Platform
 } from 'react-native';
 import {
   Container,
@@ -30,6 +31,7 @@ import {
 import Toast from 'react-native-simple-toast';
 import RazorpayCheckout from 'react-native-razorpay';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import KeyboardManager from 'react-native-keyboard-manager';
 class DonationAmount extends Component {
   constructor(props) {
     super(props);
@@ -50,6 +52,9 @@ class DonationAmount extends Component {
   }
   componentDidMount() {
     // this.campaign();
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
     this.getuser();
   }
   campaign = async () => {
