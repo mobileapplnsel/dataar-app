@@ -36,7 +36,8 @@ class User_profile extends Component {
       progress: false,
       user_id: '',
       iseditablePin: false,
-      pinCode: ''
+      pinCode: '',
+
 
     };
   }
@@ -106,12 +107,14 @@ class User_profile extends Component {
     this.setState({
       iseditablefname: true,
     });
+    this.inputText1.focus()
   };
   lnameedit = () => {
     console.log('hello world');
     this.setState({
       iseditablelname: true,
     });
+    this.inputText2.focus()
   };
   Pinedit = () => {
     console.log('hello world');
@@ -276,7 +279,8 @@ class User_profile extends Component {
                   <TextInput
                     style={Styles.user_text_input}
                     placeholder="First Name"
-                    editable={this.state.iseditablefname}
+                    ref ={ref => this.inputText1 = ref}
+                    // editable={this.state.iseditablefname}
                     onChangeText={value => this.setFirstname(value)}
                     value={this.state.fname}
                     keyboardType="default"></TextInput>
@@ -300,10 +304,12 @@ class User_profile extends Component {
               <View style={Styles.profile_main_text_contain}>
                 <Text style={Styles.user_profile_lbtext}>Last Name:</Text>
                 <View style={Styles.user_edit_contain}>
+                
                   <TextInput
                     style={Styles.user_text_input}
                     placeholder="Last Name"
-                    editable={this.state.iseditablelname}
+                    // editable={this.state.iseditablelname}
+                    ref ={ref => this.inputText2 = ref}
                     onChangeText={value => this.setLastname(value)}
                     value={this.state.lname}
                     keyboardType="default"></TextInput>

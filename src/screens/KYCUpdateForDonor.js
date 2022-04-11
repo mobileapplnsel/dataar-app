@@ -59,7 +59,6 @@ class User_profile extends Component {
       selectedIDType:'',
       imagebaseString:'',
       labelName:'',
-      progress: false,
       selectedPANNumber: '',
       showPANCardImagePicker: false,
       showAddCardImagePicker: false,
@@ -566,11 +565,9 @@ selectOneFile = async () => {
                       if (item.name == 'Take Photo')
                       {
                         this.setState({showPANCardImagePicker: false, selectedImagePickerType: 'PAN'})
-                        
                         setTimeout(() => {
                           this.captureImage()
-                         // this.props.navigation.navigate('start')}
-                       }, 2000);
+                       }, 1100);
 
                       }
                       else if (item.name == 'Select Document')
@@ -588,10 +585,16 @@ selectOneFile = async () => {
                          }
                          else
                          {
+
+                          this.setState({
+                            progress: true
+                        }, () => {
                           setTimeout(() => {
+                            this.setState({progress: false})
                             this.chooseFile('Pan')
                            // this.props.navigation.navigate('start')}
-                         }, 2000);
+                         }, 1100);
+                        });                          
                          }
          
 
@@ -747,7 +750,9 @@ onValueChange={
                       if (item.name == 'Take Photo')
                       {
                         this.setState({showAddCardImagePicker: false, selectedImagePickerType: 'ID'})
-                        this.captureImage()
+                        setTimeout(() => {
+                          this.captureImage()
+                       }, 1100);
 
                       }
                       else if (item.name == 'Select Document')
@@ -768,7 +773,7 @@ onValueChange={
                           setTimeout(() => {
                             this.chooseFile('Address')
                            // this.props.navigation.navigate('start')}
-                         }, 2000);
+                         }, 1100);
                          }
                       }
 

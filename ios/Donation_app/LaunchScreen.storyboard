@@ -24,10 +24,10 @@
                         <viewLayoutGuide key="safeArea" id="Bcu-3y-fUS"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="trailing" secondItem="U9e-dt-Xqt" secondAttribute="trailing" id="BpS-di-d5g"/>
-                            <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="U9e-dt-Xqt" secondAttribute="bottom" id="BrT-hr-HAF"/>
-                            <constraint firstItem="U9e-dt-Xqt" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" id="tcY-DX-Vne"/>
-                            <constraint firstItem="U9e-dt-Xqt" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" id="zha-fU-IgR"/>
+                            <constraint firstAttribute="trailing" secondItem="U9e-dt-Xqt" secondAttribute="trailing" id="BpS-di-d5g"/>
+                            <constraint firstAttribute="bottom" secondItem="U9e-dt-Xqt" secondAttribute="bottom" id="BrT-hr-HAF"/>
+                            <constraint firstItem="U9e-dt-Xqt" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="tcY-DX-Vne"/>
+                            <constraint firstItem="U9e-dt-Xqt" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="zha-fU-IgR"/>
                         </constraints>
                     </view>
                 </viewController>

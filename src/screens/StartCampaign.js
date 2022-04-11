@@ -282,9 +282,9 @@ const StartCampaign = ({navigation}) => {
       Alert.alert('Campaign type', 'Please select a campaign type');
     }
      else if (strdate == null) {
-      Alert.alert('Start Expiry Date', 'Please add a Date from that your campaign will start');
+      Alert.alert('Start Date', 'Please add a Date from that your campaign will start');
     } else if (endseldate == null) {
-      Alert.alert('End Expiry Date', 'Please add End Expiry Date of your campaign');
+      Alert.alert('End Date', 'Please add End Date of your campaign');
     }
     
      else {
@@ -562,7 +562,7 @@ const StartCampaign = ({navigation}) => {
   const ExpiryDatebtnPressed = () => {
     if (strdate == null)
     {
-      Toast.show('Please select Start Expiry date first', Toast.LONG)
+      Toast.show('Please select Start date first', Toast.LONG)
     }
     else
     {
@@ -685,15 +685,7 @@ setselectedValue(item.kind_id)
               </TouchableOpacity> */}
             </View>
           </SafeAreaView>
-         { progress && <ActivityIndicator  color={'#f55656'} size="large" style={{
-            position: 'absolute',
-             left: 0,
-             right: 0,
-             top: 0,
-             bottom: 0,
-             alignItems: 'center',
-             justifyContent: 'center'
-          }} /> }
+         
           
           {isNext == 0 ? (
             <ScrollView>
@@ -827,7 +819,10 @@ setselectedValue(item.kind_id)
                       if (item.name == 'Take Photo')
                       {
                         setshowImagePicker(false)
-                        captureImage()
+                        setTimeout(() => {
+                          // this.captureImage()
+                          captureImage('photo')
+                       }, 1100);
 
                       }
                       else
@@ -843,7 +838,7 @@ setselectedValue(item.kind_id)
                           setTimeout(() => {
                             chooseFile()
                            // this.props.navigation.navigate('start')}
-                         }, 2000);
+                         }, 1100);
                           
                          }
          
@@ -987,7 +982,7 @@ setselectedValue(item.kind_id)
                       ? moment(endseldate).format('DD / MM / YYYY')
                       : ''
                   }
-                  placeholder="Expiry Date"
+                  placeholder="End Date"
                   marginTop={normalize(15)}
                   // onPress={() => setShowPicker(true)}
                   icon={require('../../src/assets/images/calendar.jpg')}
@@ -1052,6 +1047,17 @@ setselectedValue(item.kind_id)
               </TouchableOpacity>
             </View>
           ) : null}
+
+{ progress && <ActivityIndicator  color={'#f55656'} size="large" style={{
+            position: 'absolute',
+             left: 0,
+             right: 0,
+             top: 160,
+             bottom: 0,
+             alignItems: 'center',
+             justifyContent: 'center'
+          }} /> }
+
           {isNext == 2 ? (
             <View style={Styles.login_text_input_contain}>
               <Text style={Styles.campaign_text_font}>Step 3</Text>

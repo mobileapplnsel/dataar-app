@@ -801,7 +801,9 @@ else
                       if (item.name == 'Take Photo')
                       {
                         this.setState({showPANCardImagePicker: false, selectedImagePickerType: 'PAN'})
-                        this.captureImage()
+                        setTimeout(() => {
+                          this.captureImage()
+                       }, 1100);
 
                       } else if (item.name == 'Select Document')
                       {
@@ -821,7 +823,7 @@ else
                           setTimeout(() => {
                             this.chooseFile('Pan')
                            // this.props.navigation.navigate('start')}
-                         }, 2000);
+                         }, 1100);
                          }
          
 
@@ -1013,7 +1015,9 @@ onValueChange={
                       if (item.name == 'Take Photo')
                       {
                         this.setState({showAddCardImagePicker: false, selectedImagePickerType: 'ID'})
-                        this.captureImage()
+                        setTimeout(() => {
+                          this.captureImage()
+                       }, 1100);
 
                       }
                       else if (item.name == 'Select Document')
@@ -1034,7 +1038,7 @@ onValueChange={
                           setTimeout(() => {
                             this.chooseFile('Address')
                            // this.props.navigation.navigate('start')}
-                         }, 2000);
+                         }, 1100);
                          }
                       }
 
@@ -1149,7 +1153,9 @@ onValueChange={
                       if (item.name == 'Take Photo')
                       {
                         this.setState({show80GCardImagePicker: false, selectedImagePickerType: '80G'})
-                        this.captureImage()
+                        setTimeout(() => {
+                          this.captureImage()
+                       }, 1100);
 
                       }
                       else if (item.name == 'Select Document')
@@ -1170,7 +1176,7 @@ onValueChange={
                           setTimeout(() => {
                             this.chooseFile('80G')
                            // this.props.navigation.navigate('start')}
-                         }, 2000);
+                         }, 1100);
                          }
                       }
 

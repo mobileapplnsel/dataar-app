@@ -183,6 +183,7 @@ class Dashboard_donation_forDonor extends Component {
       console.log(logs);
       var response = await API.post('add_to_favourite', logs);
       if (response.status == 'success') {
+        Toast.show(response.message, Toast.LONG)
         let arr = [...this.state.setcmpData];
         arr[index].like_status = item.like_status == 1 ? 2 : 1;
         this.setState({
