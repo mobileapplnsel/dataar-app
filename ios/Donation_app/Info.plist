@@ -36,6 +36,16 @@
 				<string>com.googleusercontent.apps.104839958051-05vooplkuiikl60eehl8for3npf8ab08</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.lnsel.DonationApp</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>example1</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>

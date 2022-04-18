@@ -25,6 +25,12 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
+				<string>example1</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
 				<string>fb585891535730438</string>
 			</array>
 		</dict>

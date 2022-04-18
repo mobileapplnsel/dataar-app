@@ -12,7 +12,9 @@ import {
   Animated,
   ActivityIndicator,
   StyleSheet,
-  Platform
+  Platform,
+  Linking,
+  Button
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
@@ -20,6 +22,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import KeyboardManager from 'react-native-keyboard-manager';
+import DeepLinking from 'react-native-deep-linking';
 var Styles = require('../assets/files/Styles');
 class User_profile extends Component {
   constructor(props) {
@@ -37,6 +40,7 @@ class User_profile extends Component {
       user_id: '',
       iseditablePin: false,
       pinCode: '',
+      response: {},
 
 
     };
@@ -54,6 +58,33 @@ class User_profile extends Component {
   };
   async componentDidMount() {
 
+    DeepLinking.addScheme('example1://');
+    Linking.addEventListener('url', this.handleUrl);
+
+    DeepLinking.addRoute('/test', (response) => {
+      // example://test
+      console.log('responseee: ', response)
+      this.setState({ response });
+    });
+
+    DeepLinking.addRoute('/test/:id', (response) => {
+      // example://test/23
+      console.log('responseee: ', response)
+      this.setState({ response });
+    });
+
+    DeepLinking.addRoute('/test/:id/details', (response) => {
+      // example://test/100/details
+      console.log('responseee: ', response)
+      this.setState({ response });
+    });
+
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        Linking.openURL(url);
+      }
+    }).catch(err => console.error('An error occurred', err));
+
     if (Platform.OS === 'ios') {
       KeyboardManager.setEnable(true);
     }
@@ -63,6 +94,17 @@ class User_profile extends Component {
     } else {
     }
     this.getuser();
+  }
+  componentWillUnmount() {
+    Linking.removeEventListener('url', this.handleUrl);
+  }
+  handleUrl = ({ url }) => {
+    console.log('handleUrl: ', url)
+    Linking.canOpenURL(url).then((supported) => {
+      if (supported) {
+        DeepLinking.evaluateUrl(url);
+      }
+    });
   }
   getuser = async () => {
     this.setState({
@@ -394,6 +436,28 @@ class User_profile extends Component {
             onPress={() => this.updateProfile()}>
             <Text style={Styles.login_text}>Update</Text>
           </TouchableOpacity>
+
+          {/* <View style={Styles1.container}>
+        <View style={Styles1.container}>
+          <Button
+            onPress={() => Linking.openURL('example1://test')}
+            title="Open example://test"
+          />
+          <Button
+            onPress={() => Linking.openURL('example1://test/23')}
+            title="Open example://test/23"
+          />
+          <Button
+            onPress={() => Linking.openURL('example1://test/100/details')}
+            title="Open example://test/100/details"
+          />
+        </View>
+        <View style={Styles1.container}>
+          <Text style={Styles1.text}>{this.state.response.scheme ? `Url scheme: ${this.state.response.scheme}` : 'a'}</Text>
+          <Text style={Styles1.text}>{this.state.response.path ? `Url path: ${this.state.response.path}` : 'b'}</Text>
+          <Text style={Styles1.text}>{this.state.response.id ? `Url id: ${this.state.response.id}` : 'c'}</Text>
+        </View>
+      </View> */}
               
               </ScrollView>
               {/* </ListItem> */}
@@ -433,6 +497,15 @@ class User_profile extends Component {
 const Styles1 = StyleSheet.create({
   spinnerTextStyle: {
     color: 'green',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 18,
+    margin: 10,
   },
 });
 export default User_profile;
