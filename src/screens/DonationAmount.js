@@ -183,6 +183,7 @@ class DonationAmount extends Component {
       amountpaid: this.state.Amount,
       campaign_id: this.state.campaign_id,
       status: 'sucess',
+      transaction_id: this.state.transaction_idd,
     };
     console.log('logs::::', logs)
     var response = await API.post('add_donation', logs);

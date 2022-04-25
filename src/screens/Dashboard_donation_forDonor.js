@@ -28,6 +28,7 @@ import Picker from '../components/Picker';
 import StarRating from 'react-native-star-rating';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-simple-toast';
+import KeyboardManager from 'react-native-keyboard-manager';
  //import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -122,6 +123,11 @@ class Dashboard_donation_forDonor extends Component {
   };
   
   componentDidMount = async () => {
+
+    if (Platform.OS === 'ios') {
+      KeyboardManager.setEnable(true);
+    }
+
     this.dashboard_donate();
     this.getPreferences()
     // this.getuser();

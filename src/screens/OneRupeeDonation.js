@@ -545,6 +545,7 @@ const Styles1 = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     // backgroundColor: '#dcdedc',
+    height: 45,
     borderBottomColor: '#000',
     borderBottomWidth: 1,
     paddingTop: 0,
