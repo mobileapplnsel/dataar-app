@@ -236,7 +236,7 @@ console.log('target amount')
       description: 'Credits towards consultation',
       image: 'https://i.imgur.com/3g7nmJC.png',
       currency: 'INR',
-      key: 'rzp_test_Aabh2L4rXsWHju', // rzp_test_Aabh2L4rXsWHju 'rzp_live_6JxkAJpOaUUuG4'
+      key: 'rzp_live_6JxkAJpOaUUuG4', // rzp_test_Aabh2L4rXsWHju 'rzp_live_6JxkAJpOaUUuG4'
       amount: this.state.targetAmount * 100,
       name: this.state.fname + ' ' + this.state.lname,
       prefill: {

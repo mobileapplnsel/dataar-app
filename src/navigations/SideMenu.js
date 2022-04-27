@@ -66,7 +66,7 @@ const CustomSidebarMenu = props => {
     console.log('user_Type:::', user_Type);
   }, []);
   const logout = () => {
-    AsyncStorage.clear();
+   // AsyncStorage.clear();
     signOut()
     props.navigation.replace('LogIn');
      

@@ -138,7 +138,7 @@ class DonationAmount extends Component {
       description: 'Credits towards consultation',
       image: 'https://i.imgur.com/3g7nmJC.png',
       currency: 'INR',
-      key: 'rzp_test_Aabh2L4rXsWHju', // rzp_test_Aabh2L4rXsWHju rzp_live_6JxkAJpOaUUuG4
+      key: 'rzp_live_6JxkAJpOaUUuG4', // rzp_test_Aabh2L4rXsWHju rzp_live_6JxkAJpOaUUuG4
       amount: this.state.Amount * 100,
       name: this.state.fname + ' ' + this.state.lname,
       prefill: {
