@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Dataar</string>
+	<string>Dataar App</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -92,17 +92,19 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Dataar requires access to the Camera</string>
+	<string>Dataar App requires access to the Camera</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Dataar App needs your location to show you from Admin Console</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Dataar App needs your location to show you from Admin Console</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Dataar requires access to the Microphone</string>
+	<string>Dataar App requires access to the Microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Dataar requires access to the photo library</string>
+	<string>Dataar App requires access to the photo library</string>
 	<key>Privacy – Camera Usage Description</key>
-	<string>Dataar wants to access your device&apos;s Camera</string>
+	<string>Dataar App wants to access your device&apos;s Camera</string>
 	<key>Privacy – Photo Library Additions Usage Description</key>
-	<string>Dataar wants to access your devices&apos;s Photo Library</string>
+	<string>Dataar App wants to access your devices&apos;s Photo Library</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

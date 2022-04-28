@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Dataar</string>
+	<string>Dataar App</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,7 +17,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -48,7 +48,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FacebookAppID</key>
 	<string>585891535730438</string>
 	<key>FacebookClientToken</key>
@@ -69,18 +69,20 @@
 			<key>localhost</key>
 			<dict>
 				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
+				<false/>
 			</dict>
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Dataar requires access to the Camera</string>
+	<string>Dataar App requires access to the Camera</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Dataar App needs your location to show you from Admin Console</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Dataar App needs your location to show you from Admin Console</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Dataar requires access to the Microphone</string>
+	<string>Dataar App requires access to the Microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Dataar requires access to the photo library</string>
+	<string>Dataar App requires access to the photo library</string>
 	<key>Privacy – Camera Usage Description</key>
 	<string>Dataar wants to access your device's Camera</string>
 	<key>Privacy – Photo Library Additions Usage Description</key>
@@ -121,8 +123,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

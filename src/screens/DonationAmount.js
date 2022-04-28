@@ -48,7 +48,8 @@ class DonationAmount extends Component {
       mobile: '',
       image: '',
       DonatebtnTitleStr: 'Donate',
-      progressActivityIndicator: false 
+      progressActivityIndicator: false ,
+      campaign_name: props.route.params.campaign_name
     };
   }
   componentDidMount() {
@@ -135,10 +136,10 @@ class DonationAmount extends Component {
     console.log()
 
     var options = {
-      description: 'Credits towards consultation',
-      image: 'https://i.imgur.com/3g7nmJC.png',
+      description: 'Credits towards ' + this.state.campaign_name + ' Campaign',
+      image: 'https://dataar.org/uploads/images/heart.png',
       currency: 'INR',
-      key: 'rzp_live_6JxkAJpOaUUuG4', // rzp_test_Aabh2L4rXsWHju rzp_live_6JxkAJpOaUUuG4
+      key: 'rzp_test_Aabh2L4rXsWHju', // rzp_test_Aabh2L4rXsWHju rzp_live_6JxkAJpOaUUuG4
       amount: this.state.Amount * 100,
       name: this.state.fname + ' ' + this.state.lname,
       prefill: {
@@ -146,7 +147,8 @@ class DonationAmount extends Component {
         contact: this.state.mobile,
         name: 'Razorpay Software'
       },
-      theme: {color: '#F37254'},
+      theme: {color: '#f55656'},
+      
       options: {
         checkout: {
           name: "Lacme Corp"
@@ -169,7 +171,7 @@ class DonationAmount extends Component {
       }
     }).catch((error) => {
       // handle failure
-      alert(`Error: ${error.code} | ${error.description}`);
+      // alert(`Error: ${error.code} | ${error.description}`);
     });
    }
     

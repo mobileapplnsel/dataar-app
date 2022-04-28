@@ -373,10 +373,13 @@ class Dashboard_donation_forDonor extends Component {
 
   }
   Donate = async item => {
+
+
+
     var token = await AsyncStorage.getItem('token');
     var kyc_verified = await AsyncStorage.getItem('kyc_verified');
     var pan_number = await AsyncStorage.getItem('pan_number');
-    console.log("pan_number",pan_number);
+    console.log("pan_number",pan_number, item);
 
     console.log(token);
 
@@ -401,6 +404,7 @@ class Dashboard_donation_forDonor extends Component {
                       donation_mode: item.donation_mode,
                       campaign_id: item.campaign_id,
                       kind_id: item.kind_id,
+                      campaign_name: item.campaign_name
                     });
           }
         }

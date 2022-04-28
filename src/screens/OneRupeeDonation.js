@@ -233,8 +233,9 @@ console.log('target amount')
    else
    {
     var options = {
-      description: 'Credits towards consultation',
-      image: 'https://i.imgur.com/3g7nmJC.png',
+      description: 'Credits towards One Rupee Campaign',
+      // image: 'https://i.imgur.com/3g7nmJC.png',
+      image: 'https://dataar.org/uploads/images/heart.png',
       currency: 'INR',
       key: 'rzp_live_6JxkAJpOaUUuG4', // rzp_test_Aabh2L4rXsWHju 'rzp_live_6JxkAJpOaUUuG4'
       amount: this.state.targetAmount * 100,
@@ -244,7 +245,7 @@ console.log('target amount')
         contact: this.state.mobile,
         name: 'Dataar'
       },
-      theme: {color: '#F37254'}
+      theme: {color: '#f55656'}
     }
       RazorpayCheckout.open(options).then((data) => {
       // handle success
@@ -256,7 +257,7 @@ console.log('target amount')
       this.submitDonation()
     }).catch((error) => {
       // handle failure
-      alert(`Error: ${error.code} | ${error.description}`);
+      // alert(`Error: ${error.code} | ${error.description}`);
     });
    }
     
