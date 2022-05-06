@@ -12,7 +12,9 @@ import {
   ActionSheetIOS,
   Button,
   Platform,
+
 } from 'react-native';
+import ActionSheet from 'react-native-actionsheet'
 import {
   Container,
   // TextInput,
@@ -60,6 +62,7 @@ const Register = ({navigation}) => {
   const [selectedID, setselectedID] = useState('');
   const [isPasswordHidden, setisPasswordHidden] = useState(false);
   const [isConfirmPasswordHidden, setisConfirmPPasswordHidden] = useState(false);
+  const [ItemmodalVisible, setisItemmodalVisible] = useState(true);
   
   const setTaskti = text => {
     setFirstName(text);
@@ -450,9 +453,39 @@ const Register = ({navigation}) => {
             />
             <Text style={Styles.login_text_font}>Registration</Text>
           </View>
+
+
           
           <View style={Styles.login_text_input_contain}>
+
+           
           
+          {/* <TouchableOpacity style={{ alignSelf: 'center', borderColor: '#f55656', borderRadius: 50, borderWidth: 1, width: 80, height: 80, alignItems: 'center'}}>
+          <Image
+       // source={{uri: BASE_PATH + proileImage}}
+        source={require('../../src/assets/images/round_person_add_alt_black_48.png')}
+        style={{
+          resizeMode: 'center',
+          width: 50,
+          height: 50,
+          alignSelf: 'center',
+           backgroundColor: 'transparent',
+           tintColor: '#f55656',
+           resizeMode: 'contain',
+           borderWidth: 1,
+           marginTop: 11,
+           marginStart: 6
+          //  borderColor: '#f55656',
+           
+           
+        }}
+      />
+          </TouchableOpacity> */}
+
+        
+
+
+          {/* <Text style={{alignSelf: 'center', color: '#f55656', marginBottom: 10, marginTop: 10}}>Add Profile Picture</Text> */}
             <TextInput
               placeholder="First Name"
               onChangeText={text => setTaskti(text)}
@@ -684,6 +717,20 @@ imageIconStyle: {
   height: 20,
   width: 20,
   resizeMode: 'stretch',
+},
+sideMenuProfileIcon: {
+  resizeMode: 'center',
+  width: 80,
+  height: 80,
+  alignSelf: 'center',
+   backgroundColor: 'transparent',
+   tintColor: '#f55656',
+   resizeMode: 'contain',
+   borderWidth: 1,
+   
+  //  borderColor: '#f55656',
+   
+   
 },
 })
 export default Register;

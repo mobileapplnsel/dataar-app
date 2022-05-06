@@ -139,7 +139,7 @@ class DonationAmount extends Component {
       description: 'Credits towards ' + this.state.campaign_name + ' Campaign',
       image: 'https://dataar.org/uploads/images/heart.png',
       currency: 'INR',
-      key: 'rzp_test_Aabh2L4rXsWHju', // rzp_test_Aabh2L4rXsWHju rzp_live_6JxkAJpOaUUuG4
+      key: 'rzp_live_6JxkAJpOaUUuG4', // rzp_test_Aabh2L4rXsWHju rzp_live_6JxkAJpOaUUuG4
       amount: this.state.Amount * 100,
       name: this.state.fname + ' ' + this.state.lname,
       prefill: {

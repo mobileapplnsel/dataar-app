@@ -8,9 +8,9 @@
 const ConfigApp = {
 
     // backend url
-    URL: "https://dev.solutionsfinder.co.uk/dataar/api/",
-
-
+    // URL: "https://dev.solutionsfinder.co.uk/dataar/api/",
+    URL: "https://dataar.org/api/",
+    
     // client_id: '22C663',
     // client_secret: 'b4eb098fa1b2799408427f12122bd52d'
 };

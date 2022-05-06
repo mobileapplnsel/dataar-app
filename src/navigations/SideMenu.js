@@ -20,7 +20,8 @@ import {
   StyleSheet,
   Alert,
   SafeAreaView,
-  Linking
+  Linking,
+  Clipboard
 } from 'react-native';
 import {
   Container,
@@ -47,6 +48,8 @@ import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
+import messaging from '@react-native-firebase/messaging';
+import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
 // import Strings from '../utils/Strings';
 const CustomSidebarMenu = props => {
   const BASE_PATH =
@@ -65,8 +68,17 @@ const CustomSidebarMenu = props => {
     console.log('user_id:::', user_id);
     console.log('user_Type:::', user_Type);
   }, []);
-  const logout = () => {
-   // AsyncStorage.clear();
+  const logout = async () => {
+    
+   AsyncStorage.clear();
+  var unsubscribe = messaging().onMessage(async remoteMessage => {
+    Alert.alert( JSON.stringify(remoteMessage.notification.title), JSON.stringify(remoteMessage.notification.body));
+  });
+  var token = await messaging().getToken();
+  console.log('FCM token11222: ', token)
+  AsyncStorage.setItem('FCMtoken', token);
+   Clipboard.setString(token)
+
     signOut()
     props.navigation.replace('LogIn');
      
@@ -264,7 +276,7 @@ const CustomSidebarMenu = props => {
             onPress={() => props.navigation.navigate('Donation')}
           />
         )} */}
-<DrawerItem label="About Us" onPress={ ()=> Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/about-us')} />
+{/* <DrawerItem label="About Us" onPress={ ()=> Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/about-us')} />
 
           
 
@@ -274,7 +286,21 @@ const CustomSidebarMenu = props => {
 
           <DrawerItem label="Terms & Conditions" onPress={() => Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/terms-and-condition')} />
         
-          <DrawerItem label="Privacy Policy" onPress={() => Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/privacy-policy')} />
+          <DrawerItem label="Privacy Policy" onPress={() => Linking.openURL('https://dev.solutionsfinder.co.uk/dataar/privacy-policy')} /> */}
+
+
+<DrawerItem label="About Us" onPress={ ()=> Linking.openURL('https://dataar.org//about-us')} />
+
+          
+
+          <DrawerItem label="Teams" onPress={() => Linking.openURL('https://dataar.org/team')} />
+
+          <DrawerItem label="Contact Us" onPress={() => Linking.openURL('https://dataar.org/contact-us')} />
+
+          <DrawerItem label="Terms & Conditions" onPress={() => Linking.openURL('https://dataar.org/terms-and-condition')} />
+        
+          <DrawerItem label="Privacy Policy" onPress={() => Linking.openURL('https://dataar.org/privacy-policy')} />
+
 
         {user_id !== null ? (
           <DrawerItem label="Logout" onPress={() => logout()} />

@@ -35,6 +35,7 @@ import AppPreLoader from '../components/AppPreLoader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import KeyboardManager from 'react-native-keyboard-manager';
+import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
 const Login = ({navigation}) => {
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
@@ -59,9 +60,14 @@ const Login = ({navigation}) => {
     if (Platform.OS === 'ios') {
       KeyboardManager.setEnable(true);
     }
+
+    
+
     const willFocusSubscription = navigation.addListener('focus', () => {
       console.log('willFocusSubscription called: ')
         setisloading(false);
+
+        
 
       GoogleSignin.configure({
         scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
@@ -89,6 +95,10 @@ const Login = ({navigation}) => {
         BackHandler.removeEventListener('hardwareBackPress', onBackPress)
      
     }
+
+    return appleAuth.onCredentialRevoked(async () => {
+      console.warn('If this function executes, User Credentials have been Revoked');
+    });
     
   }, []);
  
@@ -234,6 +244,120 @@ else
       }
     }
   };
+  const onAppleButtonPress = async () => {
+ 
+    const appleAuthRequestResponse = await appleAuth.performRequest({
+      requestedOperation: appleAuth.Operation.LOGIN,
+      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    });
+  
+
+    // get current authentication state for user
+    // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
+     const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+  
+    // use credentialState response to ensure the user is authenticated
+    if (credentialState === appleAuth.State.AUTHORIZED) {
+
+      
+      // Alert.alert('Response', appleAuthRequestResponse.fullName.givenName, appleAuthRequestResponse.fullName.familyName,
+      // appleAuthRequestResponse.identityToken);
+      // console.log('user is authenticated: ', appleAuthRequestResponse)
+
+      setisloading(true);
+
+    var fcm_token = await AsyncStorage.getItem('FCMtoken');
+    var logs = {
+      firstName: appleAuthRequestResponse.fullName.givenName,
+      lastName: appleAuthRequestResponse.fullName.familyName,
+      apple_id: appleAuthRequestResponse.identityToken,
+      fcm_token: fcm_token
+    };
+
+    var response = await API.post('login_with_apple', logs);
+    console.log ('login_with_apple response: ', response)
+
+    if (response.status == 'success') {
+      // navigation.navigate('OtpVerify', {mobile: Mobile});
+      console.log(response.userdata[0].user_type);
+      var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
+      if (response.userdata[0].user_type !== null) {
+        if (response.userdata[0].user_type == 0) {
+          console.log(response.token);
+          await AsyncStorage.setItem('token', String(response.token));
+          await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
+          await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
+          await AsyncStorage.setItem(
+            'user_type',
+            response.userdata[0].user_type,
+          );
+          var token = await AsyncStorage.getItem('token');
+          console.log('token', token);
+          // setisloading(true);
+          if (isLoggedInForOneRupee == 'yes')
+        {
+          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+          setTimeout(() => {
+            navigation.replace('OneRupeeDonation', {
+              donate_amt: '100',
+              donation_mode: 'dsadas',
+              campaign_id: '',
+              kind_id: '',
+            });
+            
+          }, 1000);
+        }
+else
+{
+          setTimeout(() => {
+            navigation.replace('Dashboard_donation_forDonor');
+            // setisloading(false);
+            setselectedValue('');
+          }, 1000);
+        }
+        } else {
+          await AsyncStorage.setItem('token', response.token);
+          await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
+          await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
+          await AsyncStorage.setItem(
+            'user_type',
+            response.userdata[0].user_type,
+          );
+
+          setisloading(true);
+          if (isLoggedInForOneRupee == 'yes')
+        {
+          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+          setTimeout(() => {
+            navigation.replace('OneRupeeDonation', {
+              donate_amt: '100',
+              donation_mode: 'dsadas',
+              campaign_id: '',
+              kind_id: '',
+            });
+            
+          }, 1000);
+        }
+else
+{
+          setTimeout(() => {
+            navigation.replace('Dashboard');
+            // setisloading(false);
+            setselectedValue('');
+          }, 1000);
+        }
+        }
+      } else {
+        navigation.replace('logintype', {
+          user_id: response.userdata[0].user_id,
+        });
+      }
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+
+    }
+  }
   const signInfb = () => {
     return new Promise((resolve, reject) => {
       LoginManager.logOut();
@@ -576,13 +700,24 @@ else
           </TouchableOpacity>
 
           <View style={Styles.login_social_contain}>
-            <TouchableOpacity onPress={() => signInfb()}>
+
+
+          { Platform.OS === 'ios' && <TouchableOpacity onPress={() => onAppleButtonPress()}>
               <Image
                 style={{width: 40, height: 40, marginStart: 0, marginTop: 20}}
+                source={require('../../src/assets/images/apple_dark.png')}
+                // resizeMode="contain"
+              />
+            </TouchableOpacity> }
+
+            <TouchableOpacity onPress={() => signInfb()}>
+              <Image
+                style={{width: 40, height: 40, marginStart: 10, marginTop: 20}}
                 source={require('../../src/assets/images/fb.png')}
                 // resizeMode="contain"
               />
             </TouchableOpacity>
+            
             <TouchableOpacity onPress={() => signIngoo()}>
               <Image
                 style={{width: 40, height: 40, marginStart: 10, marginTop: 20}}

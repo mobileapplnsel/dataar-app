@@ -84,9 +84,9 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Dataar App requires access to the photo library</string>
 	<key>Privacy – Camera Usage Description</key>
-	<string>Dataar wants to access your device's Camera</string>
+	<string>Dataar App requires access to the Camera to upload photo to Dataar's supportive cloud</string>
 	<key>Privacy – Photo Library Additions Usage Description</key>
-	<string>Dataar wants to access your devices's Photo Library</string>
+	<string>Dataar App requires access to the Photo Library to upload photo to Dataar's supportive cloud</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>

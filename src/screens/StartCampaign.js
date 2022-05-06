@@ -420,8 +420,8 @@ const StartCampaign = ({navigation}) => {
     formdata.append('supported_doc', {uri: selectedPANSource, name: selectedPANName, type: selectedPANType});
 
     console.log('Start campaign parameters: ', JSON.stringify(formdata))
-
-    fetch('https://dev.solutionsfinder.co.uk/dataar/api/add_campaign', {
+//https://dev.solutionsfinder.co.uk/dataar/api/add_campaign
+    fetch('https://dataar.org/api/add_campaign', {
       method: 'POST',
       headers: {
         Accept: '*/*',

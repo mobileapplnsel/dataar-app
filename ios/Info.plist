@@ -92,7 +92,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Dataar App requires access to the Camera</string>
+	<string>Dataar App requires access to the Camera to upload photo to Dataar&apos;s supportive cloud</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Dataar App needs your location to show you from Admin Console</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -100,11 +100,11 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Dataar App requires access to the Microphone</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Dataar App requires access to the photo library</string>
+	<string>Dataar App requires access to the Photo Library to upload photo to Dataar&apos;s supportive cloud</string>
 	<key>Privacy – Camera Usage Description</key>
-	<string>Dataar App wants to access your device&apos;s Camera</string>
+	<string>Dataar App requires access to the Camera to upload photo to Dataar&apos;s supportive cloud</string>
 	<key>Privacy – Photo Library Additions Usage Description</key>
-	<string>Dataar App wants to access your devices&apos;s Photo Library</string>
+	<string>Dataar App requires access to the Photo Library to upload photo to Dataar&apos;s supportive cloud</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

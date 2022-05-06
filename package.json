@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@invertase/react-native-apple-authentication": "^2.1.5",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/checkbox": "^0.5.8",
     "@react-native-community/datetimepicker": "^3.5.2",
@@ -26,6 +27,7 @@
     "prop-types": "^15.7.2",
     "react": "17.0.1",
     "react-native": "^0.64.2",
+    "react-native-actionsheet": "^2.4.2",
     "react-native-calendars": "^1.1264.0",
     "react-native-date-picker": "^3.3.2",
     "react-native-deep-linking": "^2.2.0",
