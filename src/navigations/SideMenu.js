@@ -50,6 +50,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 import messaging from '@react-native-firebase/messaging';
 import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
+import { useIsFocused } from "@react-navigation/native";
 // import Strings from '../utils/Strings';
 const CustomSidebarMenu = props => {
   const BASE_PATH =
@@ -58,16 +59,36 @@ const CustomSidebarMenu = props => {
   const [user_id, setUser_id] = useState('');
   const [user_Type, setUser_Type] = useState('');
   const [token, setToken] = useState('');
+  const [profile_img, setprofile_img] = useState('');
+  const [profile_name, setprofile_name] = useState('');
+  const isFocused = useIsFocused();
+
   useEffect(async () => {
+   
+    if(isFocused){ 
+      doStuff();
+  }
+
+  
+    
+       
+  }, [isFocused, props] );
+
+  const doStuff = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
     var user_Type = await AsyncStorage.getItem('user_type');
     var token = await AsyncStorage.getItem('token');
+    var profile_img = await AsyncStorage.getItem('profile_image');
+    var profile_name = await AsyncStorage.getItem('profile_name');
+    setprofile_img(profile_img);
     setUser_id(user_id);
     setUser_Type(user_Type);
+    setprofile_name(profile_name);
     setToken(token);
-    console.log('user_id:::', user_id);
-    console.log('user_Type:::', user_Type);
-  }, []);
+  console.log('user_id1:::', user_id);
+  console.log('user_Type1:::', user_Type);
+  };
+
   const logout = async () => {
     
    AsyncStorage.clear();
@@ -185,11 +206,34 @@ const CustomSidebarMenu = props => {
     <SafeAreaView style={{flex: 1}}>
       
       {/*Top Large Image */}
-      <Image
-       // source={{uri: BASE_PATH + proileImage}}
-        source={require('../../src/assets/images/heart1.png')}
-        style={styles.sideMenuProfileIcon}
-      />
+      
+
+{profile_img != null ? ( <Image
+         source={{uri: profile_img}}
+        // source={require('../../src/assets/images/heart1.png')}
+        style={{
+          // resizeMode: 'center',
+          width: 100,
+          height: 100,
+           borderRadius: 100 / 2,
+          alignSelf: 'center',
+          marginTop: 10,
+          marginBottom: 7
+          //  backgroundColor: 'transparent',
+          //  tintColor: '#f55656',
+          //  resizeMode: 'contain'
+           
+        }}
+      /> ) : <Image
+      // source={{uri: BASE_PATH + proileImage}}
+       source={require('../../src/assets/images/heart1.png')}
+       style={styles.sideMenuProfileIcon}
+     />}
+
+<Text style={{
+    fontSize: 17,
+    alignSelf: 'center', color: '#f55656', marginBottom: 2
+  }}>{'Hi, '+profile_name}</Text>
 
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />

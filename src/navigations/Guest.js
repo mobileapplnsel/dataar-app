@@ -34,6 +34,7 @@ import DonationDetails from '../screens/DonationDetails';
 import Search_screen from '../screens/Search_screen';
 import Preference from '../screens/Preference';
 import logintype from '../screens/logintype';
+import logintypeForiOS from '../screens/logintypeForiOS';
 import My_Donation_Details from '../screens/My_Donation_Details';
 import CamapignAdded from '../screens/CamapignAdded';
 import {navigationRef} from './Route';
@@ -452,6 +453,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="SignUp" component={RegisterScreen} />
     <AuthStack.Screen name="OtpVerify" component={OtpVerify} />
     <AuthStack.Screen name="logintype" component={logintype} />
+    <AuthStack.Screen name="logintypeForiOS" component={logintypeForiOS} />
     <AuthStack.Screen name="Dashboard" component={DrawerScreencamp} />
     <AuthStack.Screen name="Search_screen" component={Search_screen} />
     <AuthStack.Screen name="Preference" component={Preference} />

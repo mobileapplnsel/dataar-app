@@ -11,7 +11,8 @@ import {
   FlatList,
   StyleSheet,
   ActivityIndicator,
-  Platform
+  Platform,
+  Linking
 } from 'react-native';
 import {
   Container,
@@ -133,6 +134,12 @@ class DonationAmount extends Component {
    else
    {
 
+    if (Platform.OS === 'ios') {
+      this.donation_ios()
+    }
+else
+{
+
     console.log()
 
     var options = {
@@ -174,7 +181,31 @@ class DonationAmount extends Component {
       // alert(`Error: ${error.code} | ${error.description}`);
     });
    }
-    
+  }
+  };
+  donation_ios = async () => {
+    var token = await AsyncStorage.getItem('token');
+    var user_id = await AsyncStorage.getItem('user_id');
+    var logs = 
+    {
+  user_id: user_id,
+  campaign_id: this.state.campaign_id,
+  actual_amount: this.state.Amount,
+    };
+
+    if (token != null) {
+      var response = await API.post('campaign_donation_ios', logs);
+      console.log(response);
+      if (response.status == 'success') {
+        
+
+        Linking.openURL(response.redirect_url)
+
+      } else {
+        Alert.alert(response.status, response.message);
+      }
+    } else {
+    }
   };
   startInkind = async () => {
     var user_id = await AsyncStorage.getItem('user_id');

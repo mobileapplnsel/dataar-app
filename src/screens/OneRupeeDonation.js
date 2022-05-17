@@ -15,7 +15,8 @@ import {
   Button, NativeModules, NativeEventEmitter,
   PermissionsAndroid,
   ActivityIndicator,
-  Platform
+  Platform,
+  Linking
 } from 'react-native';
 import {
   Container,
@@ -232,6 +233,12 @@ console.log('target amount')
     }
    else
    {
+
+    if (Platform.OS === 'ios') {
+      this.one_rupee_donation_ios()
+    }
+else
+{
     var options = {
       description: 'Credits towards One Rupee Campaign',
       // image: 'https://i.imgur.com/3g7nmJC.png',
@@ -260,8 +267,40 @@ console.log('target amount')
       // alert(`Error: ${error.code} | ${error.description}`);
     });
    }
-    
+  }
       }
+      one_rupee_donation_ios = async () => {
+        var token = await AsyncStorage.getItem('token');
+        var user_id = await AsyncStorage.getItem('user_id');
+        var logs = 
+        {
+      user_id: user_id,
+      campaign_id: '1',
+      actual_amount: String(this.state.targetAmount),
+      plan_type: this.state.plantype,
+        };
+
+        if (token != null) {
+          var response = await API.post('one_rupee_donation_ios', logs);
+          console.log(response);
+          if (response.status == 'success') {
+            // navigation.navigate('OtpVerify', {mobile: Mobile});
+            // this.setState({
+            //   fname: response.data.first_name,
+            //   lname: response.data.last_name,
+            //   email: response.data.email,
+            //   mobile: response.data.phone,
+            //   image: response.data.kyc_file,
+            // });
+
+            Linking.openURL(response.redirect_url)
+
+          } else {
+            Alert.alert(response.status, response.message);
+          }
+        } else {
+        }
+      };
     
   render() {
     return (

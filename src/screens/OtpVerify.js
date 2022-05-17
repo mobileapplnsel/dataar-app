@@ -62,6 +62,8 @@ else
         await AsyncStorage.setItem('user_id', response.user_id);
         await AsyncStorage.setItem('fb_token', '');
         await AsyncStorage.setItem('user_type', response.user_type);
+        await AsyncStorage.setItem('profile_image', response.profile_image);
+        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
         var token = await AsyncStorage.getItem('token');
         console.log('token', token);
         navigation.navigate('Dashboard_donation_forDonor');
@@ -69,7 +71,9 @@ else
         await AsyncStorage.setItem('token', response.token);
         await AsyncStorage.setItem('user_id', response.user_id);
         await AsyncStorage.setItem('fb_token', '');
+        await AsyncStorage.setItem('profile_image', response.profile_image);
         await AsyncStorage.setItem('user_type', response.user_type);
+        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
         navigation.navigate('Dashboard');
       }
     } else {

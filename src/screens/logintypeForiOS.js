@@ -42,6 +42,8 @@ const logintype = ({route, navigation}) => {
   const [isloading, setisloading] = useState(false);
   const [userId, setuserId] = useState('');
   const [selecttypeerror, setselecttypeerror] = useState('');
+  const [FirstName, setFirstName] = useState('');
+  const [LastName, setLastName] = useState('');
   
   // const contextType = AuthContext;
   useEffect(() => {
@@ -52,60 +54,124 @@ const logintype = ({route, navigation}) => {
     setselectedValue(dataval)
     setselecttypeerror('')
   }
-
+  const setTaskti = text => {
+    setFirstName(text);
+  };
+  const setTasktipass = text => {
+    setLastName(text);
+  };
   const Login = async (dataval, accessToken) => {
 
-    if (selectedValue == '' || selectedValue == 'Select One')
+    if (FirstName == '' && LastName == '')
     {
-setselecttypeerror('Please choose a type')
+      Alert.alert('First Name & Last Name', 'Please enter both First name and Last name');
+    }
+    else if (FirstName == '')
+    {
+      Alert.alert('First Name', 'Please enter First name');
+    }
+    else if (LastName == '')
+    {
+      Alert.alert('Last Name', 'Please enter Last name');
     }
 else
 {
 
-  
 
-    var logs = {
-      user_id: userId,
-      usertype: selectedValue,
-    };
-    var response = await API.post('update_usertype', logs);
-    if (response.status == 'success') {
-      // navigation.navigate('OtpVerify', {mobile: Mobile});
-      console.log(response);
+
+  setisloading(true);
+
+  var fcm_token = await AsyncStorage.getItem('FCMtoken');
+
+  var logs = {
+    firstName: FirstName,
+    lastName: LastName,
+    apple_id: userId,
+    fcm_token: fcm_token
+  };
+
+  var response = await API.post('login_with_apple', logs);
+  console.log ('login_with_apple response: ', response)
+
+  if (response.status == 'success') {
+    console.log(response.userdata[0].user_type);
+    var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
+    if (response.userdata[0].user_type !== null) {
       if (response.userdata[0].user_type == 0) {
         console.log(response.token);
         await AsyncStorage.setItem('token', String(response.token));
         await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
-        // await AsyncStorage.setItem('fb_token', response.userdata[0].fb_token);
-        await AsyncStorage.setItem('user_type', response.userdata[0].user_type);
-        await AsyncStorage.setItem('profile_image', response.profile_image);
-        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
+        await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
+        await AsyncStorage.setItem(
+          'user_type',
+          response.userdata[0].user_type,
+        );
         var token = await AsyncStorage.getItem('token');
         console.log('token', token);
-        setisloading(true);
+        // setisloading(true);
+        if (isLoggedInForOneRupee == 'yes')
+      {
+        AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
         setTimeout(() => {
-          navigation.navigate('Dashboard_donation_forDonor');
-          setisloading(false);
+          navigation.replace('OneRupeeDonation', {
+            donate_amt: '100',
+            donation_mode: 'dsadas',
+            campaign_id: '',
+            kind_id: '',
+          });
+          
+        }, 1000);
+      }
+else
+{
+        setTimeout(() => {
+          navigation.replace('Dashboard_donation_forDonor');
+          // setisloading(false);
           setselectedValue('');
-        }, 3000);
+        }, 1000);
+      }
       } else {
         await AsyncStorage.setItem('token', response.token);
         await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
-        // await AsyncStorage.setItem('fb_token', response.userdata[0].fb_token);
-        await AsyncStorage.setItem('user_type', response.userdata[0].user_type);
-        await AsyncStorage.setItem('profile_image', response.profile_image);
-        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
+        await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
+        await AsyncStorage.setItem(
+          'user_type',
+          response.userdata[0].user_type,
+        );
 
         setisloading(true);
+        if (isLoggedInForOneRupee == 'yes')
+      {
+        AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
         setTimeout(() => {
-          navigation.navigate('Dashboard');
-          setisloading(false);
+          navigation.replace('OneRupeeDonation', {
+            donate_amt: '100',
+            donation_mode: 'dsadas',
+            campaign_id: '',
+            kind_id: '',
+          });
+          
+        }, 1000);
+      }
+else
+{
+        setTimeout(() => {
+          navigation.replace('Dashboard');
+          // setisloading(false);
           setselectedValue('');
-        }, 3000);
+        }, 1000);
+      }
       }
     } else {
-      Alert.alert(response.status, response.message);
+      navigation.replace('logintype', {
+        user_id: response.userdata[0].user_id,
+      });
     }
+  } else {
+    Alert.alert(response.status, response.message);
+  }
+
+
   }
   };
   const ActionSheetIOSonPress = () =>
@@ -121,12 +187,12 @@ else
       if (buttonIndex === 0) {
 
         setselectValueMethod('0')
-       // setselectedValue('Donor')
+        setselectedValue('Donor')
         
       } else if (buttonIndex === 1) {
 
         setselectValueMethod('1')
-       // setselectedValue('Donee')
+        setselectedValue('Donee')
 
       } else if (buttonIndex === 2) {
         // setResult("🔮");
@@ -151,48 +217,38 @@ else
           <Text style={Styles.login_text_font1}>Sign in to continue</Text>
         </View>
         <View style={Styles.login_text_input_contain}>
-        { Platform.OS === 'ios' ? 
-<TouchableOpacity onPress={() => ActionSheetIOSonPress()}>
-<View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', height: 40,
-      margin: 0,
-      marginTop: 11}}>
-            <View style={{flex:1, maxWidth: 414, backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
-                <Text style={{paddingLeft:13,color: 'gray', fontSize: 16,}}>{selectedValue}</Text>
-                <View style={{width:15, height:15, justifyContent: 'flex-end', marginRight: 20, marginTop: 3}}>
-                  <Image source={require("../../src/assets/images/down_arrow.png")} style={{width:24, height:24,}} />
-                </View>
-                
-              </View>
-              </View>
-              </TouchableOpacity> 
-:
-          <Picker
-            selectedValue={selectedValue}
-            style={{
-              height: 50,
-              width: '90%',
-              borderColor: '#000',
-              alignSelf: 'center',
-              borderWidth: 1,
-            }}
-            onValueChange={(itemValue, itemIndex) =>
-              setselectValueMethod(itemValue)
-            }>
-            <Picker.Item label="Select one" value="" />
-            <Picker.Item label="Donor" value="0" />
-            <Picker.Item label="Donee" value="1" />
-          </Picker> }
-          <Text style={{
-    marginTop: -5,
-    color: 'red',
-    fontSize: 11,
-    marginBottom: 5,
-    marginLeft: 13,
-}}>{selecttypeerror}</Text>
+       
+
+<TextInput
+              placeholder="First Name"
+              onChangeText={text => setTaskti(text)}
+              style={Styles.login_text_input}
+              keyboardType="default"
+              placeholderTextColor='grey'
+            />
+            <TextInput
+              placeholder="Last Name"
+              onChangeText={text => setTasktipass(text)}
+              style={Styles.login_text_input}
+              keyboardType="default"
+              placeholderTextColor='grey'
+            />
+
           <TouchableOpacity
-            style={Styles.login_btn_forget}
+            style={{
+              // fontSize: 18,
+              // marginLeft: 50,
+              // marginRight: 50,
+              width: '94%',
+              height: 50,
+              backgroundColor: '#f55656',
+              marginTop: 55,
+              color: '#f55656',
+              alignSelf:"center",
+              marginBottom: 14
+            }}
             onPress={() => Login()}>
-            <Text style={Styles.login_text}>Login</Text>
+            <Text style={Styles.login_text}>Submit</Text>
           </TouchableOpacity>
         </View>
       </ImageBackground>

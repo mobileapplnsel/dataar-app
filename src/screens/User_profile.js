@@ -14,7 +14,8 @@ import {
   StyleSheet,
   Platform,
   Linking,
-  Button
+  Button,
+  PermissionsAndroid
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
@@ -23,8 +24,58 @@ import Toast from 'react-native-simple-toast';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import KeyboardManager from 'react-native-keyboard-manager';
 import DeepLinking from 'react-native-deep-linking';
+import PickerDob from '../components/Picker';
+import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
+import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
+import DocumentPicker from 'react-native-document-picker';
+import {
+  launchCamera,
+  launchImageLibrary
+} from 'react-native-image-picker';
 var Styles = require('../assets/files/Styles');
+const requestCameraPermission = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.CAMERA,
+        {
+          title: 'Camera Permission',
+          message: 'App needs camera permission',
+        },
+      );
+      // If CAMERA Permission is granted
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+  } else return true;
+};
+
+const requestExternalWritePermission = async () => {
+  if (Platform.OS === 'android') {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'External Storage Write Permission',
+          message: 'App needs write permission',
+        },
+      );
+      // If WRITE_EXTERNAL_STORAGE Permission is granted
+      return granted === PermissionsAndroid.RESULTS.GRANTED;
+    } catch (err) {
+      console.warn(err);
+      alert('Write permission err', err);
+    }
+    return false;
+  } else return true;
+};
+const ArrImagePicker = [{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}]
 class User_profile extends Component {
+
+  
+
   constructor(props) {
     super(props);
     this.state = {
@@ -41,10 +92,131 @@ class User_profile extends Component {
       iseditablePin: false,
       pinCode: '',
       response: {},
+      profile_img: '',
+      showProfileImagePicker: false,
+      selectedProfileImageSource: '',
+      selectedProfileImageType: '',
+      selectedProfileImage: ''
+
+     
 
 
     };
   }
+
+  captureImage = async (type) => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 400,
+      maxHeight: 200,
+       quality: 1,
+      // videoQuality: 'low',
+      // durationLimit: 30, //Video max duration in seconds
+      //  saveToPhotos: true,
+    };
+    let isCameraPermitted = await requestCameraPermission();
+    let isStoragePermitted = await requestExternalWritePermission();
+    console.log('isCameraPermitted', isCameraPermitted)
+    console.log('isStoragePermitted', isStoragePermitted)
+    if (isCameraPermitted && isStoragePermitted) {
+      
+      launchCamera(options, (response) => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          // alert('User cancelled camera picker');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          alert('Camera not available on device');
+          return;
+        } else if (response.errorCode == 'permission') {
+          alert('Permission not satisfied');
+          return;
+        } else if (response.errorCode == 'others') {
+          alert(response.errorMessage);
+          return;
+        }
+
+        this.setState({profile_img: response.assets['0']['uri'],selectedProfileImage: response.assets['0']['fileName'],
+       selectedProfileImageSource: response.assets['0']['uri'], selectedProfileImageType: response.assets['0']['type']})
+        
+      });
+    }
+  };
+
+   chooseFile = async () => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 400,
+      maxHeight: 200,
+      quality: 1,
+    };
+    console.log('chooseFile called!!!')
+    launchImageLibrary(options, async (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        // alert('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        alert('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        alert('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        alert(response.errorMessage);
+        return;
+      }
+
+
+      this.setState({profile_img: response.assets['0']['uri'],selectedProfileImage: response.assets['0']['fileName'],
+       selectedProfileImageSource: response.assets['0']['uri'], selectedProfileImageType: response.assets['0']['type']})
+
+      // console.log('base64 -> ', response.assets['0']['fileName']);
+      // console.log('uri -> ', response.uri);
+      // console.log('width -> ', response.width);
+      // console.log('height -> ', response.height);
+      // console.log('fileSize -> ', response.fileSize);
+      // console.log('type -> ', response.type);
+      // console.log('fileName -> ', response.fileName);
+     // setFilePath(response);
+    });
+  };
+
+   selectOneFile1 = async () => {
+    //Opening Document Picker for selection of one file
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.images],
+      });
+
+      // console.log('res : ' + JSON.stringify(res));
+      // console.log('URi : ' + res.uri);
+      // console.log('Type : ' + res.type);
+      // console.log('File Name : ' + res.name);
+      // console.log('File Size : ' + res.size);
+     
+      
+
+      this.setState({profile_img: res.uri,selectedProfileImage: res.name,
+       selectedProfileImageSource: res.uri, selectedProfileImageType: res.type})
+      
+     
+    } catch (err) {
+      //Handling any exception (If any)
+      if (DocumentPicker.isCancel(err)) {
+        //If user canceled the document selection
+        // alert('Canceled from single doc picker');
+      } else {
+        //For Unknown Error
+        alert('Unknown Error: ' + JSON.stringify(err));
+        throw err;
+      }
+    }
+  };
+
+
   btnkyc = () => {
     if (!this.state.kyc) {
       this.setState({
@@ -57,6 +229,10 @@ class User_profile extends Component {
     }
   };
   async componentDidMount() {
+
+    var profile_img = await AsyncStorage.getItem('profile_image');
+    this.setState({ profile_img: profile_img });
+    console.log('profile_img: ', this.state.profile_img)
 
     DeepLinking.addScheme('example1://');
     Linking.addEventListener('url', this.handleUrl);
@@ -192,16 +368,51 @@ class User_profile extends Component {
     }
     else
     {
-      var logs = {
-        usrId: this.state.user_id,
-        firstname: this.state.fname,
-        lastname: this.state.lname,
-        phone: this.state.mobile,
-        email: this.state.email,
-        zipcode: this.state.pinCode
-      };
-      console.log('Update Profile logs: ', logs);
-      var response = await API.postWithoutHeader('update_user_profile_info', logs);
+      
+      
+      // var logs = {
+      //   usrId: this.state.user_id,
+      //   firstname: this.state.fname,
+      //   lastname: this.state.lname,
+      //   phone: this.state.mobile,
+      //   email: this.state.email,
+      //   zipcode: this.state.pinCode,
+        
+      // };
+      // console.log('Update Profile logs: ', logs);
+      // var response = await API.postWithoutHeader('update_user_profile_info', logs);
+
+
+
+
+      var formdata = new FormData();
+if (this.state.selectedProfileImageType == '')
+{
+  formdata.append('usrId', this.state.user_id);
+  formdata.append('firstname', this.state.fname);
+  formdata.append('lastname', this.state.lname);
+  formdata.append('phone', this.state.mobile);
+  formdata.append('email', this.state.email);
+  formdata.append('zipcode', this.state.pinCode);
+}
+else
+{
+  formdata.append('usrId', this.state.user_id);
+  formdata.append('firstname', this.state.fname);
+  formdata.append('lastname', this.state.lname);
+  formdata.append('phone', this.state.mobile);
+  formdata.append('email', this.state.email);
+  formdata.append('zipcode', this.state.pinCode);
+  formdata.append('profile_image', {uri: this.state.selectedProfileImageSource, name: this.state.selectedProfileImage, type: this.state.selectedProfileImageType});
+}
+    
+
+      // var response = await API.post('register', logs);
+      var response = await API.postWithFormData('update_user_profile_info', formdata);
+
+      await AsyncStorage.setItem('profile_image', response.profile_img);
+      await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
+
      // console.log(response);
      console.log('Update Profile response: ', response);
       if (response.status === 'success') {
@@ -287,7 +498,7 @@ class User_profile extends Component {
             {/* <View style={Styles.profile_main_contain}> */}
             <ScrollView>
             <View>
-              <Image
+              {/* <Image
                 style={{
                   width: 84,
                   height: 80,
@@ -297,7 +508,7 @@ class User_profile extends Component {
                 }}
                 source={require('../../src/assets/images/heart.png')}
                 // resizeMode="contain"dashboard_main_btn
-              />
+              /> */}
               <Text
                 style={[
                   Styles.user_kyc_font,
@@ -315,6 +526,122 @@ class User_profile extends Component {
           /> 
             {/* <List style={Styles.profile_main_contain}> */}
               <View style={Styles.profile_main_text_contain}>
+
+             <TouchableOpacity
+                   style={{
+                    alignSelf: 'center',   
+                  }}
+                    onPress={() => this.setState({showProfileImagePicker: true})}><Image
+         source={{uri: this.state.profile_img}}
+        // source={require('../../src/assets/images/heart1.png')}
+        style={{
+          width: 100,
+          height: 100,
+           borderRadius: 100 / 2, 
+        }}
+      /></TouchableOpacity> 
+
+<TouchableOpacity
+                   style={{
+                    alignSelf: 'center', marginTop: 8,  
+                  }}
+                    onPress={() => this.setState({showProfileImagePicker: true})}>
+<Text style={{fontSize: 17, fontWeight: 'bold'}}>Edit Profile Image</Text>
+</TouchableOpacity> 
+      
+
+<PickerDob
+              backgroundColor={'#ffff'}
+              dataList={ArrImagePicker}
+              modalVisible={this.state.showProfileImagePicker}
+              onBackdropPress={() => this.setState({showProfileImagePicker: false})}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+              
+
+                      console.log('image pciker item: ', item.name)
+
+                      if (item.name == 'Take Photo')
+                      {
+                        this.setState({showProfileImagePicker: false})
+                        setTimeout(() => {
+                          // this.captureImage()
+                          this.captureImage('photo')
+                       }, 1100);
+
+                      }
+                      else
+                      {
+                        this.setState({showProfileImagePicker: false})
+                        
+                         if (Platform.OS === 'android')
+                         {
+                          this.selectOneFile1()
+                         }
+                         else
+                         {
+                          setTimeout(() => {
+                            this.chooseFile()
+                           // this.props.navigation.navigate('start')}
+                         }, 1100);
+                          
+                         }
+         
+
+        {/* <TouchableOpacity
+          activeOpacity={0.5}
+          style={Styles1.buttonStyle1}
+          onPress={() => chooseFile('photo')}>
+          <Text style={Styles1.textStyle}>Choose Image</Text>
+        </TouchableOpacity> */}
+
+
+                      }
+
+                      // setshowPicker(false)
+                      // setselectType(item.name)
+                      // setselectID(item.id)
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                      flexDirection: 'row',
+
+                    }}>
+                      <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 0,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                      tintColor: 'black',
+                      marginEnd: 10
+                    }}
+                    source={item.image}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 30,
+                         // alignSelf: 'center'
+                        },
+                        // this.state.genderValue == item.name,
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+
                 {/* <ListItem style={Styles.profile_main_text_contain}> */}
                 <Text style={Styles.user_profile_lbtext}>First Name:</Text>
                 <View style={Styles.user_edit_contain}>
@@ -497,6 +824,9 @@ class User_profile extends Component {
 const Styles1 = StyleSheet.create({
   spinnerTextStyle: {
     color: 'green',
+    position: 'absolute',
+    alignSelf: 'center',
+    marginTop: 200
   },
   container: {
     flex: 1,

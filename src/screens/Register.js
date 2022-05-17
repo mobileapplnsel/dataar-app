@@ -12,6 +12,7 @@ import {
   ActionSheetIOS,
   Button,
   Platform,
+  PermissionsAndroid
 
 } from 'react-native';
 import ActionSheet from 'react-native-actionsheet'
@@ -30,12 +31,20 @@ import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-community/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import KeyboardManager from 'react-native-keyboard-manager';
+import Selector from '../components/Selector';
+import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
+import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
+import PickerDob from '../components/Picker';
+import {
+  launchCamera,
+  launchImageLibrary
+} from 'react-native-image-picker';
 var pdfpath
 var pdffile
 var filename1 = 'Upload your Pan'
 var filename2 = 'Upload your address proof'
 const Register = ({navigation}) => {
- 
+  const [ArrImagePicker, setArrImagePicker] = useState([{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}]);
   const [FirstName, setFirstName] = useState('');
   const [showComponent, setshowComponent] = useState(true);
    const [websiteLink, setwebsiteLink] = useState('');
@@ -63,6 +72,10 @@ const Register = ({navigation}) => {
   const [isPasswordHidden, setisPasswordHidden] = useState(false);
   const [isConfirmPasswordHidden, setisConfirmPPasswordHidden] = useState(false);
   const [ItemmodalVisible, setisItemmodalVisible] = useState(true);
+  const [selectedProfileImage, setselectedProfileImage] = useState('Upload Your Profile Image');
+  const [showProfileImagePicker, setshowProfileImagePicker] = useState(false);
+  const [selectedProfileImageSource, setselectedProfileImageSource] = useState('');
+  const [selectedProfileImageType, setselectedProfileImageType] = useState('');
   
   const setTaskti = text => {
     setFirstName(text);
@@ -155,57 +168,6 @@ const Register = ({navigation}) => {
       }
     }
   };
-  const selectOneFile1 = async () => {
-    //Opening Document Picker for selection of one file
-    try {
-      const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.images],
-        //There can me more options as well
-        // DocumentPicker.types.allFiles
-        // DocumentPicker.types.images
-        // DocumentPicker.types.plainText
-        // DocumentPicker.types.audio
-        // DocumentPicker.types.pdf
-      });
-
-         
-
-      //Printing the log realted to the file
-    
-      console.log('res : ' + JSON.stringify(res));
-      console.log('URI : ' + res.uri);
-      console.log('Type : ' + res.type);
-      console.log('File Name : ' + res.name);
-      console.log('File Size : ' + res.size);
-      pdfpath = res.uri
-      filename1 = res.name
-      setselectedIDName(res.name);
-      setselectedIDSource(res.uri);
-       RNFetchBlob.fs
-          .readFile(res.uri, 'base64')
-          .then((data) => {
-            setimagebaseString(data)
-            console.log('base1 : ' +data);
-           })
-          .catch((err) => { console.log('err : ' +err);});
-       
-      //Setting the state to show single file attributes
-     
-    } catch (err) {
-      //Handling any exception (If any)
-      if (DocumentPicker.isCancel(err)) {
-        //If user canceled the document selection
-        alert('Canceled from single doc picker');
-      } else {
-        //For Unknown Error
-        alert('Unknown Error: ' + JSON.stringify(err));
-        throw err;
-      }
-    }
-  
-    
-  };
-
   const ActionSheetIOSonPress = () =>
   ActionSheetIOS.showActionSheetWithOptions(
     {
@@ -231,51 +193,146 @@ const Register = ({navigation}) => {
       }
     }
   );
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'App needs camera permission',
+          },
+        );
+        // If CAMERA Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    } else return true;
+  };
 
- const selectTrustCertiFile = async () => {
+  const requestExternalWritePermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+          {
+            title: 'External Storage Write Permission',
+            message: 'App needs write permission',
+          },
+        );
+        // If WRITE_EXTERNAL_STORAGE Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        alert('Write permission err', err);
+      }
+      return false;
+    } else return true;
+  };
+  const captureImage = async (type) => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 400,
+      maxHeight: 200,
+       quality: 1,
+      // videoQuality: 'low',
+      // durationLimit: 30, //Video max duration in seconds
+      //  saveToPhotos: true,
+    };
+    let isCameraPermitted = await requestCameraPermission();
+    let isStoragePermitted = await requestExternalWritePermission();
+    console.log('isCameraPermitted', isCameraPermitted)
+    console.log('isStoragePermitted', isStoragePermitted)
+    if (isCameraPermitted && isStoragePermitted) {
+      
+      launchCamera(options, (response) => {
+        console.log('Response = ', response);
+
+        if (response.didCancel) {
+          // alert('User cancelled camera picker');
+          return;
+        } else if (response.errorCode == 'camera_unavailable') {
+          alert('Camera not available on device');
+          return;
+        } else if (response.errorCode == 'permission') {
+          alert('Permission not satisfied');
+          return;
+        } else if (response.errorCode == 'others') {
+          alert(response.errorMessage);
+          return;
+        }
+        setselectedProfileImage(response.assets['0']['fileName']);
+        setselectedProfileImageSource(response.assets['0']['uri']);
+        setselectedProfileImageType(response.assets['0']['type']);
+      });
+    }
+  };
+
+  const chooseFile = async () => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 400,
+      maxHeight: 200,
+      quality: 1,
+    };
+    console.log('chooseFile called!!!')
+    launchImageLibrary(options, async (response) => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        // alert('User cancelled camera picker');
+        return;
+      } else if (response.errorCode == 'camera_unavailable') {
+        alert('Camera not available on device');
+        return;
+      } else if (response.errorCode == 'permission') {
+        alert('Permission not satisfied');
+        return;
+      } else if (response.errorCode == 'others') {
+        alert(response.errorMessage);
+        return;
+      }
+
+      setselectedProfileImage(response.assets['0']['fileName']);
+      setselectedProfileImageSource(response.assets['0']['uri']);
+      setselectedProfileImageType(response.assets['0']['type']);
+
+      // console.log('base64 -> ', response.assets['0']['fileName']);
+      // console.log('uri -> ', response.uri);
+      // console.log('width -> ', response.width);
+      // console.log('height -> ', response.height);
+      // console.log('fileSize -> ', response.fileSize);
+      // console.log('type -> ', response.type);
+      // console.log('fileName -> ', response.fileName);
+      //setFilePath(response);
+    });
+  };
+
+  const selectOneFile1 = async () => {
     //Opening Document Picker for selection of one file
     try {
       const res = await DocumentPicker.pick({
-        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
-        //There can me more options as well
-        // DocumentPicker.types.allFiles
-        // DocumentPicker.types.images
-        // DocumentPicker.types.plainText
-        // DocumentPicker.types.audio
-        // DocumentPicker.types.pdf
+        type: [DocumentPicker.types.images],
       });
 
-      
-               
-      
-      //Printing the log realted to the file
-      
-      console.log('res : ' + JSON.stringify(res));
-      console.log('URi : ' + res.uri);
-      console.log('Type : ' + res.type);
-      console.log('File Name : ' + res.name);
-      console.log('File Size : ' + res.size);
-      pdfpath = res.uri
-      filename1 = res.name
-      setselectedTrustFileName(res.name);
-      setselectedTrustFileSource(res.uri);
+      // console.log('res : ' + JSON.stringify(res));
+      // console.log('URi : ' + res.uri);
+      // console.log('Type : ' + res.type);
+      // console.log('File Name : ' + res.name);
+      // console.log('File Size : ' + res.size);
      
-       RNFetchBlob.fs
-          .readFile(res.uri, 'base64')
-          .then((data) => {
-            setfilebaseString(data)
-            console.log('base : ' +data);
-           })
-          .catch((err) => { console.log('err : ' +err);});
-       
-       
-      //Setting the state to show single file attributes
+      setselectedProfileImage(res.name);
+      setselectedProfileImageSource(res.uri);
+      setselectedProfileImageType(res.type);
+      
      
     } catch (err) {
       //Handling any exception (If any)
       if (DocumentPicker.isCancel(err)) {
         //If user canceled the document selection
-        alert('Canceled from single doc picker');
+        // alert('Canceled from single doc picker');
       } else {
         //For Unknown Error
         alert('Unknown Error: ' + JSON.stringify(err));
@@ -283,10 +340,6 @@ const Register = ({navigation}) => {
       }
     }
   };
-
-
-
-
 
 
 
@@ -332,6 +385,9 @@ const Register = ({navigation}) => {
     else if (selectedValue == 'Select One') {
       Alert.alert('Select One', 'Please select a type which you want to be');
     }
+    else if (selectedProfileImageSource == '') {
+      Alert.alert('Profile Picture', 'Please uplaod your profile picture');
+    }
      else if (
       FirstName != '' &&
       LastName != '' &&
@@ -339,43 +395,38 @@ const Register = ({navigation}) => {
       Mobile != '' &&
       password != ''
     ) {
-      var logs = {
-        firstname: FirstName.trim(),
-        lastname: LastName.trim(),
-        email: Email.trim(),
-        phone: Mobile.trim(),
-        password: password.trim(),
-        usertype: selectedValue,
-        device_id: '',
-        device_type: 'A',
-        fcm_token:fcm_token,
-        zipcode: Pincode
+
+      // var logs = {
+      //   firstname: FirstName.trim(),
+      //   lastname: LastName.trim(),
+      //   email: Email.trim(),
+      //   phone: Mobile.trim(),
+      //   password: password.trim(),
+      //   usertype: selectedValue,
+      //   device_id: '',
+      //   device_type: 'A',
+      //   fcm_token:fcm_token,
+      //   zipcode: Pincode
         
 
-      };
-//       firstname:soumyajeet
-// lastname:seal
-// email:soumyajeet@gmail.com
-// phone:7894561230
-// password:654321
-// usertype:0
-// device_id:firebasetokenid
-// device_type:A|i
-// fcm_token:khkbrER34
-// usertype: selectedValue,
-// kycfile_type: 'base64',
-// kyc_file: filebaseString,
-// pan_number: '1234567890',
-// address_proof_type:'Adhar Card',
-// address_proof_number:'1234567890',
-// kyc_address_file:imagebaseString,
-      // formdata.append('firstname', FirstName);
-      // formdata.append('lastname', LastName);
-      // formdata.append('email', Email);
-      // formdata.append('phone', Mobile);
-      // formdata.append('password', password);
-      // formdata.append('usertype', Otp);
-      var response = await API.post('register', logs);
+      // };
+
+    var formdata = new FormData();
+    formdata.append('firstname', FirstName.trim());
+    formdata.append('lastname', LastName.trim());
+    formdata.append('email', Email.trim());
+    formdata.append('phone', Mobile.trim());
+    formdata.append('password', password.trim());
+    formdata.append('usertype', selectedValue);
+    formdata.append('profile_image', {uri: selectedProfileImageSource, name: selectedProfileImage, type: selectedProfileImageType});
+    formdata.append('device_id', '');
+    formdata.append('device_type', 'A');
+    formdata.append('fcm_token', fcm_token);
+    formdata.append('zipcode', Pincode);
+    
+
+      // var response = await API.post('register', logs);
+      var response = await API.postWithFormData('register', formdata);
     
       if (response.status == 'success') {
         // need to add kyc uploadation function here
@@ -446,19 +497,36 @@ const Register = ({navigation}) => {
               </View>
         </SafeAreaView>
           <View style={Styles.login_text_main}>
-            <Image
+            {/* <Image
               style={{width: 90, height: 80, marginStart: 30, marginTop: 20}}
               source={require('../../src/assets/images/heart.png')}
               // resizeMode="contain"
-            />
-            <Text style={Styles.login_text_font}>Registration</Text>
+            /> */}
+            <Text style={{
+    fontSize: 45,
+    alignSelf: 'center',
+  }}>Registration</Text>
           </View>
 
 
           
           <View style={Styles.login_text_input_contain}>
 
+          {selectedProfileImageSource != '' ? ( <Image
+         source={{uri: selectedProfileImageSource}}
+        // source={require('../../src/assets/images/heart1.png')}
+        style={{
+          // resizeMode: 'center',
+          width: 100,
+          height: 100,
+           borderRadius: 100 / 2,
+          alignSelf: 'center',
+          //  backgroundColor: 'transparent',
+          //  tintColor: '#f55656',
+          //  resizeMode: 'contain'
            
+        }}
+      /> ) : null}
           
           {/* <TouchableOpacity style={{ alignSelf: 'center', borderColor: '#f55656', borderRadius: 50, borderWidth: 1, width: 80, height: 80, alignItems: 'center'}}>
           <Image
@@ -481,6 +549,134 @@ const Register = ({navigation}) => {
         }}
       />
           </TouchableOpacity> */}
+
+
+
+
+
+<Selector
+              text={selectedProfileImage}
+              placeholder="Gender"
+              onPress={() => setshowProfileImagePicker(true)}
+              width={'100%'}
+              height={42}
+              imageheight={10}
+              imagewidth={11}
+              backcolor={'#ffff'}
+              borderRadius={10}
+              borderWidth={1}
+              margright={10}
+              marginTop={18}
+              fontcolor={'#A1A1A1'}
+            />
+
+            <PickerDob
+              backgroundColor={'#ffff'}
+              dataList={ArrImagePicker}
+              modalVisible={showProfileImagePicker}
+              onBackdropPress={() => setshowProfileImagePicker(false)}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // this.user_filter(item.name, item.id);
+                      // this.setState({gender: item.name});
+                      // this.setState({showPicker: false});
+
+                      console.log('image pciker item: ', item.name)
+
+                      if (item.name == 'Take Photo')
+                      {
+                        setshowProfileImagePicker(false)
+                        setTimeout(() => {
+                          // this.captureImage()
+                          captureImage('photo')
+                       }, 1100);
+
+                      }
+                      else
+                      {
+                        setshowProfileImagePicker(false)
+                        
+                         if (Platform.OS === 'android')
+                         {
+                          selectOneFile1()
+                         }
+                         else
+                         {
+                          setTimeout(() => {
+                            chooseFile()
+                           // this.props.navigation.navigate('start')}
+                         }, 1100);
+                          
+                         }
+         
+
+        {/* <TouchableOpacity
+          activeOpacity={0.5}
+          style={Styles1.buttonStyle1}
+          onPress={() => chooseFile('photo')}>
+          <Text style={Styles1.textStyle}>Choose Image</Text>
+        </TouchableOpacity> */}
+
+
+                      }
+
+                      // setshowPicker(false)
+                      // setselectType(item.name)
+                      // setselectID(item.id)
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                      flexDirection: 'row',
+
+                    }}>
+                      <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 0,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                      tintColor: 'black',
+                      marginEnd: 10
+                    }}
+                    source={item.image}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 30,
+                         // alignSelf: 'center'
+                        },
+                        // this.state.genderValue == item.name,
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+
+
+
+
+
+
+        <Text style={ {
+  marginTop: 5,
+  color: 'green',
+  fontSize: 11,
+  marginBottom: 10,
+  alignSelf: 'center',
+  paddingLeft: -80
+}}>{'Only Image format is acceptable'}</Text>
 
         
 

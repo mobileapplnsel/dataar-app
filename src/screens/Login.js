@@ -244,29 +244,132 @@ else
       }
     }
   };
+const onAppleButtonPressTest = async () => {
+  setisloading(true);
+
+    var fcm_token = await AsyncStorage.getItem('FCMtoken');
+
+    var logs = {
+      firstName: '',
+      lastName: '',
+      apple_id: 'daddsadsawq123',
+      fcm_token: fcm_token
+    };
+
+    var response = await API.post('login_with_apple', logs);
+    console.log ('login_with_apple response: ', response)
+
+    if (response.status == 'success') {
+      // navigation.navigate('OtpVerify', {mobile: Mobile});
+      console.log(response.userdata[0].user_type);
+      var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
+      if (response.userdata[0].user_type !== null) {
+        if (response.userdata[0].user_type == 0) {
+          console.log(response.token);
+          await AsyncStorage.setItem('token', String(response.token));
+          await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
+          await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
+          await AsyncStorage.setItem(
+            'user_type',
+            response.userdata[0].user_type,
+          );
+          var token = await AsyncStorage.getItem('token');
+          console.log('token', token);
+          // setisloading(true);
+          if (isLoggedInForOneRupee == 'yes')
+        {
+          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+          setTimeout(() => {
+            navigation.replace('OneRupeeDonation', {
+              donate_amt: '100',
+              donation_mode: 'dsadas',
+              campaign_id: '',
+              kind_id: '',
+            });
+            
+          }, 1000);
+        }
+else
+{
+          setTimeout(() => {
+            navigation.replace('Dashboard_donation_forDonor');
+            // setisloading(false);
+            setselectedValue('');
+          }, 1000);
+        }
+        } else {
+          await AsyncStorage.setItem('token', response.token);
+          await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
+          await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
+          await AsyncStorage.setItem(
+            'user_type',
+            response.userdata[0].user_type,
+          );
+
+          setisloading(true);
+          if (isLoggedInForOneRupee == 'yes')
+        {
+          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+          setTimeout(() => {
+            navigation.replace('OneRupeeDonation', {
+              donate_amt: '100',
+              donation_mode: 'dsadas',
+              campaign_id: '',
+              kind_id: '',
+            });
+            
+          }, 1000);
+        }
+else
+{
+          setTimeout(() => {
+            navigation.replace('Dashboard');
+            // setisloading(false);
+            setselectedValue('');
+          }, 1000);
+        }
+        }
+      } else {
+        navigation.replace('logintype', {
+          user_id: response.userdata[0].user_id,
+        });
+      }
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+}
+
   const onAppleButtonPress = async () => {
+
+
+    
+
  
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
     });
   
-
-    // get current authentication state for user
-    // /!\ This method must be tested on a real device. On the iOS simulator it always throws an error.
      const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
   
     // use credentialState response to ensure the user is authenticated
     if (credentialState === appleAuth.State.AUTHORIZED) {
 
       
-      // Alert.alert('Response', appleAuthRequestResponse.fullName.givenName, appleAuthRequestResponse.fullName.familyName,
-      // appleAuthRequestResponse.identityToken);
-      // console.log('user is authenticated: ', appleAuthRequestResponse)
 
-      setisloading(true);
+      if (appleAuthRequestResponse.fullName.givenName == null || appleAuthRequestResponse.fullName.givenName == '')
+      {
+        navigation.replace('logintypeForiOS', {
+          user_id: appleAuthRequestResponse.identityToken,
+        });
+      }
+else
+{
+
+  setisloading(true);
 
     var fcm_token = await AsyncStorage.getItem('FCMtoken');
+
     var logs = {
       firstName: appleAuthRequestResponse.fullName.givenName,
       lastName: appleAuthRequestResponse.fullName.familyName,
@@ -355,7 +458,7 @@ else
     } else {
       Alert.alert(response.status, response.message);
     }
-
+  }
     }
   }
   const signInfb = () => {
@@ -541,7 +644,8 @@ else
         await AsyncStorage.setItem('google_token', '');
         await AsyncStorage.setItem('user_type', response.user_type);
         await AsyncStorage.setItem('kyc_verified', response.kyc_verified);
-       
+        await AsyncStorage.setItem('profile_image', response.profile_img);
+        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
         var token = await AsyncStorage.getItem('token');
         console.log('token', token);
         setisloading(true);
@@ -578,6 +682,8 @@ else
         await AsyncStorage.setItem('google_token', '');
         await AsyncStorage.setItem('user_type', response.user_type);
         await AsyncStorage.setItem('kyc_verified', response.kyc_verified);
+        await AsyncStorage.setItem('profile_image', response.profile_img);
+        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
         if(response.pan_number !="")
         {
           await AsyncStorage.setItem('pan_number', response.pan_number);
