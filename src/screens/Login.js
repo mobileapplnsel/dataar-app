@@ -36,6 +36,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import KeyboardManager from 'react-native-keyboard-manager';
 import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
+
 const Login = ({navigation}) => {
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
@@ -48,6 +49,7 @@ const Login = ({navigation}) => {
   const [isSelect, setisSelect] = useState(false);
   const [isloading, setisloading] = useState(false);
   const [isPasswordHidden, setisPasswordHidden] = useState(false);
+  const [credentialStateForUser, updateCredentialStateForUser] = useState(-1);
   const setTaskti = text => {
     setemail(text);
   };
@@ -59,15 +61,25 @@ const Login = ({navigation}) => {
     const isFocused = navigation.isFocused();
     if (Platform.OS === 'ios') {
       KeyboardManager.setEnable(true);
-    }
+  
+      // initialise revoke listener
+    authCredentialListener = appleAuth.onCredentialRevoked(async () => {
+      console.warn('If this function executes, User Credentials have been Revoked');
+    });
 
-    
+    return (() => {
+      // remove revoke listener
+      if (authCredentialListener.remove !== undefined) {
+        authCredentialListener.remove();
+      }
+    })
+
+    }
 
     const willFocusSubscription = navigation.addListener('focus', () => {
       console.log('willFocusSubscription called: ')
         setisloading(false);
 
-        
 
       GoogleSignin.configure({
         scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
@@ -96,9 +108,9 @@ const Login = ({navigation}) => {
      
     }
 
-    return appleAuth.onCredentialRevoked(async () => {
-      console.warn('If this function executes, User Credentials have been Revoked');
-    });
+   
+
+    
     
   }, []);
  
@@ -341,10 +353,6 @@ else
 
   const onAppleButtonPress = async () => {
 
-
-    
-
- 
     const appleAuthRequestResponse = await appleAuth.performRequest({
       requestedOperation: appleAuth.Operation.LOGIN,
       requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
@@ -352,10 +360,7 @@ else
   
      const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
   
-    // use credentialState response to ensure the user is authenticated
     if (credentialState === appleAuth.State.AUTHORIZED) {
-
-      
 
       if (appleAuthRequestResponse.fullName.givenName == null || appleAuthRequestResponse.fullName.givenName == '')
       {
