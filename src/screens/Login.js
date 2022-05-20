@@ -174,6 +174,9 @@ const Login = ({navigation}) => {
                 response.userdata[0].user_type,
               );
               var token = await AsyncStorage.getItem('token');
+
+          await AsyncStorage.setItem('profile_image', response.profile_image);
+        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
               console.log('token', token);
              // setisloading(true);
               if (isLoggedInForOneRupee == 'yes')
@@ -211,7 +214,8 @@ else
                 'user_type',
                 response.userdata[0].user_type,
               );
-
+              await AsyncStorage.setItem('profile_image', response.profile_image);
+              await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
               setisloading(true);
               if (isLoggedInForOneRupee == 'yes')
         {
@@ -362,10 +366,15 @@ else
   
     if (credentialState === appleAuth.State.AUTHORIZED) {
 
+      // Alert.alert("Alert", JSON.stringify(appleAuthRequestResponse),  [
+      //   {text: 'OK', onPress: () => console.log('dadas')},
+      // ],
+      // {cancelable: false},);
+
       if (appleAuthRequestResponse.fullName.givenName == null || appleAuthRequestResponse.fullName.givenName == '')
       {
         navigation.replace('logintypeForiOS', {
-          user_id: appleAuthRequestResponse.identityToken,
+          user_id: appleAuthRequestResponse.user,
         });
       }
 else
@@ -378,7 +387,7 @@ else
     var logs = {
       firstName: appleAuthRequestResponse.fullName.givenName,
       lastName: appleAuthRequestResponse.fullName.familyName,
-      apple_id: appleAuthRequestResponse.identityToken,
+      apple_id: appleAuthRequestResponse.user,
       fcm_token: fcm_token
     };
 
@@ -399,6 +408,8 @@ else
             'user_type',
             response.userdata[0].user_type,
           );
+          await AsyncStorage.setItem('profile_image', response.profile_image);
+        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
           var token = await AsyncStorage.getItem('token');
           console.log('token', token);
           // setisloading(true);
@@ -431,7 +442,8 @@ else
             'user_type',
             response.userdata[0].user_type,
           );
-
+          await AsyncStorage.setItem('profile_image', response.profile_image);
+          await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
           setisloading(true);
           if (isLoggedInForOneRupee == 'yes')
         {
@@ -547,6 +559,8 @@ else
             'user_type',
             response.userdata[0].user_type,
           );
+          await AsyncStorage.setItem('profile_image', response.profile_image);
+        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
           var token = await AsyncStorage.getItem('token');
           console.log('token', token);
           // setisloading(true);
@@ -579,7 +593,8 @@ else
             'user_type',
             response.userdata[0].user_type,
           );
-
+          await AsyncStorage.setItem('profile_image', response.profile_image);
+          await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
           setisloading(true);
           if (isLoggedInForOneRupee == 'yes')
         {

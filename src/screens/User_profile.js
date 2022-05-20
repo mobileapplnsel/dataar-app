@@ -410,12 +410,15 @@ else
       // var response = await API.post('register', logs);
       var response = await API.postWithFormData('update_user_profile_info', formdata);
 
-      await AsyncStorage.setItem('profile_image', response.profile_img);
-      await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
+     
 
      // console.log(response);
      console.log('Update Profile response: ', response);
       if (response.status === 'success') {
+
+        await AsyncStorage.setItem('profile_image', response.profile_img);
+        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
+
         Toast.show(response.message, Toast.LONG)
         this.props.navigation.goBack()
       } else {

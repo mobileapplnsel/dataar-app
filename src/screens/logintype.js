@@ -62,12 +62,35 @@ setselecttypeerror('Please choose a type')
 else
 {
 
-  
+  var logs
 
-    var logs = {
+  if (Platform.OS === 'ios')
+  {
+    if (selectedValue == 'Donor')
+    {
+      logs = {
+        user_id: userId,
+        usertype: '0',
+      };
+    }
+    else
+    {
+      logs = {
+        user_id: userId,
+        usertype: '1',
+      };
+    }
+
+  }
+  else
+  {
+     logs = {
       user_id: userId,
       usertype: selectedValue,
     };
+  }
+
+    
     var response = await API.post('update_usertype', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
@@ -79,7 +102,7 @@ else
         // await AsyncStorage.setItem('fb_token', response.userdata[0].fb_token);
         await AsyncStorage.setItem('user_type', response.userdata[0].user_type);
         await AsyncStorage.setItem('profile_image', response.profile_image);
-        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
+        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
         var token = await AsyncStorage.getItem('token');
         console.log('token', token);
         setisloading(true);
@@ -94,7 +117,7 @@ else
         // await AsyncStorage.setItem('fb_token', response.userdata[0].fb_token);
         await AsyncStorage.setItem('user_type', response.userdata[0].user_type);
         await AsyncStorage.setItem('profile_image', response.profile_image);
-        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
+        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
 
         setisloading(true);
         setTimeout(() => {
@@ -121,12 +144,12 @@ else
       if (buttonIndex === 0) {
 
         setselectValueMethod('0')
-       // setselectedValue('Donor')
+        setselectedValue('Donor')
         
       } else if (buttonIndex === 1) {
 
         setselectValueMethod('1')
-       // setselectedValue('Donee')
+        setselectedValue('Donee')
 
       } else if (buttonIndex === 2) {
         // setResult("🔮");
