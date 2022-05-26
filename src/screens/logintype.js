@@ -33,6 +33,7 @@ import {
 import {Picker} from '@react-native-picker/picker';
 import AppPreLoader from '../components/AppPreLoader';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView } from 'react-native-gesture-handler';
 const logintype = ({route, navigation}) => {
   const [Email, setemail] = useState('');
   const [googToken, setgoogleToken] = useState('');
@@ -41,12 +42,21 @@ const logintype = ({route, navigation}) => {
   const [isSelect, setisSelect] = useState(false);
   const [isloading, setisloading] = useState(false);
   const [userId, setuserId] = useState('');
+  const [loginThrough, setloginThrough] = useState('');
   const [selecttypeerror, setselecttypeerror] = useState('');
-  
+  const [emailerror, setemailerror] = useState('');
+  const [mobileerror, setmobileerror] = useState('');
+  const [addresserror, setaddresserror] = useState('');
+  const [pincodeerror, setpincodeerror] = useState('');
+  const [Mobile, setmobile] = useState('');
+  const [FullAddress, setfulladdress] = useState('');
+  const [PinCode, setpincode] = useState('');
   // const contextType = AuthContext;
   useEffect(() => {
   const {user_id} = route.params;
+  const {loginThrough} = route.params;
     setuserId(user_id);
+    setloginThrough(loginThrough);
   }, []);
   const setselectValueMethod = async (dataval) => {
     setselectedValue(dataval)
@@ -59,35 +69,147 @@ const logintype = ({route, navigation}) => {
     {
 setselecttypeerror('Please choose a type')
     }
+    else  if (Mobile == '')
+    {
+setmobileerror('Please enter mobile number')
+    }
+    else  if (FullAddress == '')
+    {
+setaddresserror('Please enter your full address')
+    }
+    else  if (PinCode == '')
+    {
+setpincodeerror('Please enter pincode')
+    }
 else
 {
+
+  if ((loginThrough == 'fb' || loginThrough == 'apple') && (Email == ''))
+  {
+   
+setemailerror('Please enter email')
+    
+  }
+  else
+  {
 
   var logs
 
   if (Platform.OS === 'ios')
   {
-    if (selectedValue == 'Donor')
+    if (loginThrough == 'google')
+    {
+      if (selectedValue == 'Donor')
+      {
+        logs = {
+          user_id: userId,
+          usertype: '0',
+          mobileno: Mobile,
+          fulladdress: FullAddress,
+          pincode: PinCode
+        };
+      }
+      else
+      {
+        logs = {
+          user_id: userId,
+          usertype: '1',
+          mobileno: Mobile,
+          fulladdress: FullAddress,
+          pincode: PinCode
+        };
+      }
+    }
+    else if (loginThrough == 'fb')
+    {
+      if (selectedValue == 'Donor')
+      {
+        logs = {
+          user_id: userId,
+          usertype: '0',
+          email: Email,
+          mobileno: Mobile,
+          fulladdress: FullAddress,
+          pincode: PinCode
+        };
+      }
+      else
+      {
+        logs = {
+          user_id: userId,
+          usertype: '1',
+          email: Email,
+          mobileno: Mobile,
+          fulladdress: FullAddress,
+          pincode: PinCode
+        };
+      }
+    }
+    else
+    {
+      if (selectedValue == 'Donor')
+      {
+        logs = {
+          user_id: userId,
+          usertype: '0',
+          email: Email,
+          mobileno: Mobile,
+          fulladdress: FullAddress,
+          pincode: PinCode
+        };
+      }
+      else
+      {
+        logs = {
+          user_id: userId,
+          usertype: '1',
+          email: Email,
+          mobileno: Mobile,
+          fulladdress: FullAddress,
+          pincode: PinCode
+        };
+      }
+    }
+    
+
+  }
+  else
+  {
+    
+
+    if (loginThrough == 'google')
     {
       logs = {
         user_id: userId,
-        usertype: '0',
+        usertype: selectedValue,
+          mobileno: Mobile,
+          fulladdress: FullAddress,
+          pincode: PinCode
+      };
+    }
+    else if (loginThrough == 'fb')
+    {
+      logs = {
+        user_id: userId,
+        usertype: selectedValue,
+        email: Email,
+          mobileno: Mobile,
+          fulladdress: FullAddress,
+          pincode: PinCode
       };
     }
     else
     {
       logs = {
         user_id: userId,
-        usertype: '1',
+        usertype: selectedValue,
+        email: Email,
+          mobileno: Mobile,
+          fulladdress: FullAddress,
+          pincode: PinCode
       };
     }
 
-  }
-  else
-  {
-     logs = {
-      user_id: userId,
-      usertype: selectedValue,
-    };
   }
 
     
@@ -130,6 +252,7 @@ else
       Alert.alert(response.status, response.message);
     }
   }
+  }
   };
   const ActionSheetIOSonPress = () =>
   ActionSheetIOS.showActionSheetWithOptions(
@@ -159,11 +282,15 @@ else
   if (isloading) {
     return <AppPreLoader />;
   }
+  const setMobile = text => {
+    setmobile(text);
+  };
   return (
     <Container>
       <ImageBackground
         source={require('../../src/assets/images/bg.jpg')}
         style={Styles.login_main}>
+          <ScrollView>
         <View style={Styles.login_main_header}></View>
         <View style={Styles.login_text_main}>
           <Image
@@ -174,6 +301,75 @@ else
           <Text style={Styles.login_text_font1}>Sign in to continue</Text>
         </View>
         <View style={Styles.login_text_input_contain}>
+          
+
+{ loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
+              placeholder="Enter Mobile No."
+              onChangeText={text => setMobile(text)}
+              style={Styles.login_text_input}
+              keyboardType="numeric"
+              placeholderTextColor='grey'
+            /> : null}
+
+<Text style={{
+    marginTop: 5,
+    color: 'red',
+    fontSize: 11,
+    marginBottom: 5,
+    marginLeft: 13,
+}}>{mobileerror}</Text>
+
+{ loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
+              placeholder="Enter Email ID"
+              onChangeText={text => setemail(text)}
+              style={Styles.login_text_input}
+              keyboardType="numeric"
+              placeholderTextColor='grey'
+            /> : null}
+
+<Text style={{
+    marginTop: 5,
+    color: 'red',
+    fontSize: 11,
+    marginBottom: 5,
+    marginLeft: 13,
+}}>{emailerror}</Text>
+
+{ loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
+              placeholder="Enter Full Address"
+              onChangeText={text => setfulladdress(text)}
+              style={Styles.login_text_input}
+              keyboardType="numeric"
+              placeholderTextColor='grey'
+            /> : null}
+
+<Text style={{
+    marginTop: 5,
+    color: 'red',
+    fontSize: 11,
+    marginBottom: 5,
+    marginLeft: 13,
+}}>{addresserror}</Text>
+
+
+{ loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
+              placeholder="Enter Pincode"
+              onChangeText={text => setpincode(text)}
+              style={Styles.login_text_input}
+              keyboardType="numeric"
+              placeholderTextColor='grey'
+            /> : null}
+
+<Text style={{
+    marginTop: 5,
+    color: 'red',
+    fontSize: 11,
+    marginBottom: 5,
+    marginLeft: 13,
+}}>{pincodeerror}</Text>
+
+
+
         { Platform.OS === 'ios' ? 
 <TouchableOpacity onPress={() => ActionSheetIOSonPress()}>
 <View style={{flexDirection:'row', alignItems: 'center', justifyContent: 'center', height: 40,
@@ -193,7 +389,7 @@ else
             selectedValue={selectedValue}
             style={{
               height: 50,
-              width: '90%',
+              width: '97%',
               borderColor: '#000',
               alignSelf: 'center',
               borderWidth: 1,
@@ -217,7 +413,9 @@ else
             onPress={() => Login()}>
             <Text style={Styles.login_text}>Login</Text>
           </TouchableOpacity>
+          
         </View>
+        </ScrollView>
       </ImageBackground>
     </Container>
   );

@@ -355,7 +355,7 @@ class Preference extends Component {
                       style={[
                         {
                           fontSize: 14,
-                          lineHeight: 14,
+                          lineHeight: 35,
                         },
                         this.state.genderValue == item.pref_name,
                       ]}>

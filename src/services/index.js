@@ -48,33 +48,7 @@ export default class API {
   }
   httpRequest(method, url, params) {
     console.log(params);
-    // return new Promise(async (resolve, reject) => {
-    // var token = await AsyncStorage.getItem('token');
-    //   axios
-    //     .post(
-    //       url,
-    //       {
-    //         params,
-    //       },
-    //       {
-    //         headers: {
-    //           Authorization: 'Bearer ' + token,
-    //           Accept: '*/*',
-    //           // 'Content-Type': 'application/json',
-    //         },
-    //         // data: ,
-    //       },
-    //     )
-    //     .then(response => {
-    //       console.log(response);
-    //       resolve(JSON.stringify(response));
-    //     })
-    //     .catch(function (error) {
-    //       // console.log(error);
-    //       reject(error);
-    //     });
-    // });
-
+  
     return new Promise(async (resolve, reject) => {
       console.log('enter111');
       var token = await AsyncStorage.getItem('token');

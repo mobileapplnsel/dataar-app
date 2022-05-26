@@ -15,7 +15,8 @@ import {
   Platform,
   KeyboardAvoidingView,
   PermissionsAndroid,
-  ActivityIndicator
+  ActivityIndicator,
+  Share
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem} from 'native-base';
 import API from '../services/api';
@@ -415,7 +416,7 @@ class Dashboard_donation_forDonor extends Component {
               Alert.alert("Alert", "Kyc under the processing");
             }
             else{
-              Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+              Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page",  [
                 {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
               ],
               {cancelable: false},);
@@ -504,7 +505,7 @@ class Dashboard_donation_forDonor extends Component {
               Alert.alert("Alert", " Your Kyc is currently under review. We will let you know once your KYC gets approved.");
             }
             else{
-              Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+              Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page",  [
                 {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
               ],
               {cancelable: false},);
@@ -555,6 +556,29 @@ class Dashboard_donation_forDonor extends Component {
       },
       this.commetFetch,
     );
+  };
+  shareCampaign = async (item) => {
+    // this.modalizeRefComment.current.open();
+    console.log(item);
+    try {
+      const result = await Share.share({
+       title: 'Campaign Link',
+  message: 'Please share the campaign and stay safe , Campaign Link : ' + item.campaign_image, 
+  url: 'https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en'
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+    
   };
   commetFetch = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -757,9 +781,23 @@ source={{uri: item.campaign_image}}>
                   alignItems: 'center',
                   // backgroundColor: '#5ca7f2',
                 }}>
-                <Text style={Styles.doner_title_font}>
+                  <TouchableOpacity
+                    style={[
+                      {
+                        marginTop: 20,
+                        alignSelf: 'center',
+    alignItems: 'center',
+                      },
+                    ]}
+                    onPress={() => this.shareCampaign(item)}>
+                <Text style={{
+    fontSize: 14,
+    color: '#757373',
+    fontWeight: '500',
+  }}>
                   {item.quantity} Share
                 </Text>
+                </TouchableOpacity>
                 <View
                   style={{
                     width: 90,
@@ -1069,12 +1107,15 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                       paddingVertical: 12,
                       borderBottomColor: '#DDDDDD',
                       borderBottomWidth: 1,
+                     
+
                     }}>
                     <Text
                       style={[
                         {
                           fontSize: 14,
-                          lineHeight: 14,
+                          lineHeight: 40,
+                          textAlignVertical: 'center'
                         },
                         this.state.genderValue == item.pref_name,
                       ]}>
@@ -1126,7 +1167,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                       style={[
                         {
                           fontSize: 14,
-                          lineHeight: 14,
+                          lineHeight: 40,
                         },
                         this.state.genderValue1 == item.name,
                       ]}>

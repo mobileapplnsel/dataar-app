@@ -233,7 +233,7 @@ const CustomSidebarMenu = props => {
 <Text style={{
     fontSize: 17,
     alignSelf: 'center', color: '#f55656', marginBottom: 2
-  }}>{'Hi, '+profile_name}</Text>
+  }}>{'Hi '+profile_name}</Text>
 
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />

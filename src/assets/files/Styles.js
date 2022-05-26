@@ -791,7 +791,8 @@ module.exports = StyleSheet.create({
     // borderBottomWidth: 1,
     // paddingTop:20,
     marginTop: 20,
-    color: 'black'
+    color: 'black',
+    paddingLeft: 7
   },
   campaign_radio_contain: {
     flexDirection: 'row',

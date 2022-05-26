@@ -953,7 +953,7 @@ setselectedValue(item.kind_id)
                       style={[
                         {
                           fontSize: 14,
-                          lineHeight: 14,
+                          lineHeight: 40,
                         },
                         // this.state.genderValue == item.name,
                       ]}>

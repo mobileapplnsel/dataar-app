@@ -58,29 +58,43 @@ const Login = ({navigation}) => {
   };
   // const contextType = AuthContext;
   useEffect(() => {
-    const isFocused = navigation.isFocused();
-    if (Platform.OS === 'ios') {
-      KeyboardManager.setEnable(true);
-  
-      // initialise revoke listener
-    authCredentialListener = appleAuth.onCredentialRevoked(async () => {
-      console.warn('If this function executes, User Credentials have been Revoked');
-    });
+    
 
-    return (() => {
-      // remove revoke listener
-      if (authCredentialListener.remove !== undefined) {
-        authCredentialListener.remove();
-      }
-    })
-
+    if (Platform.OS === 'android') {
+      BackHandler.addEventListener('hardwareBackPress', backBtnPressed)
+   
+       return () =>
+         BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+      
+     }
+    else
+    {
+    KeyboardManager.setEnable(true);
     }
+    
+    
+    
+  }, []);
 
-    const willFocusSubscription = navigation.addListener('focus', () => {
-      console.log('willFocusSubscription called: ')
-        setisloading(false);
+  useEffect(() => {
+    if (Platform.OS === 'ios') {
+    // console.warn('Iffff');
+    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+    return appleAuth.onCredentialRevoked(async () => {
+      console.warn('If this function executes, User Credentials have been Revoked');
+    });}
+  }, []);
+ 
+  const onBackPress = () => {
+    return true;
+  };
 
+  useEffect(() => {
+    const isFocused = navigation.isFocused();
 
+    const willFocusSubscription1 = navigation.addListener('focus', () => {
+      
+      setisloading(false);
       GoogleSignin.configure({
         scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
         webClientId:
@@ -88,35 +102,11 @@ const Login = ({navigation}) => {
         offlineAccess: false, // if you want to access Google API on behalf of the user FROM YOUR SERVER
         forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
       })
+
   });
 
-  return willFocusSubscription;
-
-    GoogleSignin.configure({
-      scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
-      webClientId:
-        '104839958051-nlpuvn6mk2bnh1aujqi58o0nqvqul2ll.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
-      offlineAccess: false, // if you want to access Google API on behalf of the user FROM YOUR SERVER
-      forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
-    })
-
-    if (Platform.OS === 'android') {
-     BackHandler.addEventListener('hardwareBackPress', backBtnPressed)
-
-      return () =>
-        BackHandler.removeEventListener('hardwareBackPress', onBackPress)
-     
-    }
-
-   
-
-    
-    
+  return willFocusSubscription1;
   }, []);
- 
-  const onBackPress = () => {
-    return true;
-  };
    const backBtnPressed = () => {
     
     Alert.alert(
@@ -241,6 +231,7 @@ else
           } else {
             navigation.replace('logintype', {
               user_id: response.userdata[0].user_id,
+              loginThrough: 'google'
             });
           }
         } else {
@@ -470,6 +461,7 @@ else
       } else {
         navigation.replace('logintype', {
           user_id: response.userdata[0].user_id,
+          loginThrough: 'apple'
         });
       }
     } else {
@@ -621,6 +613,7 @@ else
       } else {
         navigation.replace('logintype', {
           user_id: response.userdata[0].user_id,
+          loginThrough: 'fb'
         });
       }
     } else {
@@ -821,7 +814,7 @@ else
           </TouchableOpacity>
           <TouchableOpacity onPress={() => register()}>
             <Text style={Styles.login_user_register}>
-              Don`t have an account?.Create one
+              Don't have an account? Create one
             </Text>
           </TouchableOpacity>
 

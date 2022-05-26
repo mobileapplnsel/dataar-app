@@ -27,7 +27,7 @@ const Dashboard = ({navigation}) => {
   const TrackCampaign = () => {
     navigation.navigate('View_campaign');
   };
-  const StartCampaign = async () => {
+  const StartCampaign = async (flag) => {
     var token = await AsyncStorage.getItem('token');
     var kyc_verified = await AsyncStorage.getItem('kyc_verified');
     var pan_number = await AsyncStorage.getItem('pan_number');
@@ -39,7 +39,7 @@ const Dashboard = ({navigation}) => {
     var logs = {
       user_id: user_id,
     };
-    console.log(logs);
+    console.log(logs, flag);
     var response = await API.post('kyc_status', logs);
     if (response.status == 'success') {
       console.log(response.userdata.pan_number);
@@ -47,7 +47,14 @@ const Dashboard = ({navigation}) => {
         {
           if(response.userdata.pan_number!='')
           {
+            if (flag == 'trackcampaign')
+            {
+              TrackCampaign()
+            }
+            else
+            {
             navigation.navigate('StartCampaign');
+            }
           }
         }
         else
@@ -57,7 +64,7 @@ const Dashboard = ({navigation}) => {
               Alert.alert("Alert", " It is currently under review. We will let you know once your KYC gets approved.");
             }
             else{
-              Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+              Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page",  [
                 {text: 'OK', onPress: () => navigation.navigate('KYCUpdateForDonee')},
               ],
               {cancelable: false},);
@@ -86,7 +93,7 @@ const Dashboard = ({navigation}) => {
     const isFocused = navigation.isFocused();
 
     const willFocusSubscription = navigation.addListener('focus', () => {
-      console.log('focusListener has called!!!!')
+      console.log('focusListener has called2344555!!!!')
       navigation.closeDrawer();
 
   });
@@ -181,13 +188,13 @@ const Dashboard = ({navigation}) => {
           <View style={Styles.dashboard_main_btn}>
             <TouchableOpacity
               style={Styles.login_btn_forget}
-              onPress={() => TrackCampaign()}>
+              onPress={() => StartCampaign('trackcampaign')}>
               <Text style={Styles.login_text}>Track My Campaign</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={Styles.login_btn_forget}
-              onPress={() => StartCampaign()}>
+              onPress={() => StartCampaign('startcampaign')}>
               <Text style={Styles.login_text}>Start Campaign</Text>
             </TouchableOpacity>
           </View>

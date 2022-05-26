@@ -74,7 +74,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Dataar App requires access to the Camera</string>
+	<string>Dataar App requires access to the Camera to upload photo to Dataar's supportive cloud</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Dataar App needs your location to show you from Admin Console</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

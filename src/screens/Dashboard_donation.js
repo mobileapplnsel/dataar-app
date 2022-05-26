@@ -860,7 +860,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                       style={[
                         {
                           fontSize: 14,
-                          lineHeight: 14,
+                          lineHeight: 40,
                         },
                         this.state.genderValue == item.name,
                       ]}>

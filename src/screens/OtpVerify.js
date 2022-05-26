@@ -115,7 +115,7 @@ else
               style={{width: 90, height: 80, marginStart: 40, marginTop: 20}}
               source={require('../../src/assets/images/heart.png')}
             />
-            <Text style={Styles.login_text_font}>Otp Verify</Text>
+            <Text style={Styles.login_text_font}>OTP Verify</Text>
           </View>
           <View style={Styles.login_text_input_contain}>
             <TextInput

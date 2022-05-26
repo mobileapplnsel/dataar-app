@@ -102,6 +102,8 @@ else
         await AsyncStorage.setItem('token', String(response.token));
         await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
         await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
+        await AsyncStorage.setItem('profile_image', response.profile_image);
+        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
         await AsyncStorage.setItem(
           'user_type',
           response.userdata[0].user_type,
@@ -138,7 +140,8 @@ else
           'user_type',
           response.userdata[0].user_type,
         );
-
+        await AsyncStorage.setItem('profile_image', response.profile_image);
+        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
         setisloading(true);
         if (isLoggedInForOneRupee == 'yes')
       {
