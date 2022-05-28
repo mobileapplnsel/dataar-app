@@ -24,6 +24,7 @@ const Dashboard = ({navigation}) => {
   const [Mobile, setmobile] = useState('');
   const [password, setpassword] = useState('');
   const [Otp, setotp] = useState('');
+  const [profile_img, setprofile_img] = useState('');
   const TrackCampaign = () => {
     navigation.navigate('View_campaign');
   };
@@ -89,8 +90,13 @@ const Dashboard = ({navigation}) => {
     }
   
   };
-  useEffect(() => {
+  useEffect(async () => {
     const isFocused = navigation.isFocused();
+
+    var profile_imgggg = await AsyncStorage.getItem('profile_image');
+    setprofile_img(profile_imgggg);
+
+   
 
     const willFocusSubscription = navigation.addListener('focus', () => {
       console.log('focusListener has called2344555!!!!')
@@ -166,21 +172,39 @@ const Dashboard = ({navigation}) => {
                   // resizeMode="contain"dashboard_main_btn
                 />
               </TouchableOpacity> */}
-              <TouchableOpacity onPress={() => user()}>
-                <Image
-                  style={{
-                    width: 30,
-                    height: 30,
-                    marginStart: 10,
-                    marginEnd: 10,
-                    // marginTop: 20,
-                    backgroundColor: 'transparent',
-                    alignSelf: 'center',
-                  }}
-                  source={require('../../src/assets/images/user.png')}
-                  // resizeMode="contain"dashboard_main_btn
-                />
-              </TouchableOpacity>
+
+{profile_img != null ? ( <TouchableOpacity onPress={() => user()}>
+      <Image
+        style={{
+          width: 40,
+          height: 40,
+          borderRadius: 20,
+          marginStart: 10,
+          marginEnd: 10,
+          // marginTop: 20,
+          backgroundColor: 'transparent',
+          alignSelf: 'center',
+        }}
+        source={{uri: profile_img}}
+        // resizeMode="contain"dashboard_main_btn
+      />
+    </TouchableOpacity> ) : <TouchableOpacity onPress={() => user()}>
+      <Image
+        style={{
+          width: 30,
+          height: 30,
+          marginStart: 10,
+          marginEnd: 10,
+          // marginTop: 20,
+          backgroundColor: 'transparent',
+          alignSelf: 'center',
+        }}
+        source={require('../../src/assets/images/user.png')}
+        // resizeMode="contain"dashboard_main_btn
+      />
+    </TouchableOpacity>}
+
+              
             </View>
           </SafeAreaView>
           

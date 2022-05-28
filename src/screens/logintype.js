@@ -106,7 +106,8 @@ setemailerror('Please enter email')
           usertype: '0',
           mobileno: Mobile,
           fulladdress: FullAddress,
-          pincode: PinCode
+          pincode: PinCode,
+          login_source: 'google'
         };
       }
       else
@@ -116,7 +117,8 @@ setemailerror('Please enter email')
           usertype: '1',
           mobileno: Mobile,
           fulladdress: FullAddress,
-          pincode: PinCode
+          pincode: PinCode,
+          login_source: 'google'
         };
       }
     }
@@ -130,7 +132,8 @@ setemailerror('Please enter email')
           email: Email,
           mobileno: Mobile,
           fulladdress: FullAddress,
-          pincode: PinCode
+          pincode: PinCode,
+          login_source: 'facebook'
         };
       }
       else
@@ -141,7 +144,8 @@ setemailerror('Please enter email')
           email: Email,
           mobileno: Mobile,
           fulladdress: FullAddress,
-          pincode: PinCode
+          pincode: PinCode,
+          login_source: 'facebook'
         };
       }
     }
@@ -155,7 +159,8 @@ setemailerror('Please enter email')
           email: Email,
           mobileno: Mobile,
           fulladdress: FullAddress,
-          pincode: PinCode
+          pincode: PinCode,
+          login_source: 'apple'
         };
       }
       else
@@ -166,7 +171,8 @@ setemailerror('Please enter email')
           email: Email,
           mobileno: Mobile,
           fulladdress: FullAddress,
-          pincode: PinCode
+          pincode: PinCode,
+          login_source: 'apple'
         };
       }
     }
@@ -184,7 +190,8 @@ setemailerror('Please enter email')
         usertype: selectedValue,
           mobileno: Mobile,
           fulladdress: FullAddress,
-          pincode: PinCode
+          pincode: PinCode,
+          login_source: 'google'
       };
     }
     else if (loginThrough == 'fb')
@@ -195,7 +202,8 @@ setemailerror('Please enter email')
         email: Email,
           mobileno: Mobile,
           fulladdress: FullAddress,
-          pincode: PinCode
+          pincode: PinCode,
+          login_source: 'facebook'
       };
     }
     else
@@ -206,7 +214,8 @@ setemailerror('Please enter email')
         email: Email,
           mobileno: Mobile,
           fulladdress: FullAddress,
-          pincode: PinCode
+          pincode: PinCode,
+          login_source: 'apple'
       };
     }
 
@@ -323,23 +332,23 @@ setemailerror('Please enter email')
               placeholder="Enter Email ID"
               onChangeText={text => setemail(text)}
               style={Styles.login_text_input}
-              keyboardType="numeric"
+              keyboardType='default'
               placeholderTextColor='grey'
             /> : null}
 
-<Text style={{
+{ loginThrough == 'fb' || loginThrough == 'apple' ? <Text style={{
     marginTop: 5,
     color: 'red',
     fontSize: 11,
     marginBottom: 5,
     marginLeft: 13,
-}}>{emailerror}</Text>
+}}>{emailerror}</Text> : null}
 
 { loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
               placeholder="Enter Full Address"
               onChangeText={text => setfulladdress(text)}
               style={Styles.login_text_input}
-              keyboardType="numeric"
+              keyboardType='default'
               placeholderTextColor='grey'
             /> : null}
 

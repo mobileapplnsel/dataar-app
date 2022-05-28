@@ -90,7 +90,9 @@ class User_profile extends Component {
       progress: false,
       user_id: '',
       iseditablePin: false,
+      iseditableAddress: false,
       pinCode: '',
+      addressString: '',
       response: {},
       profile_img: '',
       showProfileImagePicker: false,
@@ -299,7 +301,7 @@ class User_profile extends Component {
 
     if (token != null) {
       var response = await API.post('fetch_profile_data', logs);
-      console.log('fetch_profile_data: ',response);
+      console.log('fetch_profile_data1: ',response);
       if (response.status == 'success') {
         // navigation.navigate('OtpVerify', {mobile: Mobile});
         
@@ -309,6 +311,7 @@ class User_profile extends Component {
           email: response.data.email,
           mobile: response.data.phone,
           image: response.data.kyc_file,
+          addressString: response.data.address,
           progress: false,
           user_id: user_id,
           pinCode: response.data.zipcode
@@ -341,7 +344,16 @@ class User_profile extends Component {
   }, () => {
     this.inputText.focus()
   });
-    
+
+  };
+  AddressEdit = () => {
+    console.log('hello world');
+    this.setState({
+      iseditableAddress: true,
+  }, () => {
+    this.inputText3.focus()
+  });
+
   };
   setFirstname = value => {
     this.setState({
@@ -393,6 +405,7 @@ if (this.state.selectedProfileImageType == '')
   formdata.append('lastname', this.state.lname);
   formdata.append('phone', this.state.mobile);
   formdata.append('email', this.state.email);
+  formdata.append('address', this.state.addressString);
   formdata.append('zipcode', this.state.pinCode);
 }
 else
@@ -402,6 +415,7 @@ else
   formdata.append('lastname', this.state.lname);
   formdata.append('phone', this.state.mobile);
   formdata.append('email', this.state.email);
+  formdata.append('address', this.state.addressString);
   formdata.append('zipcode', this.state.pinCode);
   formdata.append('profile_image', {uri: this.state.selectedProfileImageSource, name: this.state.selectedProfileImage, type: this.state.selectedProfileImageType});
 }
@@ -723,6 +737,37 @@ else
               </View>
 
               
+
+              <View style={Styles.profile_main_text_contain}>
+                <Text style={Styles.user_profile_lbtext}>Full Address:</Text>
+                <View style={Styles.user_edit_contain}>
+                <TextInput
+                  style={Styles.user_text_input}
+                  ref ={ref => this.inputText3 = ref}
+                  placeholder="Full Address"
+                  // editable={this.state.iseditablePin}
+                  autoFocus={this.state.iseditableAddress}
+                  onChangeText={(text) => this.setState({
+                    addressString: text,
+                  })}
+                  value={this.state.addressString}
+                  keyboardType='default'></TextInput>
+                  <TouchableOpacity
+                    style={Styles.user_edit_profile_lbtext}
+                    onPress={() => this.AddressEdit()}>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 21,
+                        marginStart: 12,
+                        marginTop: 20,
+                        backgroundColor: 'transparent',
+                      }}
+                      source={require('../../src/assets/images/penicon.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
 
               <View style={Styles.profile_main_text_contain}>
                 <Text style={Styles.user_profile_lbtext}>PIN code:</Text>

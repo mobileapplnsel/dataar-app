@@ -84,7 +84,9 @@ class User_profile extends Component {
       progress: false,
       user_id: '',
       iseditablePin: false,
+      iseditableAddress: false,
       pinCode: '',
+      addressString: '',
       profile_img: '',
       showProfileImagePicker: false,
       selectedProfileImageSource: '',
@@ -258,7 +260,8 @@ class User_profile extends Component {
           image: response.data.kyc_file,
           progress: false,
           user_id: user_id,
-          pinCode: response.data.zipcode
+          pinCode: response.data.zipcode,
+          addressString: response.data.address,
         });
       } else {
         Alert.alert(response.status, response.message);
@@ -300,6 +303,16 @@ class User_profile extends Component {
   });
     
   };
+
+  AddressEdit = () => {
+    console.log('hello world');
+    this.setState({
+      iseditableAddress: true,
+  }, () => {
+    this.inputText3.focus()
+  });
+
+  };
    updateProfile = async () => {
     if (this.state.fname.trim() == '')
     {
@@ -334,6 +347,7 @@ if (this.state.selectedProfileImageType == '')
   formdata.append('phone', this.state.mobile);
   formdata.append('email', this.state.email);
   formdata.append('zipcode', this.state.pinCode);
+  formdata.append('address', this.state.addressString);
 }
 else
 {
@@ -343,6 +357,7 @@ else
   formdata.append('phone', this.state.mobile);
   formdata.append('email', this.state.email);
   formdata.append('zipcode', this.state.pinCode);
+  formdata.append('address', this.state.addressString);
   formdata.append('profile_image', {uri: this.state.selectedProfileImageSource, name: this.state.selectedProfileImage, type: this.state.selectedProfileImageType});
 }
         // var response = await API.post('register', logs);
@@ -646,6 +661,37 @@ else
               </View>
 
               <View style={Styles.profile_main_text_contain}>
+                <Text style={Styles.user_profile_lbtext}>Full Address:</Text>
+                <View style={Styles.user_edit_contain}>
+                <TextInput
+                  style={Styles.user_text_input}
+                  ref ={ref => this.inputText3 = ref}
+                  placeholder="Full Address"
+                  // editable={this.state.iseditablePin}
+                  autoFocus={this.state.iseditableAddress}
+                  onChangeText={(text) => this.setState({
+                    addressString: text,
+                  })}
+                  value={this.state.addressString}
+                  keyboardType='default'></TextInput>
+                  <TouchableOpacity
+                    style={Styles.user_edit_profile_lbtext}
+                    onPress={() => this.AddressEdit()}>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 21,
+                        marginStart: 12,
+                        marginTop: 20,
+                        backgroundColor: 'transparent',
+                      }}
+                      source={require('../../src/assets/images/penicon.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <View style={Styles.profile_main_text_contain}>
                 <Text style={Styles.user_profile_lbtext}>PIN code:</Text>
                 <View style={Styles.user_edit_contain}>
                 <TextInput
@@ -674,6 +720,8 @@ else
                   </TouchableOpacity>
                 </View>
               </View>
+
+              
 
               <TouchableOpacity
             style={{width: '94%',

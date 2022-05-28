@@ -168,6 +168,7 @@ else
     } else {
       navigation.replace('logintype', {
         user_id: response.userdata[0].user_id,
+        loginThrough: 'apple'
       });
     }
   } else {

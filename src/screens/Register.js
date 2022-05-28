@@ -53,6 +53,7 @@ const Register = ({navigation}) => {
   const [Mobile, setmobile] = useState('');
   const [Pincode, setPincode] = useState('');
   const [password, setpassword] = useState('');
+  const [address, setaddress] = useState('');
   const [confirm_password, setConfirmPassword] = useState('');
   const [Otp, setotp] = useState('');
   const [selectedValue, setselectedValue] = useState('Select One');
@@ -388,6 +389,9 @@ const Register = ({navigation}) => {
     else if (selectedProfileImageSource == '') {
       Alert.alert('Profile Picture', 'Please uplaod your profile picture');
     }
+    else if (address.trim() == '') {
+      Alert.alert('Full Address', 'Please enter full address');
+    }
      else if (
       FirstName != '' &&
       LastName != '' &&
@@ -422,6 +426,7 @@ const Register = ({navigation}) => {
     formdata.append('device_id', '');
     formdata.append('device_type', 'A');
     formdata.append('fcm_token', fcm_token);
+    formdata.append('address', address);
     formdata.append('zipcode', Pincode);
     
 
@@ -709,6 +714,14 @@ const Register = ({navigation}) => {
               onChangeText={text => setMobile(text)}
               style={Styles.login_text_input}
               keyboardType="numeric"
+              placeholderTextColor='grey'
+            />
+
+<TextInput
+              placeholder="Full Address"
+              onChangeText={text => setaddress(text)}
+              style={Styles.login_text_input}
+              keyboardType="default"
               placeholderTextColor='grey'
             />
 

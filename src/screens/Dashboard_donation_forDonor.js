@@ -54,6 +54,7 @@ class Dashboard_donation_forDonor extends Component {
       genderValue: '',
       genderValue1: '',
       pan_number: '',
+      profile_img_URL: '',
       kyc_verified: '',
       gender: 'Preference',
       gender1: 'Filter by type',
@@ -129,15 +130,24 @@ class Dashboard_donation_forDonor extends Component {
       KeyboardManager.setEnable(true);
     }
 
+    
+
     this.dashboard_donate();
     this.getPreferences()
     // this.getuser();
 
-    this.focusListener = this.props.navigation.addListener('focus', () => {
+    this.focusListener = this.props.navigation.addListener('focus', async () => {
 
       console.log('focusListener has calle1d!!!!')
       this.props.navigation.closeDrawer();
        this.dashboard_donate();
+
+       let profile_imgggg = await AsyncStorage.getItem('profile_image');
+    
+
+    this.setState({
+      profile_img_URL: profile_imgggg
+    });
     // this.getPreferences()
       //Put your Data loading function here instead of my this.loadData()
     });
@@ -355,22 +365,64 @@ class Dashboard_donation_forDonor extends Component {
   };
   ContactDonee = async item => {
 
-    console.log("ContactDonee selected item: ",item);
+
+    var token = await AsyncStorage.getItem('token');
+    var kyc_verified = await AsyncStorage.getItem('kyc_verified');
+    var pan_number = await AsyncStorage.getItem('pan_number');
+    console.log("pan_number",pan_number, item);
+
+    console.log(token);
+
+
+    if (token != null && token !== '') {
+
+
+      var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+    };
+    console.log(logs);
+    var response = await API.post('kyc_status', logs);
+    if (response.status == 'success') {
+      console.log(response.userdata.pan_number);
+      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
+        {
+          if(response.userdata.pan_number!='')
+          {
+            console.log("ContactDonee selected item: ",item);
 
     this.props.navigation.navigate('DonationInKind', {
       campaign_id: item.campaign_id,
       kind_id: item.kind_id,
     });
+          }
+        }
+        else
+          {
+            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
+            {
+              Alert.alert("Alert", "Kyc under the processing");
+            }
+            else{
+              Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page",  [
+                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
+              ],
+              {cancelable: false},);
+            }
     
-    // Alert.alert(
-    //   'Alert',
-    //   'An email has been sent to your email address, please check and contact the Donee directly.', // <- this part is optional, you can pass an empty string
-    //   [
-    //     {text: 'OK', onPress: () => console.log('cancelled')},
-    //   ],
-    //   {cancelable: false},
-    // )
+          
+          }
+        
 
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+
+  }
+    
+     else {
+      this.props.navigation.replace('LogIn');
+    }
 
   }
   Donate = async item => {
@@ -563,7 +615,7 @@ class Dashboard_donation_forDonor extends Component {
     try {
       const result = await Share.share({
        title: 'Campaign Link',
-  message: 'Please share the campaign and stay safe , Campaign Link : ' + item.campaign_image, 
+  message: 'Please share the campaign and stay safe , Campaign Link : ' + item.campaign_details_url, 
   url: 'https://play.google.com/store/apps/details?id=nic.goi.aarogyasetu&hl=en'
       });
       if (result.action === Share.sharedAction) {
@@ -1021,7 +1073,27 @@ source={{uri: item.campaign_image}}>
                   // resizeMode="contain"dashboard_main_btn
                 />
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.user()}>
+
+              { this.state.profile_img_URL != null && <TouchableOpacity onPress={() => this.user()}>
+                <Image
+                  style={{
+                    width: 40,
+                    height: 40,
+                    marginStart: 10,
+                    marginEnd: 10,
+                    // marginTop: 20,
+                    borderRadius: 20,
+                    backgroundColor: 'transparent',
+                    alignSelf: 'center',
+                  }}
+         source={{uri: this.state.profile_img_URL}}/>
+         </TouchableOpacity> }  
+           
+        
+
+       
+
+{ this.state.profile_img_URL == null &&  <TouchableOpacity onPress={() => this.user()}>
                 <Image
                   style={{
                     width: 30,
@@ -1035,7 +1107,7 @@ source={{uri: item.campaign_image}}>
                   source={require('../../src/assets/images/user.png')}
                   // resizeMode="contain"dashboard_main_btn
                 />
-              </TouchableOpacity>
+              </TouchableOpacity> }
             </View>
           </SafeAreaView>
 

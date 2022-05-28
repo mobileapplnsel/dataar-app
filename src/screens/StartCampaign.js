@@ -77,7 +77,7 @@ const StartCampaign = ({navigation}) => {
   const [seachableModalVisible, setseachableModalVisible] = useState(false);
   const [selectType, setselectType] = useState('Select Type');
   const [selectImageType, setselectImageType] = useState('Upload Image');
-  const [selectID, setselectID] = useState('');
+  const [selectID, setselectID] = useState('2');
   const [showPicker, setshowPicker] = useState(false);
   const [showImagePicker, setshowImagePicker] = useState(false);
   const [ArrPref1, setArrPref1] = useState([]);
@@ -272,15 +272,20 @@ const StartCampaign = ({navigation}) => {
       Alert.alert('Title', 'Please add Campaign Title');
     } else if (Description == '') {
       Alert.alert('Description', 'Please add Campaign Description');
-    } else if (pincode == 0 || pincode.trim() == '') {
+    }
+    else if (Description.length < 50) {
+      Alert.alert('Description', 'Description text must be minimum 50 characters');
+    }
+     else if (pincode == 0 || pincode.trim() == '') {
       Alert.alert('PIN code', 'Please enter PIN where you wish to run your campaign');
     }
     
      else if (selectedCampaignImageSource == '') {
       Alert.alert('Image', 'Please add a campaign Image');
-    } else if (selectID == '') {
-      Alert.alert('Campaign type', 'Please select a campaign type');
-    }
+    } 
+    // else if (selectID == '') {
+    //   Alert.alert('Campaign type', 'Please select a campaign type');
+    // }
      else if (strdate == null) {
       Alert.alert('Start Date', 'Please add a Date from that your campaign will start');
     } else if (endseldate == null) {
@@ -710,6 +715,16 @@ setselectedValue(item.kind_id)
                 keyboardType="default"
                 placeholderTextColor='grey'
               />
+
+<Text style={ {
+  marginTop: 5,
+  color: 'red',
+  fontSize: 11,
+  marginBottom: 10,
+  // alignSelf: 'center',
+  paddingLeft: 13
+}}>{'Description text must be minimum 50 characters'}</Text>
+
               <TextInput
                 placeholder="Pincode"
                 onChangeText={text => setpincode(text)}
@@ -911,7 +926,7 @@ setselectedValue(item.kind_id)
 
 
 
-              <Selector
+              {/* <Selector
               text={selectType}
               placeholder="Gender"
               onPress={() => setshowPicker(true)}
@@ -939,6 +954,7 @@ setselectedValue(item.kind_id)
                       // this.user_filter(item.name, item.id);
                       // this.setState({gender: item.name});
                       // this.setState({showPicker: false});
+                      console.log('item: ', item)
                       setshowPicker(false)
                       setselectType(item.name)
                       setselectID(item.id)
@@ -962,7 +978,7 @@ setselectedValue(item.kind_id)
                   </TouchableOpacity>
                 );
               }}
-            />
+            /> */}
 
 
               <View style={Styles.user_edit_contain}>
