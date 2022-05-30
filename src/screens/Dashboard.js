@@ -98,9 +98,12 @@ const Dashboard = ({navigation}) => {
 
    
 
-    const willFocusSubscription = navigation.addListener('focus', () => {
+    const willFocusSubscription = navigation.addListener('focus', async () => {
       console.log('focusListener has called2344555!!!!')
       navigation.closeDrawer();
+      var profile_imgggg = await AsyncStorage.getItem('profile_image');
+      setprofile_img(profile_imgggg);
+      
 
   });
 

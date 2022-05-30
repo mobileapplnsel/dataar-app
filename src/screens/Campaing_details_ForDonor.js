@@ -10,7 +10,8 @@ import {
   Alert,
   FlatList,
   Dimensions,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Share
 } from 'react-native';
 import {
   Container,
@@ -57,6 +58,7 @@ class Campaing_details extends Component {
       shareHeight: 360,
       campaignImageURI: '',
       starCount: 5,
+      sharableURL: ''
     };
   }
   campaign = async () => {
@@ -86,7 +88,7 @@ class Campaing_details extends Component {
       // }
       var base64String = response.data.capmain_details[0]['campaign_image']
       var base64Icon = 'data:image/png;base64,'+base64String
-      this.setState({campaignImageURI: base64String})
+      this.setState({campaignImageURI: base64String, sharableURL: response.data.campaign_details_url})
 
 
       this.setState({
@@ -264,6 +266,29 @@ class Campaing_details extends Component {
         </View>
       </View>
     );
+  };
+  shareCampaign = async () => {
+    // this.modalizeRefComment.current.open();    campaign_details_url
+    console.log('item.campaign_details_url'+ this.state.sharableURL);
+    try {
+      const result = await Share.share({
+       title: 'Campaign Link',
+  message: 'Please share the campaign and stay safe , Campaign Link : ' + this.state.sharableURL, 
+  url: ''//item.campaign_details_url
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+    
   };
   comment = () => {
     // this.modalizeRefComment.current.open();
@@ -511,9 +536,23 @@ console.log('comment button clicked!!!!')
                   marginBottom: 20
                   // backgroundColor: '#5ca7f2',
                 }}>
-                <Text style={Styles.doner_title_font}>
-                  Share
+                <TouchableOpacity
+                    style={[
+                      {
+                        marginTop: 20,
+                        alignSelf: 'center',
+    alignItems: 'center',
+                      },
+                    ]}
+                    onPress={() => this.shareCampaign()}>
+                <Text style={{
+    fontSize: 14,
+    color: '#757373',
+    fontWeight: '500',
+  }}>
+                 Share
                 </Text>
+                </TouchableOpacity>
                 <View
                   style={{
                     width: 90,

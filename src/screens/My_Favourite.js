@@ -15,6 +15,7 @@ import {
   Platform,
   KeyboardAvoidingView,
   PermissionsAndroid,
+  Share
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem} from 'native-base';
 import API from '../services/api';
@@ -278,6 +279,29 @@ class Dashboard_donation extends Component {
   //   AsyncStorage.clear();
   //   navigation.navigate('LogIn');
   // };
+  shareCampaign = async (item) => {
+    // this.modalizeRefComment.current.open();    campaign_details_url
+    console.log('item.campaign_details_url'+ item.campaign_details_url);
+    try {
+      const result = await Share.share({
+       title: 'Campaign Link',
+  message: 'Please share the campaign and stay safe , Campaign Link : ' + item.campaign_details_url, 
+  url: ''//item.campaign_details_url
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+    
+  };
   comment = item => {
     // this.modalizeRefComment.current.open();
     console.log(item);
@@ -485,9 +509,23 @@ source={{uri: item.campaign_image}}
                   alignItems: 'center',
                   // backgroundColor: '#5ca7f2',
                 }}>
-                <Text style={Styles.doner_title_font}>
+                <TouchableOpacity
+                    style={[
+                      {
+                        marginTop: 20,
+                        alignSelf: 'center',
+    alignItems: 'center',
+                      },
+                    ]}
+                    onPress={() => this.shareCampaign(item)}>
+                <Text style={{
+    fontSize: 14,
+    color: '#757373',
+    fontWeight: '500',
+  }}>
                   {item.quantity} Share
                 </Text>
+                </TouchableOpacity>
                 <View
                   style={{
                     width: 90,

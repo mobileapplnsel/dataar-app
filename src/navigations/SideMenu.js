@@ -230,10 +230,10 @@ const CustomSidebarMenu = props => {
        style={styles.sideMenuProfileIcon}
      />}
 
-<Text style={{
+{ profile_img != null ? ( <Text style={{
     fontSize: 17,
     alignSelf: 'center', color: '#f55656', marginBottom: 2
-  }}>{'Hi '+profile_name}</Text>
+  }}>{'Hi '+profile_name}</Text>) : null}
 
       <DrawerContentScrollView {...props}>
         <DrawerItemList {...props} />

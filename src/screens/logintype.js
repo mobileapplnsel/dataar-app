@@ -320,13 +320,13 @@ setemailerror('Please enter email')
               placeholderTextColor='grey'
             /> : null}
 
-<Text style={{
+{ loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <Text style={{
     marginTop: 5,
     color: 'red',
     fontSize: 11,
     marginBottom: 5,
     marginLeft: 13,
-}}>{mobileerror}</Text>
+}}>{mobileerror}</Text> : null}
 
 { loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
               placeholder="Enter Email ID"
@@ -352,13 +352,13 @@ setemailerror('Please enter email')
               placeholderTextColor='grey'
             /> : null}
 
-<Text style={{
+{ loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <Text style={{
     marginTop: 5,
     color: 'red',
     fontSize: 11,
     marginBottom: 5,
     marginLeft: 13,
-}}>{addresserror}</Text>
+}}>{addresserror}</Text>  : null}
 
 
 { loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
@@ -369,13 +369,13 @@ setemailerror('Please enter email')
               placeholderTextColor='grey'
             /> : null}
 
-<Text style={{
+{ loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <Text style={{
     marginTop: 5,
     color: 'red',
     fontSize: 11,
     marginBottom: 5,
     marginLeft: 13,
-}}>{pincodeerror}</Text>
+}}>{pincodeerror}</Text>  : null}
 
 
 

@@ -357,19 +357,6 @@ else
   
     if (credentialState === appleAuth.State.AUTHORIZED) {
 
-      // Alert.alert("Alert", JSON.stringify(appleAuthRequestResponse),  [
-      //   {text: 'OK', onPress: () => console.log('dadas')},
-      // ],
-      // {cancelable: false},);
-
-      if (appleAuthRequestResponse.fullName.givenName == null || appleAuthRequestResponse.fullName.givenName == '')
-      {
-        navigation.replace('logintypeForiOS', {
-          user_id: appleAuthRequestResponse.user,
-        });
-      }
-else
-{
 
   setisloading(true);
 
@@ -459,15 +446,26 @@ else
         }
         }
       } else {
+
+        if (appleAuthRequestResponse.fullName.givenName == null || appleAuthRequestResponse.fullName.givenName == '')
+        {
+          navigation.replace('logintypeForiOS', {
+            user_id: appleAuthRequestResponse.user,
+          });
+        }
+  else
+  {
+
         navigation.replace('logintype', {
           user_id: response.userdata[0].user_id,
           loginThrough: 'apple'
         });
       }
+      }
     } else {
       Alert.alert(response.status, response.message);
     }
-  }
+  
     }
   }
   const signInfb = () => {
