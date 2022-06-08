@@ -386,9 +386,9 @@ const Register = ({navigation}) => {
     else if (selectedValue == 'Select One') {
       Alert.alert('Select One', 'Please select a type which you want to be');
     }
-    else if (selectedProfileImageSource == '') {
-      Alert.alert('Profile Picture', 'Please uplaod your profile picture');
-    }
+    // else if (selectedProfileImageSource == '') {
+    //   Alert.alert('Profile Picture', 'Please uplaod your profile picture');
+    // }
     else if (address.trim() == '') {
       Alert.alert('Full Address', 'Please enter full address');
     }
@@ -415,19 +415,42 @@ const Register = ({navigation}) => {
 
       // };
 
+
+
     var formdata = new FormData();
-    formdata.append('firstname', FirstName.trim());
+
+    if (selectedProfileImageSource == '') 
+    {
+      formdata.append('firstname', FirstName.trim());
     formdata.append('lastname', LastName.trim());
     formdata.append('email', Email.trim());
     formdata.append('phone', Mobile.trim());
     formdata.append('password', password.trim());
     formdata.append('usertype', selectedValue);
-    formdata.append('profile_image', {uri: selectedProfileImageSource, name: selectedProfileImage, type: selectedProfileImageType});
+    formdata.append('profile_image', '');
     formdata.append('device_id', '');
     formdata.append('device_type', 'A');
     formdata.append('fcm_token', fcm_token);
     formdata.append('address', address);
     formdata.append('zipcode', Pincode);
+    }
+    else
+    {
+      formdata.append('firstname', FirstName.trim());
+      formdata.append('lastname', LastName.trim());
+      formdata.append('email', Email.trim());
+      formdata.append('phone', Mobile.trim());
+      formdata.append('password', password.trim());
+      formdata.append('usertype', selectedValue);
+      formdata.append('profile_image', {uri: selectedProfileImageSource, name: selectedProfileImage, type: selectedProfileImageType});
+      formdata.append('device_id', '');
+      formdata.append('device_type', 'A');
+      formdata.append('fcm_token', fcm_token);
+      formdata.append('address', address);
+      formdata.append('zipcode', Pincode);
+    } 
+
+    
     
 
       // var response = await API.post('register', logs);

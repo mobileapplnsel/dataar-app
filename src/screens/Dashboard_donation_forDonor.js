@@ -1144,7 +1144,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
         </Card>
         <View style={{flexDirection: 'row', justifyContent: 'space-between',
     alignItems: 'center',}}>
-        <View style={{width: '49%'}}>
+        {/* <View style={{width: '49%'}}>
             <Selector
               text={this.state.gender}
               placeholder="Gender"
@@ -1197,9 +1197,9 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                 );
               }}
             />
- </View>
+ </View> */}
 
- <View style={{width: '49%', }}>
+ <View style={{width: '100%', }}>
  <Selector
                 text={this.state.gender1}
                 placeholder="Preference"

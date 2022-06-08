@@ -345,6 +345,9 @@ const CustomSidebarMenu = props => {
         
           <DrawerItem label="Privacy Policy" onPress={() => Linking.openURL('https://dataar.org/privacy-policy')} />
 
+          {user_id !== null ? (
+          <DrawerItem label="Delete Account" onPress={() => logout()} />
+        ) : null}
 
         {user_id !== null ? (
           <DrawerItem label="Logout" onPress={() => logout()} />

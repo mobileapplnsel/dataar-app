@@ -44,6 +44,7 @@ import {
 } from 'react-native-image-picker';
 import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
 import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
+import DocumentIcon from '../../src/assets/images/outline_description_black_48.png';
 import KeyboardManager from 'react-native-keyboard-manager';
 const StartCampaign = ({navigation}) => {
   const [Title, setTitle] = useState('');
@@ -66,7 +67,10 @@ const StartCampaign = ({navigation}) => {
   const [isEndPickerVisible, setisEndPickerVisible] = useState(false);
   const [strdate, setSdate] = useState(null);
   const [endseldate, setenddate] = useState(null);
-  const [selectedPANName, setselectedPANName] = useState('Upload supported doc');
+  const [selectedPANName, setselectedPANName] = useState('Upload supported doc 1');
+  const [selectedPANName1, setselectedPANName1] = useState('Upload supported doc 2');
+  const [selectedPANName2, setselectedPANName2] = useState('Upload supported doc 3');
+  const [selectedPANName3, setselectedPANName3] = useState('Upload supported doc 4');
   const [selectedCampaignImage, setselectedCampaignImage] = useState('Upload Campaign Image');
   const [selectedCampaignImageSource, setselectedCampaignImageSource] = useState('');
   const [selectedCampaignImageType, setselectedCampaignImageType] = useState('');
@@ -82,9 +86,33 @@ const StartCampaign = ({navigation}) => {
   const [showImagePicker, setshowImagePicker] = useState(false);
   const [ArrPref1, setArrPref1] = useState([]);
   const [ArrImagePicker, setArrImagePicker] = useState([{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}]);
+  const [ArrImagePicker1, setArrImagePicker1] = useState([{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}, { "name": "Select Document", 'image': DocumentIcon}]);
   const [filePath, setFilePath] = useState({});
   const [progress, setprogress] = useState(false);
+
+  const [showImagePicker1, setshowImagePicker1] = useState(false);
+  const [showImagePicker2, setshowImagePicker2] = useState(false);
+  const [showImagePicker3, setshowImagePicker3] = useState(false);
+  const [showImagePicker4, setshowImagePicker4] = useState(false);
+
+  const [selectedSDImage, setselectedSDImage] = useState('Upload supported doc 1');
+  const [selectedselectedSDImageSource, setselectedselectedSDImageSource] = useState('');
+  const [selectedSDImageType, setselectedSDImageType] = useState('');
+
+  const [selectedSDImage1, setselectedSDImage1] = useState('Upload supported doc 2');
+  const [selectedselectedSDImageSource1, setselectedselectedSDImageSource1] = useState('');
+  const [selectedSDImageType1, setselectedSDImageType1] = useState('');
+
+  const [selectedSDImage2, setselectedSDImage2] = useState('Upload supported doc 3');
+  const [selectedselectedSDImageSource2, setselectedselectedSDImageSource2] = useState('');
+  const [selectedSDImageType2, setselectedSDImageType2] = useState('');
+
+  const [selectedSDImage3, setselectedSDImage3] = useState('Upload supported doc 4');
+  const [selectedselectedSDImageSource3, setselectedselectedSDImageSource3] = useState('');
+  const [selectedSDImageType3, setselectedSDImageType3] = useState('');
+  const [descriptionWarning, setdescriptionWarning] = useState('Description text must be minimum 50 characters');
   
+
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
       try {
@@ -124,7 +152,7 @@ const StartCampaign = ({navigation}) => {
     } else return true;
   };
 
-  const captureImage = async (type) => {
+  const captureImage = async (type, flag) => {
     let options = {
       mediaType: 'photo',
       maxWidth: 400,
@@ -156,14 +184,45 @@ const StartCampaign = ({navigation}) => {
           alert(response.errorMessage);
           return;
         }
-        setselectedCampaignImage(response.assets['0']['fileName']);
-        setselectedCampaignImageSource(response.assets['0']['uri']);
-        setselectedCampaignImageType(response.assets['0']['type']);
+
+        if (flag == 'CI')
+        {
+          setselectedCampaignImage(response.assets['0']['fileName']);
+          setselectedCampaignImageSource(response.assets['0']['uri']);
+          setselectedCampaignImageType(response.assets['0']['type']);
+        }
+        else if (flag == 'SD1')
+        {
+          setselectedSDImage(response.assets['0']['fileName']);
+          setselectedselectedSDImageSource(response.assets['0']['uri']);
+          setselectedSDImageType(response.assets['0']['type']);
+        }
+        else if (flag == 'SD2')
+        {
+          setselectedSDImage1(response.assets['0']['fileName']);
+          setselectedselectedSDImageSource1(response.assets['0']['uri']);
+          setselectedSDImageType1(response.assets['0']['type']);
+        }
+        else if (flag == 'SD3')
+        {
+          setselectedSDImage2(response.assets['0']['fileName']);
+          setselectedselectedSDImageSource2(response.assets['0']['uri']);
+          setselectedSDImageType2(response.assets['0']['type']);
+        }
+        else if (flag == 'SD4')
+        {
+          setselectedSDImage3(response.assets['0']['fileName']);
+          setselectedselectedSDImageSource3(response.assets['0']['uri']);
+          setselectedSDImageType3(response.assets['0']['type']);
+        }
+        
+
+        
       });
     }
   };
   
-  const chooseFile = async () => {
+  const chooseFile = async (flag) => {
     let options = {
       mediaType: 'photo',
       maxWidth: 400,
@@ -188,9 +247,40 @@ const StartCampaign = ({navigation}) => {
         return;
       }
 
-      setselectedCampaignImage(response.assets['0']['fileName']);
-      setselectedCampaignImageSource(response.assets['0']['uri']);
-      setselectedCampaignImageType(response.assets['0']['type']);
+      // setselectedCampaignImage(response.assets['0']['fileName']);
+      // setselectedCampaignImageSource(response.assets['0']['uri']);
+      // setselectedCampaignImageType(response.assets['0']['type']);
+
+      if (flag == 'CI')
+      {
+        setselectedCampaignImage(response.assets['0']['fileName']);
+        setselectedCampaignImageSource(response.assets['0']['uri']);
+        setselectedCampaignImageType(response.assets['0']['type']);
+      }
+      else if (flag == 'SD1')
+      {
+        setselectedSDImage(response.assets['0']['fileName']);
+        setselectedselectedSDImageSource(response.assets['0']['uri']);
+        setselectedSDImageType(response.assets['0']['type']);
+      }
+      else if (flag == 'SD2')
+      {
+        setselectedSDImage1(response.assets['0']['fileName']);
+        setselectedselectedSDImageSource1(response.assets['0']['uri']);
+        setselectedSDImageType1(response.assets['0']['type']);
+      }
+      else if (flag == 'SD3')
+      {
+        setselectedSDImage2(response.assets['0']['fileName']);
+        setselectedselectedSDImageSource2(response.assets['0']['uri']);
+        setselectedSDImageType2(response.assets['0']['type']);
+      }
+      else if (flag == 'SD4')
+      {
+        setselectedSDImage3(response.assets['0']['fileName']);
+        setselectedselectedSDImageSource3(response.assets['0']['uri']);
+        setselectedSDImageType3(response.assets['0']['type']);
+      }
 
       // console.log('base64 -> ', response.assets['0']['fileName']);
       // console.log('uri -> ', response.uri);
@@ -203,16 +293,55 @@ const StartCampaign = ({navigation}) => {
     });
   };
   
-  const selectOneFile = async () => {
+  const selectOneFile = async (flag) => {
     //Opening Document Picker for selection of one file
     try {
       const res = await DocumentPicker.pick({
         type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
        
       });
-      setselectedPANName(res.name);
-      setselectedPANSource(res.uri);
-      setselectedPANType(res.type)
+      // setselectedPANName(res.name);
+      // setselectedPANSource(res.uri);
+      // setselectedPANType(res.type)
+
+      if (flag == 'CI')
+      {
+        setselectedCampaignImage(res.name);
+        setselectedCampaignImageSource(res.uri);
+        setselectedCampaignImageType(res.type);
+        
+      }
+      else if (flag == 'SD1')
+      {
+        setselectedSDImage(res.name);
+        setselectedselectedSDImageSource(res.uri);
+        setselectedSDImageType(res.type);
+        setshowImagePicker1(false)
+      }
+      else if (flag == 'SD2')
+      {
+        setselectedSDImage1(res.name);
+        setselectedselectedSDImageSource1(res.uri);
+        setselectedSDImageType1(res.type);
+        setshowImagePicker2(false)
+      }
+      else if (flag == 'SD3')
+      {
+        setselectedSDImage2(res.name);
+        setselectedselectedSDImageSource2(res.uri);
+        setselectedSDImageType2(res.type);
+        setshowImagePicker3(false)
+      }
+      else if (flag == 'SD4')
+      {
+        setselectedSDImage3(res.name);
+        setselectedselectedSDImageSource3(res.uri);
+        setselectedSDImageType3(res.type);
+        setshowImagePicker4(false)
+
+      }
+
+      
      
     } catch (err) {
       //Handling any exception (If any)
@@ -226,7 +355,7 @@ const StartCampaign = ({navigation}) => {
       }
     }
   };
-  const selectOneFile1 = async () => {
+  const selectOneFile1 = async (flag) => {
     //Opening Document Picker for selection of one file
     try {
       const res = await DocumentPicker.pick({
@@ -239,9 +368,40 @@ const StartCampaign = ({navigation}) => {
       // console.log('File Name : ' + res.name);
       // console.log('File Size : ' + res.size);
      
-      setselectedCampaignImage(res.name);
-      setselectedCampaignImageSource(res.uri);
-      setselectedCampaignImageType(res.type);
+      // setselectedCampaignImage(res.name);
+      // setselectedCampaignImageSource(res.uri);
+      // setselectedCampaignImageType(res.type);
+
+      if (flag == 'CI')
+      {
+        setselectedCampaignImage(res.name);
+        setselectedCampaignImageSource(res.uri);
+        setselectedCampaignImageType(res.type);
+      }
+      else if (flag == 'SD1')
+      {
+        setselectedSDImage(res.name);
+        setselectedselectedSDImageSource(res.uri);
+        setselectedSDImageType(res.type);
+      }
+      else if (flag == 'SD2')
+      {
+        setselectedSDImage1(res.name);
+        setselectedselectedSDImageSource1(res.uri);
+        setselectedSDImageType1(res.type);
+      }
+      else if (flag == 'SD3')
+      {
+        setselectedSDImage2(res.name);
+        setselectedselectedSDImageSource2(res.uri);
+        setselectedSDImageType2(res.type);
+      }
+      else if (flag == 'SD4')
+      {
+        setselectedSDImage3(res.name);
+        setselectedselectedSDImageSource3(res.uri);
+        setselectedSDImageType3(res.type);
+      }
       
      
     } catch (err) {
@@ -268,6 +428,9 @@ const StartCampaign = ({navigation}) => {
         endseldate === '' &&
         image === '',
     );
+
+    // setNext(1);
+
     if (Title == '') {
       Alert.alert('Title', 'Please add Campaign Title');
     } else if (Description == '') {
@@ -294,14 +457,7 @@ const StartCampaign = ({navigation}) => {
     
      else {
       setNext(1);
-      // if (Description == '') {
-      //   Alert.alert('Description', 'Please Add Description');
-      // } else if (strdate == '') {
-      //   Alert.alert('Start Date', 'Please Add Start Date');
-      // } else if (endseldate == '') {
-      //   Alert.alert('End Date', 'Please Add End Date');
-      // } else if (image == '') {
-      //   Alert.alert('Image', 'Please Add Image');
+      
     }
   };
   const Next2 = () => {
@@ -310,7 +466,7 @@ const StartCampaign = ({navigation}) => {
       Alert.alert('Campaign', 'Please select one');
     } else {
       if (selCamp == '1') {
-        if (selectedPANName === 'Upload supported doc') {
+        if (selectedSDImage === 'Upload supported doc 1') {
           Alert.alert('Supportive Doc', 'Please add Supportive doc');
         }
        else
@@ -422,7 +578,7 @@ const StartCampaign = ({navigation}) => {
     formdata.append('filter_by_type', selectID);
     formdata.append('zip', pincode);
     formdata.append('campaign_target_qty', quantity);
-    formdata.append('supported_doc', {uri: selectedPANSource, name: selectedPANName, type: selectedPANType});
+    formdata.append('supported_doc', {uri: selectedselectedSDImageSource, name: selectedSDImage, type: selectedSDImageType});
 
     console.log('Start campaign parameters: ', JSON.stringify(formdata))
 //https://dev.solutionsfinder.co.uk/dataar/api/add_campaign
@@ -620,6 +776,20 @@ setselectedValue(item.kind_id)
 
     
   }
+
+  const setDescriptionString = (text) => 
+  {
+    setDescription(text)
+    if (text.length >= 50)
+    {
+      setdescriptionWarning('')
+    }
+    else
+    {
+      setdescriptionWarning('Description text must be minimum 50 characters')
+    }
+  }
+
   return (
    
       <Container>
@@ -710,7 +880,7 @@ setselectedValue(item.kind_id)
               />
               <TextInput
                 placeholder="Description"
-                onChangeText={text => setDescription(text)}
+                onChangeText={text => setDescriptionString(text)}
                 style={Styles.login_text_input}
                 keyboardType="default"
                 placeholderTextColor='grey'
@@ -723,7 +893,7 @@ setselectedValue(item.kind_id)
   marginBottom: 10,
   // alignSelf: 'center',
   paddingLeft: 13
-}}>{'Description text must be minimum 50 characters'}</Text>
+}}>{descriptionWarning}</Text>
 
               <TextInput
                 placeholder="Pincode"
@@ -836,7 +1006,7 @@ setselectedValue(item.kind_id)
                         setshowImagePicker(false)
                         setTimeout(() => {
                           // this.captureImage()
-                          captureImage('photo')
+                          captureImage('photo', 'CI')
                        }, 1100);
 
                       }
@@ -846,12 +1016,12 @@ setselectedValue(item.kind_id)
                         
                          if (Platform.OS === 'android')
                          {
-                          selectOneFile1()
+                          selectOneFile1('CI')
                          }
                          else
                          {
                           setTimeout(() => {
-                            chooseFile()
+                            chooseFile('CI')
                            // this.props.navigation.navigate('start')}
                          }, 1100);
                           
@@ -1036,24 +1206,444 @@ setselectedValue(item.kind_id)
               </View>
 
               {selCamp =="1" ?  ( <View> 
-                <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={selectOneFile}>
-            <View style={Styles1.buttonStyle}> 
-          <Text style={{marginRight: 10, fontSize: 17}}>
-            {selectedPANName}
-          </Text>
-          <Image
-            source={{
-              uri: 'https://img.icons8.com/offices/40/000000/attach.png',
-            }}
-            style={Styles1.imageIconStyle}
-          />
-          </View>
-        </TouchableOpacity>
+                <Selector
+              text={selectedSDImage}
+              placeholder="Gender"
+              onPress={() => setshowImagePicker1(true)}
+              width={'100%'}
+              height={42}
+              imageheight={10}
+              imagewidth={11}
+              backcolor={'#ffff'}
+              borderRadius={10}
+              borderWidth={1}
+              margright={10}
+              marginTop={18}
+              fontcolor={'#A1A1A1'}
+            />
+
+            <PickerDob
+              backgroundColor={'#ffff'}
+              dataList={ArrImagePicker1}
+              modalVisible={showImagePicker1}
+              onBackdropPress={() => setshowImagePicker1(false)}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // this.user_filter(item.name, item.id);
+                      // this.setState({gender: item.name});
+                      // this.setState({showPicker: false});
+
+                      console.log('image pciker item: ', item.name)
+
+                      if (item.name == 'Take Photo')
+                      {
+                        setshowImagePicker1(false)
+                        setTimeout(() => {
+                          // this.captureImage()
+                          captureImage('photo', 'SD1')
+                       }, 1100);
+
+                      }
+                      else if (item.name == 'Select Document')
+                      {
+                        
+                        
+                          
+                          selectOneFile('SD1')
+                         
+                        
+
+                      }
+                      else
+                      {
+                        setshowImagePicker1(false)
+                        
+                         if (Platform.OS === 'android')
+                         {
+                          selectOneFile1('SD1')
+                         }
+                         else
+                         {
+                          setTimeout(() => {
+                            chooseFile('SD1')
+                           // this.props.navigation.navigate('start')}
+                         }, 1100);
+                          
+                         }
+                      }
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                      flexDirection: 'row',
+
+                    }}>
+                      <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 0,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                      tintColor: 'black',
+                      marginEnd: 10
+                    }}
+                    source={item.image}
+                  />
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 30,
+                        },
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
        
 
-        <Text style={Styles1.warningHint}>{'Only PDF or Image format is acceptable'}</Text> 
+       <Text style={{
+   marginTop: 5,
+  color: 'green',
+  fontSize: 11,
+  marginBottom: -5,
+  marginLeft: 10,
+}}>{'Only PDF or Image format is acceptable'}</Text>
+        </View>) : null}
+
+        {selCamp =="1" ?  ( <View> 
+          <Selector
+              text={selectedSDImage1}
+              placeholder="Gender"
+              onPress={() => setshowImagePicker2(true)}
+              width={'100%'}
+              height={42}
+              imageheight={10}
+              imagewidth={11}
+              backcolor={'#ffff'}
+              borderRadius={10}
+              borderWidth={1}
+              margright={10}
+              marginTop={18}
+              fontcolor={'#A1A1A1'}
+            />
+
+            <PickerDob
+              backgroundColor={'#ffff'}
+              dataList={ArrImagePicker1}
+              modalVisible={showImagePicker2}
+              onBackdropPress={() => setshowImagePicker2(false)}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // this.user_filter(item.name, item.id);
+                      // this.setState({gender: item.name});
+                      // this.setState({showPicker: false});
+
+                      console.log('image pciker item: ', item.name)
+
+                      if (item.name == 'Take Photo')
+                      {
+                        setshowImagePicker2(false)
+                        setTimeout(() => {
+                          // this.captureImage()
+                          captureImage('photo', 'SD2')
+                       }, 1100);
+
+                      }
+                      else if (item.name == 'Select Document')
+                      {
+                        selectOneFile('SD2')
+
+                      }
+                      else
+                      {
+                        setshowImagePicker2(false)
+                        
+                         if (Platform.OS === 'android')
+                         {
+                          selectOneFile1('SD2')
+                         }
+                         else
+                         {
+                          setTimeout(() => {
+                            chooseFile('SD2')
+                           // this.props.navigation.navigate('start')}
+                         }, 1100);
+                          
+                         }
+                      }
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                      flexDirection: 'row',
+
+                    }}>
+                      <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 0,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                      tintColor: 'black',
+                      marginEnd: 10
+                    }}
+                    source={item.image}
+                  />
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 30,
+                        },
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+       
+
+        <Text style={{
+   marginTop: 5,
+  color: 'green',
+  fontSize: 11,
+  marginBottom: -5,
+  marginLeft: 10,
+}}>{'Only PDF or Image format is acceptable'}</Text>
+        </View>) : null}
+
+        {selCamp =="1" ?  ( <View> 
+          <Selector
+              text={selectedSDImage2}
+              placeholder="Gender"
+              onPress={() => setshowImagePicker3(true)}
+              width={'100%'}
+              height={42}
+              imageheight={10}
+              imagewidth={11}
+              backcolor={'#ffff'}
+              borderRadius={10}
+              borderWidth={1}
+              margright={10}
+              marginTop={18}
+              fontcolor={'#A1A1A1'}
+            />
+
+            <PickerDob
+              backgroundColor={'#ffff'}
+              dataList={ArrImagePicker1}
+              modalVisible={showImagePicker3}
+              onBackdropPress={() => setshowImagePicker3(false)}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // this.user_filter(item.name, item.id);
+                      // this.setState({gender: item.name});
+                      // this.setState({showPicker: false});
+
+                      console.log('image pciker item: ', item.name)
+
+                      if (item.name == 'Take Photo')
+                      {
+                        setshowImagePicker3(false)
+                        setTimeout(() => {
+                          // this.captureImage()
+                          captureImage('photo', 'SD3')
+                       }, 1100);
+
+                      }
+                      else if (item.name == 'Select Document')
+                      {
+                        selectOneFile('SD3')
+
+                      }
+                      else
+                      {
+                        setshowImagePicker3(false)
+                        
+                         if (Platform.OS === 'android')
+                         {
+                          selectOneFile1('SD3')
+                         }
+                         else
+                         {
+                          setTimeout(() => {
+                            chooseFile('SD3')
+                           // this.props.navigation.navigate('start')}
+                         }, 1100);
+                          
+                         }
+                      }
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                      flexDirection: 'row',
+
+                    }}>
+                      <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 0,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                      tintColor: 'black',
+                      marginEnd: 10
+                    }}
+                    source={item.image}
+                  />
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 30,
+                        },
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+       
+
+        <Text style={{
+   marginTop: 5,
+  color: 'green',
+  fontSize: 11,
+  marginBottom: -5,
+  marginLeft: 10,
+}}>{'Only PDF or Image format is acceptable'}</Text> 
+        </View>) : null}
+
+        {selCamp =="1" ?  ( <View> 
+          <Selector
+              text={selectedSDImage3}
+              placeholder="Gender"
+              onPress={() => setshowImagePicker4(true)}
+              width={'100%'}
+              height={42}
+              imageheight={10}
+              imagewidth={11}
+              backcolor={'#ffff'}
+              borderRadius={10}
+              borderWidth={1}
+              margright={10}
+              marginTop={18}
+              fontcolor={'#A1A1A1'}
+            />
+
+            <PickerDob
+              backgroundColor={'#ffff'}
+              dataList={ArrImagePicker1}
+              modalVisible={showImagePicker4}
+              onBackdropPress={() => setshowImagePicker4(false)}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // this.user_filter(item.name, item.id);
+                      // this.setState({gender: item.name});
+                      // this.setState({showPicker: false});
+
+                      console.log('image pciker item: ', item.name)
+
+                      if (item.name == 'Take Photo')
+                      {
+                        setshowImagePicker4(false)
+                        setTimeout(() => {
+                          // this.captureImage()
+                          captureImage('photo', 'SD4')
+                       }, 1100);
+
+                      }
+                      else if (item.name == 'Select Document')
+                      {
+                        selectOneFile('SD4')
+
+                      }
+                      else
+                      {
+                        setshowImagePicker4(false)
+                        
+                         if (Platform.OS === 'android')
+                         {
+                          selectOneFile1('SD4')
+                         }
+                         else
+                         {
+                          setTimeout(() => {
+                            chooseFile('SD4')
+                           // this.props.navigation.navigate('start')}
+                         }, 1100);
+                          
+                         }
+                      }
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                      flexDirection: 'row',
+
+                    }}>
+                      <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 0,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                      tintColor: 'black',
+                      marginEnd: 10
+                    }}
+                    source={item.image}
+                  />
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 30,
+                        },
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+       
+
+        <Text style={{
+   marginTop: 5,
+  color: 'green',
+  fontSize: 11,
+  marginBottom: -5,
+  marginLeft: 10,
+}}>{'Only PDF or Image format is acceptable'}</Text> 
         </View>) : null}
 
               <TouchableOpacity
