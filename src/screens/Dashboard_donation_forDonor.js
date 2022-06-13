@@ -130,7 +130,12 @@ class Dashboard_donation_forDonor extends Component {
       KeyboardManager.setEnable(true);
     }
 
+    let profile_imgggg = await AsyncStorage.getItem('profile_image');
     
+
+    this.setState({
+      profile_img_URL: profile_imgggg
+    });
 
     this.dashboard_donate();
     this.getPreferences()
@@ -611,12 +616,12 @@ class Dashboard_donation_forDonor extends Component {
   };
   shareCampaign = async (item) => {
     // this.modalizeRefComment.current.open();    campaign_details_url
-    console.log('item.campaign_details_url'+ item.campaign_details_url);
+    console.log('item.campaign_details_url: '+ item.donation_mode, item);
     try {
       const result = await Share.share({
        title: 'Campaign Link',
-  message: 'Please share the campaign and stay safe , Campaign Link : ' + item.campaign_details_url, 
-  url: ''//item.campaign_details_url
+  message: 'Here is the Campaign link of Dataar App: ' + item.campaign_details_url, 
+  url: item.campaign_details_url//item.campaign_details_url
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

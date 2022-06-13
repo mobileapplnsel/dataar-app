@@ -21,7 +21,9 @@ import {
   Alert,
   SafeAreaView,
   Linking,
-  Clipboard
+  Clipboard,
+  Modal,
+  TextInput
 } from 'react-native';
 import {
   Container,
@@ -62,6 +64,9 @@ const CustomSidebarMenu = props => {
   const [profile_img, setprofile_img] = useState('');
   const [profile_name, setprofile_name] = useState('');
   const isFocused = useIsFocused();
+  const [modalVisibleForZip, setmodalVisibleForZip] = useState(false);
+  const [DescriptionString, setDescriptionString] = useState('');
+  const [maxLengthh1, setmaxLengthh1] = useState(5000);
 
   useEffect(async () => {
    
@@ -201,7 +206,54 @@ const CustomSidebarMenu = props => {
     }
   
   };
+  const deleteRequestSend = async () => {
+    var token = await AsyncStorage.getItem('token');
+  
+    console.log(token);
+    if (token != null && token !== '') {
 
+      
+
+      var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+      remarks: DescriptionString
+    };
+    console.log(logs);
+    var response = await API.post('account_delete', logs);
+    if (response.status == 'success') {
+      // logout()
+      
+      Alert.alert(
+        response.status,
+        response.message, // <- this part is optional, you can pass an empty string
+        [
+          //  {text: 'NO', onPress: () => console.log('No')}, //logout()
+          {text: 'OK', onPress: () => logout()}, 
+          
+        ],
+        {cancelable: false},
+      )
+        
+        
+     
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+
+  }
+
+ 
+    
+     else {
+      this.props.navigation.replace('LogIn');
+    }
+  
+  };
+  const remarksTyping = async (text) => {
+    setDescriptionString(text)
+    setmaxLengthh1(5000 - text.length)
+  }
   return (
     <SafeAreaView style={{flex: 1}}>
       
@@ -346,7 +398,7 @@ const CustomSidebarMenu = props => {
           <DrawerItem label="Privacy Policy" onPress={() => Linking.openURL('https://dataar.org/privacy-policy')} />
 
           {user_id !== null ? (
-          <DrawerItem label="Delete Account" onPress={() => logout()} />
+          <DrawerItem label="Delete Account" onPress={() => setmodalVisibleForZip(true)} />
         ) : null}
 
         {user_id !== null ? (
@@ -365,6 +417,84 @@ const CustomSidebarMenu = props => {
           />
         </View> */}
       </DrawerContentScrollView>
+
+      <Modal
+                            animationType="slide"
+                            transparent={false}
+                            visible={modalVisibleForZip}
+                        >
+                          
+                            <View style={{ height: 300, marginTop: 105, backgroundColor: 'white',  width: 340,
+        alignSelf: 'center', }}>
+                            
+                                <View style={{
+        height: 240,
+        width: 340,
+        alignSelf: 'center',
+        marginTop: 0,
+        backgroundColor: 'white',//'#0da2c3',
+        borderRadius: 6,
+        borderColor:'black',
+        borderWidth:1,
+    }}>
+<Text style={{ fontSize: 13, alignSelf: 'flex-start', marginTop: 10, color: 'black', marginLeft: 17, marginBottom: 7, fontWeight: 'bold' }}>Reason For Deleting Your Account ?</Text>
+<TextInput style={{
+    
+    width: null,
+    marginLeft: 17,
+    borderRadius: 0,
+    marginRight: 17,
+    backgroundColor: 'white',
+    fontSize: 12,
+    height: 80,
+    color: 'gray',
+   borderColor: 'black',
+   borderWidth: 1,
+      padding: 5,
+      paddingTop: 5,
+      
+    
+    }}
+                placeholder={'Enter remarks here...'}
+                multiline={true}
+     numberOfLines={5}
+     textAlignVertical={'top'}
+                placeholderTextColor={'grey'}
+                value = {DescriptionString}
+                maxLength={5000}
+                onChangeText={(text) => remarksTyping(text)}
+                ></TextInput>
+<Text style={{ fontSize: 11, alignSelf: 'flex-start', marginTop: 5, color: '#f55656', marginLeft: 17, marginBottom: 7, fontWeight: '400' }}>{maxLengthh1+' Character remaining'}</Text>
+<TouchableOpacity style={{  height: 40, alignSelf: 'center',borderRadius:2, marginLeft: 17, marginRight: 17,
+ backgroundColor: '#f55656', marginTop: 20, borderRadius: 5}} onPress ={() => deleteRequestSend()}>
+              <Text style={{  fontSize:16,fontWeight: "bold",color:'white',
+ textAlign: 'center', textAlignVertical: 'center',
+color: 'white', padding: 6}}>
+   Request Delete
+</Text> 
+</TouchableOpacity>
+
+
+                                </View>
+
+                                <TouchableOpacity onPress={() => { setmodalVisibleForZip(false) }}>
+                                    <View style={{
+        height: 45,
+        marginTop: 7,
+        backgroundColor: 'white',//'#0da2c3',
+        width: 340,
+        alignSelf: 'center',
+        borderRadius: 6,
+        borderColor:'black',
+        borderWidth:1,
+    }}>
+                                        <Text style={{ fontSize: 20, alignSelf: 'center', marginTop: 10, color: 'black' }}>Cancel</Text>
+                                    </View>
+                                </TouchableOpacity>
+                                </View>
+                            
+                        </Modal>
+                       
       {/* <Text style={{ fontSize: 16, textAlign: 'center', color: 'grey' }}>
         www.aboutreact.com
       </Text> */}

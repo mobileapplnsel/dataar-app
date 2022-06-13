@@ -503,7 +503,8 @@ else
                     alignSelf: 'center', marginTop: 8,  
                   }}
                     onPress={() => this.setState({showProfileImagePicker: true})}>
-<Text style={{fontSize: 17, fontWeight: 'bold'}}>Edit Profile Image</Text>
+<Text style={{fontSize: 17, fontWeight: 'bold', alignSelf: 'center'}}>Edit Profile Image</Text>
+<Text style={{fontSize: 11, color: 'red', alignSelf: 'center'}}>Image size should not be more than 1MB</Text>
 </TouchableOpacity>
 
       

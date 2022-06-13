@@ -57,6 +57,8 @@ const logintype = ({route, navigation}) => {
   const {loginThrough} = route.params;
     setuserId(user_id);
     setloginThrough(loginThrough);
+
+  //   setloginThrough('google');
   }, []);
   const setselectValueMethod = async (dataval) => {
     setselectedValue(dataval)
@@ -64,6 +66,8 @@ const logintype = ({route, navigation}) => {
   }
 
   const Login = async (dataval, accessToken) => {
+
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
     if (selectedValue == '' || selectedValue == 'Select One')
     {
@@ -84,11 +88,20 @@ setpincodeerror('Please enter pincode')
 else
 {
 
+
   if ((loginThrough == 'fb' || loginThrough == 'apple') && (Email == ''))
   {
    
 setemailerror('Please enter email')
     
+  }
+  else if ((loginThrough == 'fb' || loginThrough == 'apple') && (reg.test(Email) === false))
+  {
+    setemailerror('Please enter valid email')
+  }
+  else if (Mobile.length < 10)
+  {
+    setmobileerror('Please enter valid mobile number')
   }
   else
   {
@@ -292,7 +305,53 @@ setemailerror('Please enter email')
     return <AppPreLoader />;
   }
   const setMobile = text => {
-    setmobile(text);
+    if (text == '')
+    {
+      setmobile(text);
+      setmobileerror('Please enter mobile number')
+    }
+    else
+    {
+      setmobile(text);
+      setmobileerror('')
+    }
+    
+  };
+  const setEmail = text => {
+    if (text == '')
+    {
+      setemail(text);
+      setemailerror('Please enter email')
+    }
+    else
+    {
+      setemail(text);
+      setemailerror('')
+    }
+  };
+  const setAddress = text => {
+    if (text == '')
+    {
+      setfulladdress(text);
+      setaddresserror('Please enter your full address')
+    }
+    else
+    {
+      setfulladdress(text);
+      setaddresserror('')
+    }
+  };
+  const setPincode = text => {
+    if (text == '')
+    {
+      setpincode(text);
+      setpincodeerror('Please enter pincode')
+    }
+    else
+    {
+      setpincode(text);
+      setpincodeerror('')
+    }
   };
   return (
     <Container>
@@ -330,7 +389,7 @@ setemailerror('Please enter email')
 
 { loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
               placeholder="Enter Email ID"
-              onChangeText={text => setemail(text)}
+              onChangeText={text => setEmail(text)}
               style={Styles.login_text_input}
               keyboardType='default'
               placeholderTextColor='grey'
@@ -346,7 +405,7 @@ setemailerror('Please enter email')
 
 { loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
               placeholder="Enter Full Address"
-              onChangeText={text => setfulladdress(text)}
+              onChangeText={text => setAddress(text)}
               style={Styles.login_text_input}
               keyboardType='default'
               placeholderTextColor='grey'
@@ -363,7 +422,7 @@ setemailerror('Please enter email')
 
 { loginThrough == 'google' || loginThrough == 'fb' || loginThrough == 'apple' ? <TextInput
               placeholder="Enter Pincode"
-              onChangeText={text => setpincode(text)}
+              onChangeText={text => setPincode(text)}
               style={Styles.login_text_input}
               keyboardType="numeric"
               placeholderTextColor='grey'

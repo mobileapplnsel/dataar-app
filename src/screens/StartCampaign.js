@@ -13,7 +13,8 @@ import {
   FlatList,
   Platform,
   PermissionsAndroid,
-  ActivityIndicator
+  ActivityIndicator,
+  Linking
   // Picker,
 } from 'react-native';
 import {
@@ -46,6 +47,7 @@ import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.pn
 import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
 import DocumentIcon from '../../src/assets/images/outline_description_black_48.png';
 import KeyboardManager from 'react-native-keyboard-manager';
+import CheckBox from '@react-native-community/checkbox';
 const StartCampaign = ({navigation}) => {
   const [Title, setTitle] = useState('');
   const [Description, setDescription] = useState('');
@@ -111,7 +113,7 @@ const StartCampaign = ({navigation}) => {
   const [selectedselectedSDImageSource3, setselectedselectedSDImageSource3] = useState('');
   const [selectedSDImageType3, setselectedSDImageType3] = useState('');
   const [descriptionWarning, setdescriptionWarning] = useState('Description text must be minimum 50 characters');
-  
+  const [toggleCheckBox, setToggleCheckBox] = useState(false)
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -517,12 +519,17 @@ const StartCampaign = ({navigation}) => {
       }
      } else if (selCamp == '1')
      {
-      if (amount == '') {
+      if (toggleCheckBox == false)
+      {
+        Alert.alert('Agreement', 'Please accept Terms & Conditions');
+      }
+      else if (amount == '') {
         Alert.alert('Amount', 'Please Add Amount');
-      } else {
+      } 
+       else {
         // setNext(3);
-        setprogress(true)
-        Start_CampaignNow();
+        // setprogress(true)
+        // Start_CampaignNow();
       }
      }
   };
@@ -647,7 +654,7 @@ const StartCampaign = ({navigation}) => {
       formdata.append('filter_by_type', selectID);
       formdata.append('zip', pincode);
       formdata.append('campaign_target_qty', quantity);
-       formdata.append('supported_doc', {uri: selectedPANSource, name: selectedPANName, type: selectedPANType});
+       formdata.append('supported_doc', {uri: selectedselectedSDImageSource, name: selectedSDImage, type: selectedSDImageType});
     }
     
 
@@ -1092,7 +1099,7 @@ setselectedValue(item.kind_id)
   marginBottom: 10,
   alignSelf: 'center',
   paddingLeft: -80
-}}>{'Only Image format is acceptable'}</Text>
+}}>{'Only Image format is acceptable and Image size should not be more than 1MB'}</Text>
 
 
 
@@ -1677,6 +1684,48 @@ setselectedValue(item.kind_id)
                 keyboardType="number-pad"
                 placeholderTextColor='grey'
               />
+              <View style = {{flexDirection: 'row',}}>
+              <CheckBox
+              style={{ margin: 10}}
+              boxType = {'square'}
+              onCheckColor = 'white'
+              onFillColor = '#f55656'
+              onTintColor = '#f55656'
+              he
+    disabled={false}
+    value={toggleCheckBox}
+    onValueChange={(newValue) => setToggleCheckBox(newValue)}
+  />
+  <Text style={{
+  color: 'black',
+  fontSize: 13,
+  marginLeft: 1,
+  marginTop: 18,
+  fontStyle: 'italic',
+}}>{'I have read and agree to the Dataar '}</Text> 
+
+<TouchableOpacity
+                    style={[
+                      {
+                        marginTop: 18,
+                        marginStart: 0, 
+                        marginEnd: 10,
+                        width: '100%',
+                      },
+                    ]}
+                    onPress={() => Linking.openURL('https://dataar.org/terms-and-condition')}>
+                  <Text style={{
+                    fontSize: 13,
+                    fontWeight: 'bold',
+                    fontStyle: 'italic',
+                    // textDecorationLine: 'underline'
+                  }}>
+                    T&C
+                  </Text>
+                  </TouchableOpacity>
+  </View>
+
+  
               <View style={Styles.campaign_name_contain}>
                 <TouchableOpacity
                   style={Styles.campaign_btn_back}

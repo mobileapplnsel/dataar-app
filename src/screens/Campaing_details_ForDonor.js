@@ -273,8 +273,8 @@ class Campaing_details extends Component {
     try {
       const result = await Share.share({
        title: 'Campaign Link',
-  message: 'Please share the campaign and stay safe , Campaign Link : ' + this.state.sharableURL, 
-  url: ''//item.campaign_details_url
+  message: 'Here is the Campaign link of Dataar App: ' + this.state.sharableURL, 
+  url: item.campaign_details_url
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

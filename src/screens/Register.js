@@ -12,7 +12,8 @@ import {
   ActionSheetIOS,
   Button,
   Platform,
-  PermissionsAndroid
+  PermissionsAndroid,
+  Linking
 
 } from 'react-native';
 import ActionSheet from 'react-native-actionsheet'
@@ -77,7 +78,7 @@ const Register = ({navigation}) => {
   const [showProfileImagePicker, setshowProfileImagePicker] = useState(false);
   const [selectedProfileImageSource, setselectedProfileImageSource] = useState('');
   const [selectedProfileImageType, setselectedProfileImageType] = useState('');
-  
+  const [toggleCheckBox, setToggleCheckBox] = useState(false)
   const setTaskti = text => {
     setFirstName(text);
   };
@@ -392,6 +393,10 @@ const Register = ({navigation}) => {
     else if (address.trim() == '') {
       Alert.alert('Full Address', 'Please enter full address');
     }
+   else if (toggleCheckBox == false)
+      {
+        Alert.alert('Agreement', 'Please accept Terms & Conditions');
+      }
      else if (
       FirstName != '' &&
       LastName != '' &&
@@ -462,7 +467,11 @@ const Register = ({navigation}) => {
         navigation.navigate('OtpVerify', {mobile: Mobile});
       } else if(response.status == 'warning') {
         Toast.show(response.message, Toast.LONG)
-      } else
+      }
+      else if(response.message == 'form validation failed') {
+        Toast.show(response.message, Toast.LONG)
+      } 
+      else
       {
         Toast.show(response[0]['message'], Toast.LONG)
        // Alert.alert(response.status, response.message);
@@ -704,7 +713,8 @@ const Register = ({navigation}) => {
   marginBottom: 10,
   alignSelf: 'center',
   paddingLeft: -80
-}}>{'Only Image format is acceptable'}</Text>
+}}>{'Only Image format is acceptable and Image size should not be more than 1MB'}</Text>
+
 
         
 
@@ -874,7 +884,81 @@ const Register = ({navigation}) => {
               <Picker.Item label="Donee" value="1" />
             </Picker> }
 
-           
+
+            <View style = {{flexDirection: 'row', width: '100%',  alignSelf: 'center',}}>
+
+              <CheckBox
+              style={{ margin: 10}}
+              boxType = {'square'}
+              onCheckColor = 'white'
+              onFillColor = '#f55656'
+              onTintColor = '#f55656'
+              
+    disabled={false}
+    value={toggleCheckBox}
+    onValueChange={(newValue) => setToggleCheckBox(newValue)}
+  />
+  <Text style={{
+  color: 'black',
+  fontSize: 13,
+  marginLeft: 1,
+  marginTop: 11,
+  fontStyle: 'italic',
+}}>{'I have read and agree to the Dataar '}</Text> 
+
+<TouchableOpacity
+                    style={[
+                      {
+                        marginTop: 11,
+                        marginStart: 0, 
+                        marginEnd: 0,
+                        width: 30,
+                      },
+                    ]}
+                    onPress={() => Linking.openURL('https://dataar.org/terms-and-condition')}>
+                  <Text style={{
+                    fontSize: 13,
+                    fontWeight: 'bold',
+                    fontStyle: 'italic',
+                    // textDecorationLine: 'underline'
+                  }}>
+                    T&C
+                  </Text>
+                  </TouchableOpacity>
+
+                  <Text style={{
+                    fontSize: 13,
+                    fontWeight: '500',
+                    fontStyle: 'italic',
+                    marginTop: 11,
+                    marginStart: 0, 
+                    width: 30,
+                    // textDecorationLine: 'underline'
+                  }}>
+                    {'and         '}      
+                  </Text>
+
+                  
+  </View>
+
+  <TouchableOpacity
+                    style={[
+                      {
+                        marginTop: -17,
+                        marginStart: 55, 
+                         width: 150,
+                      },
+                    ]}
+                    onPress={() => Linking.openURL('https://dataar.org/privacy-policy')}>
+                  <Text style={{
+                    fontSize: 13,
+                    fontWeight: 'bold',
+                    fontStyle: 'italic',
+                    // textDecorationLine: 'underline'
+                  }}>
+                    Privacy-Policy
+                  </Text>
+                  </TouchableOpacity>     
            
 <View>
    

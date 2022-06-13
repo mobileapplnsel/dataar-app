@@ -673,7 +673,8 @@ module.exports = StyleSheet.create({
     marginTop: 20,
     color: '#f55656',
     alignSelf:"center",
-    marginBottom: 14
+    marginBottom: 14,
+    borderRadius: 10,
   },
   login_user_register: {
     fontSize: 18,
