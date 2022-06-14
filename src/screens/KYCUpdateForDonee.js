@@ -68,7 +68,12 @@ class User_profile extends Component {
       showPANCardImagePicker: false,
       showAddCardImagePicker: false,
       show80GCardImagePicker: false,
+      showBanksImagePicker: false,
       selectedImagePickerType: '',
+
+      selectedBankSFileName:'Upload your bank statement *',
+      selectedBankSFileSource:'',
+      selectedBankSFileType:'',
       ArrImagePicker: [{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}, { "name": "Select Document", 'image': DocumentIcon}],
 
       
@@ -166,6 +171,12 @@ class User_profile extends Component {
           this.setState({selectedIDSource:response.assets['0']['uri']}); 
           this.setState({selectedIDType: response.assets['0']['type']}); 
         }
+        else if (this.state.selectedImagePickerType == 'Bank')
+        {
+          this.setState({selectedBankSFileName: response.assets['0']['fileName']});
+          this.setState({selectedBankSFileSource:response.assets['0']['uri']}); 
+          this.setState({selectedBankSFileType: response.assets['0']['type']}); 
+        }
         else
         {
           this.setState({selectedTrustFileName: response.assets['0']['fileName']});
@@ -213,6 +224,12 @@ else if (fileType == 'Address')
   this.setState({selectedIDName: response.assets['0']['fileName']});
   this.setState({selectedIDSource: response.assets['0']['uri']});
   this.setState({selectedIDType: response.assets['0']['type']});
+}
+else if (fileType == 'Bank')
+{
+  this.setState({selectedBankSFileName: response.assets['0']['fileName']});
+  this.setState({selectedBankSFileSource: response.assets['0']['uri']});
+  this.setState({selectedBankSFileType: response.assets['0']['type']});
 }
 else
 {
@@ -288,6 +305,60 @@ else
      this.setState({selectedPANSource:res.uri});
      this.setState({selectedPANType:res.type});
      this.setState({showPANCardImagePicker:false});
+      
+      //  RNFetchBlob.fs
+      //     .readFile(res.uri, 'base64')
+      //     .then((data) => {
+      //       this.setState({filebaseString:data})
+      //       console.log('base : ' +data);
+      //      })
+      //     .catch((err) => { console.log('err : ' +err);});
+       
+       
+      //Setting the state to show single file attributes
+     
+    } catch (err) {
+      //Handling any exception (If any)
+      if (DocumentPicker.isCancel(err)) {
+        //If user canceled the document selection
+        // alert('Canceled from single doc picker');
+      } else {
+        //For Unknown Error
+        alert('Unknown Error: ' + JSON.stringify(err));
+        throw err;
+      }
+    }
+  };
+
+  selectOneFileForBankS = async () => {
+    //Opening Document Picker for selection of one file
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.pdf, DocumentPicker.types.images],
+        //There can me more options as well
+        // DocumentPicker.types.allFiles
+        // DocumentPicker.types.images
+        // DocumentPicker.types.plainText
+        // DocumentPicker.types.audio
+        // DocumentPicker.types.pdf
+      });
+
+      
+               
+      
+      //Printing the log realted to the file
+      
+      console.log('res1 : ' + JSON.stringify(res));
+      console.log('URi1 : ' + res.uri);
+      console.log('Type1 : ' + res.type);
+      console.log('File Name1 : ' + res.name);
+      console.log('File Size1 : ' + res.size);
+      pdfpath = res.uri
+      filename1 = res.name
+     this.setState({selectedBankSFileName:res.name});
+     this.setState({selectedBankSFileSource:res.uri});
+     this.setState({selectedBankSFileType:res.type});
+     this.setState({showBanksImagePicker:false});
       
       //  RNFetchBlob.fs
       //     .readFile(res.uri, 'base64')
@@ -461,6 +532,10 @@ else
         else if (this.state.selectedID== 'Address proof' || this.state.selectedID == 'Select Address Proof *') {
           Alert.alert('Address proof Type', 'Please select address proof type');
         }
+        else if(this.state.selectedBankSFileName == 'Upload your bank statement *')
+        {
+          Alert.alert('Bank Statement', 'Please upload your Bank Statement');
+        }
         // else if (this.state.selectedTrustFileSource== '') {
         //   Alert.alert('kyc', 'Please upload your TrustCertificate');
         // }
@@ -489,7 +564,9 @@ else
             formdata.append('address_proof_type', this.state.selectedID);
             formdata.append('address_proof_number', this.state.selectedKYCNumber);
             formdata.append('kyc_address_file', {uri: this.state.selectedIDSource, name: this.state.selectedIDName, type: this.state.selectedIDType});
+            formdata.append('back_details_file', {uri: this.state.selectedBankSFileSource, name: this.state.selectedBankSFileName, type: this.state.selectedBankSFileType});
             formdata.append('donee_type', this.state.selectedsecondValue);
+            
 
             if (this.state.selectedTrustFileSource == '')
             {
@@ -501,6 +578,8 @@ else
             }
             
             formdata.append('website_link', this.state.websiteLink);
+
+            console.log('formdata: ', formdata)
         
     
     
@@ -1086,6 +1165,7 @@ onValueChange={
   fontSize: 11,
   marginBottom: -5,
   marginLeft: 10,
+  marginBottom: 34
 }}>{'Only PDF or Image format is acceptable'}</Text>
 
         {/* <TextInput
@@ -1094,6 +1174,125 @@ onValueChange={
               onChangeText={text => this.setState({selectedKYCNumber:text})}
               style={Styles.login_text_input}
               keyboardType="default"/> */}
+
+
+<Selector
+              text={this.state.selectedBankSFileName}
+              placeholder="Gender"
+              onPress={() => this.setState({showBanksImagePicker: true})}
+              width={'100%'}
+              height={42}
+              imageheight={10}
+              imagewidth={11}
+              backcolor={'#ffff'}
+              borderRadius={10}
+              borderWidth={1}
+              margright={10}
+               marginTop={-12}
+              fontcolor={'#A1A1A1'}
+            />
+
+            <PickerDob
+              backgroundColor={'#ffff'}
+              dataList={this.state.ArrImagePicker}
+              modalVisible={this.state.showBanksImagePicker}
+              onBackdropPress={() => this.setState({showBanksImagePicker: false})}
+              renderData={({item, index}) => {
+                return (
+                  <TouchableOpacity
+                    onPress={() => {
+                      // this.user_filter(item.name, item.id);
+                      // this.setState({gender: item.name});
+                      // this.setState({showPicker: false});
+
+                      console.log('image pciker item: ', item.name)
+
+                      if (item.name == 'Take Photo')
+                      {
+                        this.setState({
+                          showBanksImagePicker: false, selectedImagePickerType: 'Bank'
+                      }, () => {
+                        setTimeout(() => {
+                          this.captureImage()
+                       }, 1100);
+                      });
+                        
+
+                      } else if (item.name == 'Select Document')
+                      {
+                        this.selectOneFileForBankS()
+
+                      }
+                      else
+                      {
+                        this.setState({showBanksImagePicker: false, selectedImagePickerType: 'PAN'})
+                        
+                         if (Platform.OS === 'android')
+                         {
+                          this.selecselectOneFileForBankStOneFile()
+                         }
+                         else
+                         {
+                          setTimeout(() => {
+                            this.chooseFile('Bank')
+                           // this.props.navigation.navigate('start')}
+                         }, 1100);
+                         }
+         
+
+      
+
+
+                      }
+
+                     
+
+                    }}
+                    style={{
+                      paddingVertical: 12,
+                      borderBottomColor: '#DDDDDD',
+                      borderBottomWidth: 1,
+                      flexDirection: 'row',
+
+                    }}>
+                      <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      marginStart: 0,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                      tintColor: 'black',
+                      marginEnd: 10
+                    }}
+                    source={item.image}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+                    <Text
+                      style={[
+                        {
+                          fontSize: 14,
+                          lineHeight: 30,
+                         // alignSelf: 'center'
+                        },
+                        // this.state.genderValue == item.name,
+                      ]}>
+                      {item.name}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+            />
+       
+
+        <Text style={{
+   marginTop: 5,
+  color: 'green',
+  fontSize: 11,
+  marginBottom: -5,
+  marginLeft: 10,
+}}>{'Upload image of Cancelled Cheque or Passbook'}</Text>
       
           
   
@@ -1236,12 +1435,27 @@ onValueChange={
                        placeholder="Website Link"
                        placeholderTextColor="#000"
                        onChangeText={text => this.setState({websiteLink:text})}
-                       style={Styles.login_text_input}
+                       style={{
+                        marginLeft: 10,
+                        marginRight: 10,
+                        // backgroundColor: '#dcdedc',
+                        borderBottomColor: '#000',
+                        borderBottomWidth: 1,
+                         color:'black',
+                        paddingTop: 20,
+                        height: 55,
+                        marginBottom:30
+                      }}
                        keyboardType="default"
+                       autoCapitalize = 'none'
                      />
+
+
+
 
           </View>
             
+        
         
                   
                      </View>  : null}
@@ -1252,6 +1466,9 @@ onValueChange={
               onPress={() => this.submit()}>
               <Text style={Styles.login_text}>SUBMIT</Text>
             </TouchableOpacity>   
+
+
+           
             
            
              

@@ -219,7 +219,7 @@ this.setState({
       donation_id: donation_id,
     };
       console.log(logs);
-      var response = await API.post('my_donation_pdf', logs);
+      var response = await API.post('my_donation_pdf_new', logs);
       console.log(response);
       if (response.status == 'success') 
       {

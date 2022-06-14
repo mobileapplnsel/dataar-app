@@ -392,6 +392,7 @@ setemailerror('Please enter email')
               onChangeText={text => setEmail(text)}
               style={Styles.login_text_input}
               keyboardType='default'
+              autoCapitalize = 'none'
               placeholderTextColor='grey'
             /> : null}
 

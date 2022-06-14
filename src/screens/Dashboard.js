@@ -50,14 +50,10 @@ const deviceHeight =
           genderValue: '',
           gender: 'Filter by type',
           ArrPref: [
-            {
-              pref_name: 'Alljhjh',
-              id: 'all',
-            },
-            {
-              pref_name: 'By Preference',
-              id: 'by preference',
-            },
+            {id: "2", name: "In Kind"},
+            {id: "1", name: "Fundraising"},
+            {id: "all", name: "All"},
+    
           ],
           showPicker: false,
           hasLocationPermission: null,
@@ -110,7 +106,7 @@ const deviceHeight =
             }
             else{
               Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page",  [
-                {text: 'OK', onPress: () => navigation.navigate('KYCUpdateForDonee')},
+                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonee')},
               ],
               {cancelable: false},);
             }
@@ -152,7 +148,7 @@ const deviceHeight =
 
         
 
-        this.getPreferences()
+       // this.getPreferences()
         this.dashboard_donate();
 
         var profile_imgggg = await AsyncStorage.getItem('profile_image');

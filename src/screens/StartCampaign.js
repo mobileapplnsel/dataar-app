@@ -69,7 +69,7 @@ const StartCampaign = ({navigation}) => {
   const [isEndPickerVisible, setisEndPickerVisible] = useState(false);
   const [strdate, setSdate] = useState(null);
   const [endseldate, setenddate] = useState(null);
-  const [selectedPANName, setselectedPANName] = useState('Upload supported doc 1');
+  const [selectedPANName, setselectedPANName] = useState('***Upload supported doc');
   const [selectedPANName1, setselectedPANName1] = useState('Upload supported doc 2');
   const [selectedPANName2, setselectedPANName2] = useState('Upload supported doc 3');
   const [selectedPANName3, setselectedPANName3] = useState('Upload supported doc 4');
@@ -97,19 +97,19 @@ const StartCampaign = ({navigation}) => {
   const [showImagePicker3, setshowImagePicker3] = useState(false);
   const [showImagePicker4, setshowImagePicker4] = useState(false);
 
-  const [selectedSDImage, setselectedSDImage] = useState('Upload supported doc 1');
+  const [selectedSDImage, setselectedSDImage] = useState('Upload supported doc (Mandatory)');
   const [selectedselectedSDImageSource, setselectedselectedSDImageSource] = useState('');
   const [selectedSDImageType, setselectedSDImageType] = useState('');
 
-  const [selectedSDImage1, setselectedSDImage1] = useState('Upload supported doc 2');
+  const [selectedSDImage1, setselectedSDImage1] = useState('Upload supported doc 2 (Optional)');
   const [selectedselectedSDImageSource1, setselectedselectedSDImageSource1] = useState('');
   const [selectedSDImageType1, setselectedSDImageType1] = useState('');
 
-  const [selectedSDImage2, setselectedSDImage2] = useState('Upload supported doc 3');
+  const [selectedSDImage2, setselectedSDImage2] = useState('Upload supported doc 3 (Optional)');
   const [selectedselectedSDImageSource2, setselectedselectedSDImageSource2] = useState('');
   const [selectedSDImageType2, setselectedSDImageType2] = useState('');
 
-  const [selectedSDImage3, setselectedSDImage3] = useState('Upload supported doc 4');
+  const [selectedSDImage3, setselectedSDImage3] = useState('Upload supported doc 4 (Optional)');
   const [selectedselectedSDImageSource3, setselectedselectedSDImageSource3] = useState('');
   const [selectedSDImageType3, setselectedSDImageType3] = useState('');
   const [descriptionWarning, setdescriptionWarning] = useState('Description text must be minimum 50 characters');
@@ -468,8 +468,8 @@ const StartCampaign = ({navigation}) => {
       Alert.alert('Campaign', 'Please select one');
     } else {
       if (selCamp == '1') {
-        if (selectedSDImage === 'Upload supported doc 1') {
-          Alert.alert('Supportive Doc', 'Please add Supportive doc');
+        if (selectedSDImage === 'Upload supported doc (Mandatory)') {
+          Alert.alert('Supportive Doc', 'Please add the Supportive doc');
         }
        else
        {
@@ -519,17 +519,18 @@ const StartCampaign = ({navigation}) => {
       }
      } else if (selCamp == '1')
      {
-      if (toggleCheckBox == false)
+      
+     if (amount == '') {
+        Alert.alert('Amount', 'Please Add Amount');
+      }
+     else if (toggleCheckBox == false)
       {
         Alert.alert('Agreement', 'Please accept Terms & Conditions');
-      }
-      else if (amount == '') {
-        Alert.alert('Amount', 'Please Add Amount');
       } 
        else {
-        // setNext(3);
-        // setprogress(true)
-        // Start_CampaignNow();
+        //setNext(3);
+        setprogress(true)
+        Start_CampaignNow();
       }
      }
   };
@@ -571,7 +572,8 @@ const StartCampaign = ({navigation}) => {
     setImagetype(image.mime);
     // console.log(image.path);
   };
-  const Start_CampaignNow1 = () => {
+  const Start_CampaignNow1 = () => 
+  {
     var formdata = new FormData();
     formdata.append('user_id', '1');
     formdata.append('campaign_name', 'Title');
@@ -642,21 +644,59 @@ const StartCampaign = ({navigation}) => {
     }
     else
     {
-      formdata.append('user_id', user_id);
-      formdata.append('campaign_name', Title);
-      formdata.append('donation_mode', selCamp);
-      formdata.append('campaign_details', Description);
-      formdata.append('campaign_start_date', String(strdate));
-      formdata.append('campaign_end_date', String(endseldate));
-       formdata.append('campaign_image', {uri: selectedCampaignImageSource, name: selectedCampaignImage, type: selectedCampaignImageType});
-      formdata.append('campaign_target_amount', amount);
-      formdata.append('kind_id', selectedValue);
-      formdata.append('filter_by_type', selectID);
-      formdata.append('zip', pincode);
-      formdata.append('campaign_target_qty', quantity);
-       formdata.append('supported_doc', {uri: selectedselectedSDImageSource, name: selectedSDImage, type: selectedSDImageType});
+
+
+      var sd1, sd2, sd3
+      
+      if (selectedselectedSDImageSource1 == '')
+      {
+        sd1 = ''
+      }
+      else
+      {
+        sd1 = {uri: selectedselectedSDImageSource1, name: selectedSDImage1, type: selectedSDImageType1}
+      }
+
+      if (selectedselectedSDImageSource2 == '')
+      {
+        sd2 = ''
+      }
+      else
+      {
+        sd2 = {uri: selectedselectedSDImageSource2, name: selectedSDImage2, type: selectedSDImageType2}
+      }
+
+      if (selectedselectedSDImageSource3 == '')
+      {
+        sd3 = ''
+      }
+      else
+      {
+        sd3 = {uri: selectedselectedSDImageSource3, name: selectedSDImage3, type: selectedSDImageType3}
+      }
+
+
+
+      
+        formdata.append('user_id', user_id);
+        formdata.append('campaign_name', Title);
+        formdata.append('donation_mode', selCamp);
+        formdata.append('campaign_details', Description);
+        formdata.append('campaign_start_date', String(strdate));
+        formdata.append('campaign_end_date', String(endseldate));
+         formdata.append('campaign_image', {uri: selectedCampaignImageSource, name: selectedCampaignImage, type: selectedCampaignImageType});
+        formdata.append('campaign_target_amount', amount);
+        formdata.append('kind_id', selectedValue);
+        formdata.append('filter_by_type', selectID);
+        formdata.append('zip', pincode);
+        formdata.append('campaign_target_qty', quantity);
+         formdata.append('supported_doc', {uri: selectedselectedSDImageSource, name: selectedSDImage, type: selectedSDImageType});
+         formdata.append('supported_doc_two', sd1);
+         formdata.append('supported_doc_three', sd2);
+         formdata.append('supported_doc_four', sd3);
+         
+     
     }
-    
 
 
 
@@ -1182,10 +1222,9 @@ setselectedValue(item.kind_id)
                   onPress={() => ExpiryDatebtnPressed()}
                 />
               </View>
-              <TouchableOpacity style={Styles.campaign_btn_next}>
+              <TouchableOpacity onPress={() => Next()} style={Styles.campaign_btn_next}>
                 <Text
-                  style={Styles.campaign_text_upload}
-                  onPress={() => Next()}>
+                  style={Styles.campaign_text_upload}>
                   Next
                 </Text>
               </TouchableOpacity>

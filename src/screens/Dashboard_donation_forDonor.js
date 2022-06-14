@@ -69,7 +69,12 @@ class Dashboard_donation_forDonor extends Component {
         },
         
       ],
-      ArrPref1: [],
+      ArrPref1: [
+        {id: "2", name: "In Kind"},
+        {id: "1", name: "Fundraising"},
+        {id: "all", name: "All"},
+
+      ],
       showPicker: false,
       showPicker1: false,
       hasLocationPermission: null,
@@ -138,7 +143,10 @@ class Dashboard_donation_forDonor extends Component {
     });
 
     this.dashboard_donate();
-    this.getPreferences()
+    // this.getPreferences()
+
+   
+
     // this.getuser();
 
     this.focusListener = this.props.navigation.addListener('focus', async () => {

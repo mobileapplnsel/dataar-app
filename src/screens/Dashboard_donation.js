@@ -49,14 +49,10 @@ class Dashboard_donation extends Component {
       genderValue: '',
       gender: 'Filter by type',
       ArrPref: [
-        {
-          pref_name: 'Alljhjh',
-          id: 'all',
-        },
-        {
-          pref_name: 'By Preference',
-          id: 'by preference',
-        },
+        {id: "2", name: "In Kind"},
+        {id: "1", name: "Fundraising"},
+        {id: "all", name: "All"},
+
       ],
       showPicker: false,
       hasLocationPermission: null,
@@ -95,10 +91,11 @@ class Dashboard_donation extends Component {
     }
   };
   componentDidMount() {
-    this.getPreferences()
+    // this.getPreferences()
     this.dashboard_donate();
     // this.getuser();
 
+   
     this.focusListener = this.props.navigation.addListener('focus', () => {
 
       console.log('focusListener has called!!!!')
@@ -216,7 +213,7 @@ class Dashboard_donation extends Component {
       // search:"Omicron",
       // campaign_name: Title,
     };
-    console.log('dashboard_donate_by_filter::::',logs);
+    console.log('dashboard_donate_by_filter123::::',logs);
     var response = await API.post('donation_list', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
