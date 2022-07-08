@@ -13,9 +13,8 @@ import {
   ActivityIndicator,
   StyleSheet,
   Platform,
-  Linking,
-  Button,
-  PermissionsAndroid
+  PermissionsAndroid,
+  Modal
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
@@ -23,11 +22,14 @@ import AsyncStorage from '@react-native-community/async-storage';
 import Toast from 'react-native-simple-toast';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import KeyboardManager from 'react-native-keyboard-manager';
-import DeepLinking from 'react-native-deep-linking';
 import PickerDob from '../components/Picker';
 import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
 import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
 import DocumentPicker from 'react-native-document-picker';
+import Selector from '../components/Selector';
+import DateTimePicker from '../components/DateTimePicker';
+import moment from 'moment';
+import AppPreLoader from '../components/AppPreLoader';
 import {
   launchCamera,
   launchImageLibrary
@@ -73,9 +75,6 @@ const requestExternalWritePermission = async () => {
 };
 const ArrImagePicker = [{"name": "Take Photo", 'image': cameraIcon}, { "name": "Choose Photo", 'image': GalleryIcon}]
 class User_profile extends Component {
-
-  
-
   constructor(props) {
     super(props);
     this.state = {
@@ -93,19 +92,24 @@ class User_profile extends Component {
       iseditableAddress: false,
       pinCode: '',
       addressString: '',
-      response: {},
       profile_img: '',
       showProfileImagePicker: false,
       selectedProfileImageSource: '',
       selectedProfileImageType: '',
-      selectedProfileImage: ''
+      selectedProfileImage: '',
+      strdate: null,
+      isStartPickerVisible: false,
+      endDateString: '',
 
-     
-
+      descriptionString: '',
+      selfDonationString: '',
+      targetAmountString: '',
+      isloading: true,
+      capmain_details: [],
+      
 
     };
   }
-
   captureImage = async (type) => {
     let options = {
       mediaType: 'photo',
@@ -217,8 +221,6 @@ class User_profile extends Component {
       }
     }
   };
-
-
   btnkyc = () => {
     if (!this.state.kyc) {
       this.setState({
@@ -234,56 +236,130 @@ class User_profile extends Component {
 
     var profile_img = await AsyncStorage.getItem('profile_image');
     this.setState({ profile_img: profile_img });
-    console.log('profile_img: ', this.state.profile_img)
-
-    DeepLinking.addScheme('example1://');
-    Linking.addEventListener('url', this.handleUrl);
-
-    DeepLinking.addRoute('/test', (response) => {
-      // example://test
-      console.log('responseee: ', response)
-      this.setState({ response });
-    });
-
-    DeepLinking.addRoute('/test/:id', (response) => {
-      // example://test/23
-      console.log('responseee: ', response)
-      this.setState({ response });
-    });
-
-    DeepLinking.addRoute('/test/:id/details', (response) => {
-      // example://test/100/details
-      console.log('responseee: ', response)
-      this.setState({ response });
-    });
-
-    Linking.getInitialURL().then((url) => {
-      if (url) {
-        Linking.openURL(url);
-      }
-    }).catch(err => console.error('An error occurred', err));
 
     if (Platform.OS === 'ios') {
       KeyboardManager.setEnable(true);
     }
+  
+    this.campaign();
+  }
 
-    if (AsyncStorage.getItem('token')['_X'] == null) {
-      //   this.props.navigation.navigate('LogIn');
-    } else {
-    }
-    this.getuser();
-  }
-  componentWillUnmount() {
-    Linking.removeEventListener('url', this.handleUrl);
-  }
-  handleUrl = ({ url }) => {
-    console.log('handleUrl: ', url)
-    Linking.canOpenURL(url).then((supported) => {
-      if (supported) {
-        DeepLinking.evaluateUrl(url);
+  campaign = async () => {
+    var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      campaign_id: this.props.route.params.camp_id,
+    };
+    var response = await API.post('campaign_details', logs);
+    if (response.status == 'success') {
+      // navigation.navigate('OtpVerify', {mobile: Mobile});
+      console.log('response.data: ',response.data.capmain_details);
+      var arr = new Array();
+      var amountVal = 0;
+      for (var i = 0; i < response.data.donations.length; i++) {
+        // arr.push([
+        //   response.data.donations[i]['donor_name'],
+        //   response.data.donations[i]['updated_at'],
+        //   response.data.donations[i]['amountpaid'],
+        //   response.data.donations[i]['status'],
+        // ]);
+        // console.log(arr);
+        amountVal =
+          amountVal + parseInt(response.data.donations[i]['amountpaid']);
+        this.setState({
+          amount: amountVal,
+        });
       }
-    });
-  }
+      var base64String = response.data.capmain_details[0]['campaign_image']
+      var base64Icon = 'data:image/png;base64,'+base64String
+      this.setState({
+        // cmpData: [...response.data.donations],
+        capmain_details: [...response.data.capmain_details],
+        profile_img: base64String,
+
+        descriptionString: [...response.data.capmain_details][0]['campaign_details'],
+        strdate: [...response.data.capmain_details][0]['campaign_end_date'],
+        
+
+        isloading: false,
+      });
+
+      console.log(this.state.cmpData);
+    } else {
+      this.setState({
+        isloading: false,
+      });
+      Alert.alert(response.status, response.message);
+    }
+  };
+  Start_CampaignNow = async () => {
+    var user_id = await AsyncStorage.getItem('user_id');
+    var formdata = new FormData();
+
+
+    if (selCamp == 2) 
+    {
+      formdata.append('user_id', user_id);
+      formdata.append('campaign_name', Title);
+      formdata.append('donation_mode', selCamp);
+      formdata.append('campaign_details', Description);
+      formdata.append('campaign_start_date', String(strdate));
+      formdata.append('campaign_end_date', String(endseldate));
+       formdata.append('campaign_image', {uri: selectedCampaignImageSource, name: selectedCampaignImage, type: selectedCampaignImageType});
+      formdata.append('campaign_target_amount', amount);
+      formdata.append('kind_id', selectedValue);
+      formdata.append('filter_by_type', selectID);
+      formdata.append('zip', pincode);
+      formdata.append('campaign_target_qty', quantity);
+      formdata.append('campaign_note', KindMsg);
+      formdata.append('items', JSON.stringify(data));
+
+
+      
+    }
+    else
+    {
+
+
+
+      
+        formdata.append('user_id', user_id);
+        formdata.append('campaign_name', Title);
+        formdata.append('donation_mode', selCamp);
+        formdata.append('campaign_details', Description);
+        formdata.append('campaign_start_date', String(strdate));
+        formdata.append('campaign_end_date', String(endseldate));
+         formdata.append('campaign_image', {uri: selectedCampaignImageSource, name: selectedCampaignImage, type: selectedCampaignImageType});
+        formdata.append('campaign_target_amount', amount);
+        formdata.append('kind_id', selectedValue);
+        formdata.append('filter_by_type', selectID);
+        formdata.append('zip', pincode);
+        formdata.append('campaign_target_qty', quantity);
+         formdata.append('supported_doc', {uri: selectedselectedSDImageSource, name: selectedSDImage, type: selectedSDImageType});
+         
+         
+     
+    }
+
+    console.log('Start campaign parametersForDonee: ', JSON.stringify(formdata))
+
+     var response = await API.postWithFormData('add_campaign', formdata);
+
+     console.log('Start campaign response: ', response)
+
+    if (response.status == 'success') {
+      setprogress(false)
+      // Alert.alert('Alert', 'Campaign added successfully and waiting for admin approval');
+      Alert.alert('success', 'Campaign added successfully and waiting for admin approval.', [
+        {text: 'OK', onPress: () => navigation.navigate('Dashboard')},
+      ],
+      {cancelable: false},);
+      
+    } else {
+      setprogress(false)
+      Alert.alert(response.status, response.message);
+      navigation.navigate('Dashboard');
+    }
+  };
   getuser = async () => {
     this.setState({
       progress: true,
@@ -301,7 +377,7 @@ class User_profile extends Component {
 
     if (token != null) {
       var response = await API.post('fetch_profile_data', logs);
-      console.log('fetch_profile_data1: ',response);
+      console.log('fetch_profile_data: ',response);
       if (response.status == 'success') {
         // navigation.navigate('OtpVerify', {mobile: Mobile});
         
@@ -311,10 +387,10 @@ class User_profile extends Component {
           email: response.data.email,
           mobile: response.data.phone,
           image: response.data.kyc_file,
-          addressString: response.data.address,
           progress: false,
           user_id: user_id,
-          pinCode: response.data.zipcode
+          pinCode: response.data.zipcode,
+          addressString: response.data.address,
         });
       } else {
         Alert.alert(response.status, response.message);
@@ -323,46 +399,31 @@ class User_profile extends Component {
     }
   };
   updateUser = async () => {};
-  fnameedit = async () => {
-    console.log('hello world');
-    this.setState({
-      iseditablefname: true,
-    });
+
+  descriptionEdit = async () => {
     this.inputText1.focus()
   };
-  lnameedit = () => {
-    console.log('hello world');
-    this.setState({
-      iseditablelname: true,
-    });
+
+  targetAmountEdit = () => {
     this.inputText2.focus()
   };
-  Pinedit = () => {
-    console.log('hello world');
-    this.setState({
-      iseditablePin: true,
-  }, () => {
-    this.inputText.focus()
-  });
 
-  };
-  AddressEdit = () => {
-    console.log('hello world');
-    this.setState({
-      iseditableAddress: true,
-  }, () => {
+  selfDonationEdit = value => {
     this.inputText3.focus()
-  });
-
   };
-  setFirstname = value => {
+  setTargetAmount = value => {
     this.setState({
-      fname: value,
+      targetAmountString: value,
     });
   };
-  setLastname = value => {
+  setSelfDonation = value => {
     this.setState({
-      lname: value,
+      selfDonationString: value,
+    });
+  };
+  setDescription = value => {
+    this.setState({
+      descriptionString: value,
     });
   };
    updateProfile = async () => {
@@ -380,23 +441,16 @@ class User_profile extends Component {
     }
     else
     {
-      
-      
       // var logs = {
       //   usrId: this.state.user_id,
       //   firstname: this.state.fname,
       //   lastname: this.state.lname,
       //   phone: this.state.mobile,
       //   email: this.state.email,
-      //   zipcode: this.state.pinCode,
-        
+      //   zipcode: this.state.pinCode
       // };
       // console.log('Update Profile logs: ', logs);
       // var response = await API.postWithoutHeader('update_user_profile_info', logs);
-
-
-
-
       var formdata = new FormData();
 if (this.state.selectedProfileImageType == '')
 {
@@ -405,8 +459,8 @@ if (this.state.selectedProfileImageType == '')
   formdata.append('lastname', this.state.lname);
   formdata.append('phone', this.state.mobile);
   formdata.append('email', this.state.email);
-  formdata.append('address', this.state.addressString);
   formdata.append('zipcode', this.state.pinCode);
+  formdata.append('address', this.state.addressString);
 }
 else
 {
@@ -415,16 +469,17 @@ else
   formdata.append('lastname', this.state.lname);
   formdata.append('phone', this.state.mobile);
   formdata.append('email', this.state.email);
-  formdata.append('address', this.state.addressString);
   formdata.append('zipcode', this.state.pinCode);
+  formdata.append('address', this.state.addressString);
   formdata.append('profile_image', {uri: this.state.selectedProfileImageSource, name: this.state.selectedProfileImage, type: this.state.selectedProfileImageType});
 }
-    
+        // var response = await API.post('register', logs);
+        var response = await API.postWithFormData('update_user_profile_info', formdata);
+  
+        
 
-      // var response = await API.post('register', logs);
-      var response = await API.postWithFormData('update_user_profile_info', formdata);
 
-     
+
 
      // console.log(response);
      console.log('Update Profile response: ', response);
@@ -432,7 +487,6 @@ else
 
         await AsyncStorage.setItem('profile_image', response.profile_img);
         await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
-
         Toast.show(response.message, Toast.LONG)
         this.props.navigation.goBack()
       } else {
@@ -442,6 +496,10 @@ else
     
   };
   render() {
+    var loaded = this.state.isloading;
+    if (loaded) {
+      return <AppPreLoader />;
+    }
     return (
       <Container>
        
@@ -528,45 +586,60 @@ else
               /> */}
               <Text
                 style={[
-                  Styles.user_kyc_font,
+                  // Styles.user_kyc_font,
                   {
-                    marginLeft: 14,
+                    // marginLeft: 14,
+                    fontSize: 26,
+                    alignSelf: 'center',
+                    marginTop: 15,
+                    marginBottom: 15
                   },
                 ]}>
-                User Profile
+                Edit Campaign
               </Text>
             </View>
-            <ActivityIndicator animating={this.state.progress} size="large" style={{opacity:1}} color="red"
+            {/* <ActivityIndicator animating={this.state.progress} size="large" style={{opacity:1}} color="red"
             //Text with the Spinner
             textContent={'Loading...'}
             textStyle={Styles1.spinnerTextStyle}
-          /> 
-            {/* <List style={Styles.profile_main_contain}> */}
+          />  */}
               <View style={Styles.profile_main_text_contain}>
 
-             <TouchableOpacity
+              <TouchableOpacity style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', marginTop: 15}} 
+              onPress={() => this.setState({showProfileImagePicker: true})}>
+<Image style={{
+  
+    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
+}}
+ source={{uri: this.state.profile_img}}
+// source={require('../../src/assets/images/daatar_banner.jpg')}
+>
+</Image> 
+</TouchableOpacity>
+
+                  {/* <TouchableOpacity
                    style={{
                     alignSelf: 'center',   
                   }}
                     onPress={() => this.setState({showProfileImagePicker: true})}><Image
          source={{uri: this.state.profile_img}}
-        // source={require('../../src/assets/images/heart1.png')}
         style={{
-          width: 100,
+          width: 200,
           height: 100,
-           borderRadius: 100 / 2, 
+          borderRadius: 5
+          //  borderRadius: 100 / 2, 
         }}
-      /></TouchableOpacity> 
+      /></TouchableOpacity> */}
+
 
 <TouchableOpacity
                    style={{
                     alignSelf: 'center', marginTop: 8,  
                   }}
                     onPress={() => this.setState({showProfileImagePicker: true})}>
-<Text style={{fontSize: 17, fontWeight: 'bold', alignSelf: 'center'}}>Edit Profile Image</Text>
+<Text style={{fontSize: 17, fontWeight: 'bold', alignSelf: 'center', marginBottom: 5}}>Edit Campaign Image</Text>
 <Text style={{fontSize: 11, color: 'red', alignSelf: 'center'}}>Image size should not be more than 1MB</Text>
-</TouchableOpacity> 
-
+</TouchableOpacity>
 
       
 
@@ -587,7 +660,6 @@ else
                       {
                         this.setState({showProfileImagePicker: false})
                         setTimeout(() => {
-                          // this.captureImage()
                           this.captureImage('photo')
                        }, 1100);
 
@@ -604,25 +676,15 @@ else
                          {
                           setTimeout(() => {
                             this.chooseFile()
-                           // this.props.navigation.navigate('start')}
                          }, 1100);
                           
                          }
          
 
-        {/* <TouchableOpacity
-          activeOpacity={0.5}
-          style={Styles1.buttonStyle1}
-          onPress={() => chooseFile('photo')}>
-          <Text style={Styles1.textStyle}>Choose Image</Text>
-        </TouchableOpacity> */}
-
 
                       }
 
-                      // setshowPicker(false)
-                      // setselectType(item.name)
-                      // setselectID(item.id)
+                      
 
                     }}
                     style={{
@@ -637,23 +699,19 @@ else
                       width: 30,
                       height: 30,
                       marginStart: 0,
-                      // marginTop: 20,
                       backgroundColor: 'transparent',
                       alignSelf: 'center',
                       tintColor: 'black',
                       marginEnd: 10
                     }}
                     source={item.image}
-                    // resizeMode="contain"dashboard_main_btn
                   />
                     <Text
                       style={[
                         {
                           fontSize: 14,
                           lineHeight: 30,
-                         // alignSelf: 'center'
                         },
-                        // this.state.genderValue == item.name,
                       ]}>
                       {item.name}
                     </Text>
@@ -662,21 +720,39 @@ else
               }}
             />
 
-                {/* <ListItem style={Styles.profile_main_text_contain}> */}
-                <Text style={Styles.user_profile_lbtext}>First Name:</Text>
-                <View style={Styles.user_edit_contain}>
+                <Text style={{
+    fontSize: 17,
+    // alignSelf: 'center',
+    color: 'grey',
+    fontWeight: '500',
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 20
+  }}>Campaign Description:</Text>
+                <View style={{
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginLeft: 15,
+    marginRight: 15
+  }}>
                   <TextInput
-                    style={Styles.user_text_input}
-                    placeholder="First Name"
+                    style={{
+                      borderBottomColor: '#000',
+                      borderBottomWidth: 1,
+                      width: '90%',
+                      color: 'black',
+                      height: 43
+                    }}
+                    placeholder="Enter Campaign Description"
                     ref ={ref => this.inputText1 = ref}
                     // editable={this.state.iseditablefname}
-                    onChangeText={value => this.setFirstname(value)}
-                    value={this.state.fname}
+                    onChangeText={value => this.setDescription(value)}
+                    value={this.state.descriptionString}
                     keyboardType="default"></TextInput>
                   {/* </ListItem> */}
                   <TouchableOpacity
                     style={Styles.user_edit_profile_lbtext}
-                    onPress={() => this.fnameedit()}>
+                    onPress={() => this.descriptionEdit()}>
                     <Image
                       style={{
                         width: 24,
@@ -689,125 +765,59 @@ else
                     />
                   </TouchableOpacity>
                 </View>
-              </View>
-              <View style={Styles.profile_main_text_contain}>
-                <Text style={Styles.user_profile_lbtext}>Last Name:</Text>
-                <View style={Styles.user_edit_contain}>
-                
-                  <TextInput
-                    style={Styles.user_text_input}
-                    placeholder="Last Name"
-                    // editable={this.state.iseditablelname}
-                    ref ={ref => this.inputText2 = ref}
-                    onChangeText={value => this.setLastname(value)}
-                    value={this.state.lname}
-                    keyboardType="default"></TextInput>
-                  <TouchableOpacity
-                    style={Styles.user_edit_profile_lbtext}
-                    onPress={() => this.lnameedit()}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 21,
-                        marginStart: 12,
-                        marginTop: 20,
-                        backgroundColor: 'transparent',
-                      }}
-                      source={require('../../src/assets/images/penicon.png')}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-              <View style={Styles.profile_main_text_contain}>
-                <Text style={Styles.user_profile_lbtext}>Email:</Text>
-                <TextInput
-                  style={Styles.user_text_input}
-                  placeholder="Email"
-                  editable={false}
-                  onChangeText={() => this.setEmailname()}
-                  value={this.state.email}
-                  keyboardType="email-address"></TextInput>
-              </View>
-              <View style={Styles.profile_main_text_contain}>
-                <Text style={Styles.user_profile_lbtext}>Mobile:</Text>
-                <TextInput
-                  style={Styles.user_text_input}
-                  placeholder="Mobile"
-                  editable={false}
-                  onChangeText={() => this.setMobile()}
-                  value={this.state.mobile}
-                  keyboardType="number-pad"></TextInput>
-              </View>
 
+                <Text style={ {
+  marginTop: 5,
+  marginLeft: 0,
+  marginRight: 15,
+  color: 'red',
+  fontSize: 11,
+  marginBottom: 10,
+  // alignSelf: 'center',
+  paddingLeft: 13
+}}>{'Description text must be minimum 50 characters'}</Text>
               
+              <Text style={{
+    fontSize: 17,
+    // alignSelf: 'center',
+    color: 'grey',
+    fontWeight: '500',
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 20
+  }}>Campaign End Date:</Text>
 
-              <View style={Styles.profile_main_text_contain}>
-                <Text style={Styles.user_profile_lbtext}>Full Address:</Text>
-                <View style={Styles.user_edit_contain}>
-                <TextInput
-                  style={Styles.user_text_input}
-                  ref ={ref => this.inputText3 = ref}
-                  placeholder="Full Address"
-                  // editable={this.state.iseditablePin}
-                  autoFocus={this.state.iseditableAddress}
-                  onChangeText={(text) => this.setState({
-                    addressString: text,
-                  })}
-                  value={this.state.addressString}
-                  keyboardType='default'></TextInput>
-                  <TouchableOpacity
-                    style={Styles.user_edit_profile_lbtext}
-                    onPress={() => this.AddressEdit()}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 21,
-                        marginStart: 12,
-                        marginTop: 20,
-                        backgroundColor: 'transparent',
-                      }}
-                      source={require('../../src/assets/images/penicon.png')}
-                    />
-                  </TouchableOpacity>
-                </View>
+              <View style={ {
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    // backgroundColor: '#f55656',
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: -5
+  }}>
+                <Selector
+                  text={this.state.strdate ? moment(this.state.strdate).format('DD / MM / YYYY') : ''}
+                  placeholder="End Date"
+                  marginTop={normalize(15)}
+                  // onPress={() => setShowPicker(true)}
+                  icon={require('../../src/assets/images/calendar.jpg')}
+                  onPress={() => this.setState({isStartPickerVisible: true})}
+                />
               </View>
 
-              <View style={Styles.profile_main_text_contain}>
-                <Text style={Styles.user_profile_lbtext}>PIN code:</Text>
-                <View style={Styles.user_edit_contain}>
-                <TextInput
-                  style={Styles.user_text_input}
-                  ref ={ref => this.inputText = ref}
-                  placeholder="PIN code"
-                  // editable={this.state.iseditablePin}
-                  autoFocus={this.state.iseditablePin}
-                  onChangeText={(text) => this.setState({
-                    pinCode: text,
-                  })}
-                  value={this.state.pinCode}
-                  keyboardType='number-pad'></TextInput>
-                  <TouchableOpacity
-                    style={Styles.user_edit_profile_lbtext}
-                    onPress={() => this.Pinedit()}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 21,
-                        marginStart: 12,
-                        marginTop: 20,
-                        backgroundColor: 'transparent',
-                      }}
-                      source={require('../../src/assets/images/penicon.png')}
-                    />
-                  </TouchableOpacity>
-                </View>
               </View>
+              
+              
+              
+              
+              </ScrollView>
 
               <TouchableOpacity
             style={{width: '94%',
+            position: 'absolute',
             height: 50,
             backgroundColor: '#f55656',
-            marginTop: 30,
+            bottom: 20,
             color: '#f55656',
             alignSelf:"center",
             marginBottom: 34}}
@@ -815,29 +825,16 @@ else
             <Text style={Styles.login_text}>Update</Text>
           </TouchableOpacity>
 
-          {/* <View style={Styles1.container}>
-        <View style={Styles1.container}>
-          <Button
-            onPress={() => Linking.openURL('example1://test')}
-            title="Open example://test"
-          />
-          <Button
-            onPress={() => Linking.openURL('example1://test/23')}
-            title="Open example://test/23"
-          />
-          <Button
-            onPress={() => Linking.openURL('example1://test/100/details')}
-            title="Open example://test/100/details"
-          />
-        </View>
-        <View style={Styles1.container}>
-          <Text style={Styles1.text}>{this.state.response.scheme ? `Url scheme: ${this.state.response.scheme}` : 'a'}</Text>
-          <Text style={Styles1.text}>{this.state.response.path ? `Url path: ${this.state.response.path}` : 'b'}</Text>
-          <Text style={Styles1.text}>{this.state.response.id ? `Url id: ${this.state.response.id}` : 'c'}</Text>
-        </View>
-      </View> */}
-              
-              </ScrollView>
+              <DateTimePicker
+        value={new Date(this.state.strdate) == null ? new Date(moment().toISOString()) : new Date(this.state.strdate)}
+          maxDate={new Date("2040-12-31")}
+        minDate={new Date(this.state.strdate)}
+        dateTimePickerVisible={this.state.isStartPickerVisible}
+        onDateChange={val => this.setState({strdate: val})}
+        onBackdropPress={() => this.setState({isStartPickerVisible: false})}
+        onPressDone={() => this.setState({isStartPickerVisible: false})}
+      />
+
               {/* </ListItem> */}
               {/* <View>
                 <TouchableOpacity
@@ -866,7 +863,31 @@ else
             ) : null} */}
             {/* </View> */}
           </ImageBackground>
-        
+          <Modal transparent={true} animationType="none" visible={this.state.progress}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          // backgroundColor: `rgba(0,0,0,${0.6})`,
+          width: '100%',
+          height: '100%',
+          // marginTop: 400
+        }}
+      >
+        <View
+          style={{
+            padding: 13,
+            backgroundColor: 'grey',
+            borderRadius: 3,
+            marginTop: '40%'
+          }}
+        >
+          <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
+          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+        </View>
+      </View>
+    </Modal>
       </Container>
     );
   }
@@ -875,18 +896,6 @@ else
 const Styles1 = StyleSheet.create({
   spinnerTextStyle: {
     color: 'green',
-    position: 'absolute',
-    alignSelf: 'center',
-    marginTop: 200
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  text: {
-    fontSize: 18,
-    margin: 10,
   },
 });
 export default User_profile;

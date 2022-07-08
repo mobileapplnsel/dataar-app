@@ -42,7 +42,10 @@ class Campaing_details extends Component {
       modalComment: false,
       isVisible: false,
       shareHeight: 360,
-      campaignImageURI: ''
+      campaignImageURI: '',
+      raiseQueryString: '',
+      maxLengthh1: 5000,
+      descriptionString: ''
     };
   }
   campaign = async () => {
@@ -53,7 +56,7 @@ class Campaing_details extends Component {
     var response = await API.post('campaign_details', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
-      console.log('response.data: ',response);
+      console.log('response.data: ',response.data.capmain_details);
       var arr = new Array();
       var amountVal = 0;
       for (var i = 0; i < response.data.donations.length; i++) {
@@ -281,6 +284,92 @@ class Campaing_details extends Component {
       </View>
     );
   };
+   remarksTyping = async (text) => {
+    this.setState({raiseQueryString: text, maxLengthh1: 5000 - text.length})
+   
+  }
+  setDescription = value => {
+    this.setState({
+      descriptionString: value,
+    });
+  };
+  descriptionEdit = async () => {
+    this.inputText1.focus()
+  };
+   submitQuery = async () => {
+    var user_id = await AsyncStorage.getItem('user_id');
+    if (this.state.raiseQueryString.trim() == '')
+    {
+      Alert.alert('Alert', 'Please enter your query');
+    }
+else
+{
+    var logs = {
+      user_id: user_id,
+      remarks: this.state.raiseQueryString
+    };
+    console.log(logs);
+    var response = await API.post('raise_a_query', logs);
+    if (response.status == 'success') {
+      // logout()
+      
+      Alert.alert(
+        response.status,
+        response.message, // <- this part is optional, you can pass an empty string
+        [
+          //  {text: 'NO', onPress: () => console.log('No')}, //logout()
+          {text: 'OK', onPress: () => this.setState({raiseQueryString: ''})}, 
+          
+        ],
+        {cancelable: false},
+      )
+        
+        
+     
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+
+  }
+  
+  };
+  submitSelfDonation = async () => {
+    var user_id = await AsyncStorage.getItem('user_id');
+    if (this.state.descriptionString.trim() == '')
+    {
+      Alert.alert('Alert', 'Please enter amount');
+    }
+else
+{
+    var logs = {
+      user_id: user_id,
+      remarks: this.state.descriptionString
+    };
+    console.log(logs);
+    var response = await API.post('raise_a_query', logs);
+    if (response.status == 'success') {
+      // logout()
+      
+      Alert.alert(
+        response.status,
+        response.message, // <- this part is optional, you can pass an empty string
+        [
+          //  {text: 'NO', onPress: () => console.log('No')}, //logout()
+          {text: 'OK', onPress: () => this.setState({raiseQueryString: ''})}, 
+          
+        ],
+        {cancelable: false},
+      )
+        
+        
+     
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+
+  }
+  
+  };
   render() {
     var loaded = this.state.isloading;
     if (loaded) {
@@ -427,7 +516,7 @@ class Campaing_details extends Component {
                     {'   '} Like: 
                   </Text>
                 </View> */}
-              </View>
+             
               {/* <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
                 <Row
                   data={this.state.tableHead}
@@ -443,6 +532,136 @@ class Campaing_details extends Component {
                <Text style={Styles.sub_text_font1}>
                     
                   </Text>
+
+
+                  <Text style={{
+    fontSize: 17,
+    // alignSelf: 'center',
+    color: 'grey',
+    fontWeight: '500',
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 20,
+    marginBottom: 10
+  }}>Raise your query:</Text>
+
+                  <TextInput style={{
+    
+    width: null,
+    marginLeft: 17,
+    borderRadius: 0,
+    marginRight: 17,
+    backgroundColor: 'white',
+    fontSize: 12,
+    height: 80,
+    color: 'gray',
+   borderColor: 'black',
+   borderWidth: 1,
+      padding: 5,
+      paddingTop: 5,
+      
+    
+    }}
+                placeholder={'Type your query here...'}
+                multiline={true}
+     numberOfLines={5}
+     textAlignVertical={'top'}
+                placeholderTextColor={'grey'}
+                value = {this.state.raiseQueryString}
+                maxLength={5000}
+                onChangeText={(text) => this.remarksTyping(text)}
+                ></TextInput>
+<Text style={{ fontSize: 11, alignSelf: 'flex-start', marginTop: 5, color: '#f55656', marginLeft: 17, marginBottom: 7, fontWeight: '400' }}>{this.state.maxLengthh1+' Character remaining'}</Text>
+
+
+<TouchableOpacity
+                  style={{width: '94%',
+                    height: 46,
+                    backgroundColor: '#f55656',
+                    marginTop: 15,
+                    color: '#f55656',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 6,}}
+                  onPress={() => this.submitQuery()}>
+                  <Text style={Styles.donate_btn_text}>Submit Query</Text>
+                </TouchableOpacity>
+
+              { this.props.route.params.camp_type == '1' &&  <Text style={{
+    fontSize: 17,
+    // alignSelf: 'center',
+    color: 'grey',
+    fontWeight: '500',
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 20
+  }}>Self-Donation:</Text> }
+
+  { this.props.route.params.camp_type == '1' &&  <View style={{
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginLeft: 15,
+    marginRight: 15
+  }}> 
+                  <TextInput
+                    style={{
+                      borderBottomColor: '#000',
+                      borderBottomWidth: 1,
+                      width: '90%',
+                      color: 'black',
+                      height: 43,
+                      backgroundColor: 'white'
+                    }}
+                    keyboardType='decimal-pad'
+                    placeholder="Enter amount"
+                    placeholderTextColor='grey'
+                    ref ={ref => this.inputText1 = ref}
+                    // editable={this.state.iseditablefname}
+                    onChangeText={value => this.setDescription(value)}
+                    value={this.state.descriptionString}
+                    ></TextInput>
+                  {/* </ListItem> */}
+                  <TouchableOpacity
+                    style={Styles.user_edit_profile_lbtext}
+                    onPress={() => this.descriptionEdit()}>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 21,
+                        marginStart: 12,
+                        marginTop: 20,
+                        backgroundColor: 'transparent',
+                      }}
+                      source={require('../../src/assets/images/penicon.png')}
+                    />
+                  </TouchableOpacity>
+                </View> }
+
+                { this.props.route.params.camp_type == '1' &&  <Text style={ {
+  marginTop: 5,
+  marginLeft: 0,
+  marginRight: 15,
+  color: 'green',
+  fontSize: 11,
+  marginBottom: 10,
+  // alignSelf: 'center',
+  paddingLeft: 13
+}}>{'Make a self donation'}</Text> }
+
+{ this.props.route.params.camp_type == '1' && <TouchableOpacity
+                  style={{width: '94%',
+                    height: 46,
+                    backgroundColor: '#f55656',
+                    marginTop: 15,
+                    color: '#f55656',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 6,
+                  marginBottom: 60}}
+                  onPress={() => this.submitSelfDonation()}>
+                  <Text style={Styles.donate_btn_text}>Submit Donation</Text>
+                </TouchableOpacity> }
+                </View>
             </ScrollView>
           </ImageBackground>
 

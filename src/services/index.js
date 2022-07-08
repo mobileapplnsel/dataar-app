@@ -71,7 +71,10 @@ export default class API {
           console.log(responseJson);
         })
         .catch(error => {
-          reject(error);
+
+          console.log('error123: ',error);
+          // reject(error);
+
         }); //to catch the errors if any
     });
   }

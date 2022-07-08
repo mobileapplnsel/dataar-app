@@ -38,7 +38,8 @@ const splash = ({navigation}) => {
        AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
       if (token == null) {
         // console.log('token', AsyncStorage.getItem('token'));
-        navigation.replace('Dashboard_donation'); // Dashboard_donation
+        navigation.replace('Dashboard_donation'); // Dashboard_donation // StartCampaign
+
        
         // LogIn
       } else {

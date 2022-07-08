@@ -420,7 +420,21 @@ class Dashboard_donation extends Component {
     const wish = item.like_status == 1 ? true : false;
     // console.log('wish: ', wish);
     var msDiff = new Date(item.campaign_end_date).getTime() - new Date().getTime();    //Future date - current date
-    var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24));
+    var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24)) + 1;
+    var finalDaysleft = daysTill30June2035
+    if (daysTill30June2035 == 0)
+    {
+      finalDaysleft = 'Expiring Today'
+    }
+    else if (daysTill30June2035 == 1)
+    {
+      finalDaysleft = 'Expiring Tomorrow'
+    }
+    else
+    {
+      finalDaysleft = daysTill30June2035 +' days left'
+    }
+    
     return (
       <View style={{flex: 1}} key={item.donation_id}>
         <Card style={{overflow: 'hidden'}}>
@@ -517,7 +531,7 @@ source={{uri: item.campaign_image}}
                   {item.days} days to go
                 </Text> */}
                  <Text style={Styles.doner_title_font}>
-                  {daysTill30June2035} days to go
+                  {finalDaysleft}
                 </Text>
               </View>
              

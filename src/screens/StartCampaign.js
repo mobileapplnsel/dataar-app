@@ -48,6 +48,37 @@ import GalleryIcon from '../../src/assets/images/outline_collections_black_48.pn
 import DocumentIcon from '../../src/assets/images/outline_description_black_48.png';
 import KeyboardManager from 'react-native-keyboard-manager';
 import CheckBox from '@react-native-community/checkbox';
+const RenderComponent = (props) => {
+  return (<TextInput
+  key={props.index}
+      style={{borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
+      value={props.data[props.index].item}
+      onChangeText={val => {
+          let newArray = [...props.data];
+          newArray[props.index].item = val
+          props.setData(newArray);
+          console.log(props.data); //always rerender when type one character.. please help!!
+      }}
+  />);
+}
+
+const RenderComponent1 = (props) => {
+  return (<TextInput
+  key={props.index}
+  keyboardType = 'decimal-pad'
+      style={{borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
+      value={props.data[props.index].qty}
+      onChangeText={val => {
+          let newArray = [...props.data];
+          newArray[props.index].qty = val
+          props.setData(newArray);
+          console.log(props.data); //always rerender when type one character.. please help!!
+      }}
+  />);
+}
+
+
+
 const StartCampaign = ({navigation}) => {
   const [Title, setTitle] = useState('');
   const [Description, setDescription] = useState('');
@@ -114,6 +145,22 @@ const StartCampaign = ({navigation}) => {
   const [selectedSDImageType3, setselectedSDImageType3] = useState('');
   const [descriptionWarning, setdescriptionWarning] = useState('Description text must be minimum 50 characters');
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
+
+  const [unitList, setunitList] = useState([{"created_at": "2021-06-09 02:58:51", "kind_id": "kg", "kind_name": "Kilogram", "status": "1", "updated_at": "2022-05-18 03:19:42"},
+   {"created_at": "2021-08-23 02:30:52", "kind_id": "m", "kind_name": "Meter", "status": "1", "updated_at": "2021-08-23 02:30:52"}, 
+   {"created_at": "2021-08-23 02:31:13", "kind_id": "L", "kind_name": "Litre", "status": "1", "updated_at": "2021-08-23 02:31:42"}, 
+   {"created_at": "2022-05-18 03:20:44", "kind_id": "pound", "kind_name": "Pound", "status": "1", "updated_at": "2022-05-18 03:20:44"},
+    {"created_at": "2022-05-18 03:20:44", "kind_id": "Ft", "kind_name": "Feet", "status": "1", "updated_at": "2022-05-18 03:20:44"}])
+  const [seachableModalVisible1, setseachableModalVisible1] = useState(false);
+  const [unitSelectedIndex, setunitSelectedIndex] = useState(0);
+
+
+  const [data, setData] = useState([
+    {id: 1, item: "", qty: '', unit: ''},
+    
+]);
+
+
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -431,7 +478,7 @@ const StartCampaign = ({navigation}) => {
         image === '',
     );
 
-    // setNext(1);
+    //  setNext(1);
 
     if (Title == '') {
       Alert.alert('Title', 'Please add Campaign Title');
@@ -487,6 +534,13 @@ const StartCampaign = ({navigation}) => {
     setselCamp('');
     setamount('');
   };
+
+  const Back1 = () => {
+    setNext(0);
+
+      setselCamp('');
+    // setamount('');
+  };
   const getPreferences = async () => {
     var response = await API.post('filter_by_type_list');
     console.log('filter_by_type_list', response);
@@ -507,10 +561,15 @@ const StartCampaign = ({navigation}) => {
       if (selectedValue == '') {
         Alert.alert('In Kind Object', 'Please select any of the In Kind object');
       }
-      else if (quantity.trim() == '') {
-        Alert.alert('Quantity', 'Please enter quantity');
-      } else if (KindMsg.trim() == '') {
+      // else if (quantity.trim() == '') {
+      //   Alert.alert('Quantity', 'Please enter quantity');
+      // } 
+      else if (KindMsg.trim() == '') {
         Alert.alert('Comments', 'Please elaborate your campaign');
+      }
+      else if (data[data.length - 1].item == '' || data[data.length - 1].qty == '' || data[data.length - 1].unit == '')
+      {
+        Alert.alert('Alet', 'Please populate all fields for the last line item or delete the last item if it is not more than 1 line item');
       }
        else {
         // setNext(3);
@@ -625,6 +684,8 @@ const StartCampaign = ({navigation}) => {
   const Start_CampaignNow = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
     var formdata = new FormData();
+
+
     if (selCamp == 2) 
     {
       formdata.append('user_id', user_id);
@@ -640,6 +701,9 @@ const StartCampaign = ({navigation}) => {
       formdata.append('zip', pincode);
       formdata.append('campaign_target_qty', quantity);
       formdata.append('campaign_note', KindMsg);
+      formdata.append('items', JSON.stringify(data));
+
+
       
     }
     else
@@ -745,7 +809,7 @@ const StartCampaign = ({navigation}) => {
   const fetchkind = async () => {
     var response = await API.post('kind_list');
     if (response.status == 'success') {
-      console.log(response);
+      console.log('kind_list response: ',response);
       setkind(response.data);
     } else {
       Alert.alert(response.status, response.message);
@@ -824,6 +888,32 @@ setselectedValue(item.kind_id)
     
   }
 
+  const selectItemOnDropDown1 = (item) => 
+  {
+
+setseachableModalVisible1(false)
+
+    let newArray = [...data];
+    newArray[unitSelectedIndex].unit = item.kind_id
+    setData(newArray);
+        
+  }
+
+  const removeCategoryItem = (index) => 
+  {
+
+    if (data.length > 1)
+    {
+    let newArray = [...data];
+    newArray.splice(index, 1);
+    setData(newArray);
+    }
+    else
+    {
+      Toast.show('Single item can not be deleted. You must have to add single item', Toast.LONG)
+    }   
+  }
+
   const setDescriptionString = (text) => 
   {
     setDescription(text)
@@ -837,6 +927,122 @@ setselectedValue(item.kind_id)
     }
   }
 
+const SelectUnit = (index) => 
+  {
+
+    
+   setunitSelectedIndex(index);
+    setseachableModalVisible1(true)
+  }
+
+  const renderItem = ({item, index}) => (
+    <View style={{padding: 10}}>
+      <View style={{flexDirection:'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 0}}>
+      <View style={{flexDirection:'column', width: '40%', marginRight: '2%'}}>
+        <Text style={{marginBottom: 5}}>Item Name</Text>
+        <RenderComponent item={item} index={index} data={data} setData={setData} />
+        </View>
+        <View style={{flexDirection:'column', width: '18%', marginRight: '2%'}}>
+        <Text style={{marginBottom: 5}}>Qty </Text>
+        <RenderComponent1 item={item} index={index} data={data} setData={setData} />
+        </View>
+        <View style={{flexDirection:'column', width: '28%', marginRight: '2%'}}>
+        <Text style={{marginBottom: 5}}>Unit </Text>
+        { Platform.OS === 'ios' ? 
+<TouchableOpacity onPress={() => SelectUnit(index)}>
+<View style={{borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}>
+            <View style={{flex:1, maxWidth: 414, backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
+                <Text style={{paddingLeft:4,color: 'gray', fontSize: 16, marginTop: 8}}>{item.unit}</Text>
+                <View style={{width:15, height:15, justifyContent: 'flex-end', marginRight: 15, marginTop: 14}}>
+                  <Image source={require("../../src/assets/images/down_arrow.png")} style={{width:24, height:24}} />
+                </View>
+                
+              </View>
+              </View>
+              </TouchableOpacity> 
+:
+             
+
+
+
+                <Picker
+                  selectedValue={selectedValue}
+                  style={{
+                    height: 50,
+                    width: '80%',
+                    borderColor: '#000',
+                    alignSelf: 'center',
+                    borderWidth: 1,
+                  }}
+                  onValueChange={
+                    (itemValue, itemIndex) => setselectedValue(itemValue)
+                    // console.log(itemValue)
+                    // Alert.alert(itemValue)
+                  }>
+                  <Picker.Item label="Select one" value="" />
+                  {kind.map((item, index) => (
+                    <Picker.Item label={item.kind_name} value={item.kind_id} />
+                  ))}
+                </Picker>
+
+                  }
+                 
+
+        </View>
+        <View style={{flexDirection:'column', width: '6%', marginRight: '2%',}}>
+                  <TouchableOpacity onPress={() => removeCategoryItem(index)}>
+            <Image style={{ resizeMode: 'contain', height: 37, width: 37, marginTop: 21, tintColor: '#f55656'
+}}
+source={require('../../src/assets/images/outline_remove_circle_outline_black_36pt_2x.png')}>
+</Image> 
+</TouchableOpacity>
+        </View>
+        </View>
+    </View>
+);
+
+    
+const add_more = (id) => {
+
+  if (data.length == 10)
+  {
+    Alert.alert("Alert", "You can not add more than 10 items");
+  }
+  else if (data[data.length - 1].item == '')
+  {
+    Alert.alert("Item Name", "Please enter Item Name for the last item");
+  }
+  else if (data[data.length - 1].qty == '')
+  {
+    Alert.alert("Quantity", "Please enter Quantity for the last item");
+  }
+  else if (data[data.length - 1].unit == '')
+  {
+    Alert.alert("Unit", "Please select Unit for the last item");
+  }
+  else
+  {
+  let newArray = [...data];
+  console.log('newArray: ', newArray)
+  newArray.push({id: id, item: '', qty: '', unit: ''})
+  setData(newArray);
+  console.log('newArray1: ', data)
+  }
+}
+
+// const RenderComponent2 = (props) => {
+//   return (<TextInput
+//   key={props.index}
+//       style={{borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
+//       value={props.data[props.index].unit}
+//       onChangeText={val => {
+//           let newArray = [...props.data];
+//           newArray[props.index].unit = val
+//           props.setData(newArray);
+//           console.log(props.data); //always rerender when type one character.. please help!!
+//       }}
+//   />);
+// }
   return (
    
       <Container>
@@ -924,6 +1130,7 @@ setselectedValue(item.kind_id)
                 style={Styles.login_text_input}
                 keyboardType="default"
                 placeholderTextColor='grey'
+                value={Title}
               />
               <TextInput
                 placeholder="Description"
@@ -931,6 +1138,7 @@ setselectedValue(item.kind_id)
                 style={Styles.login_text_input}
                 keyboardType="default"
                 placeholderTextColor='grey'
+                value={Description}
               />
 
 <Text style={ {
@@ -948,6 +1156,7 @@ setselectedValue(item.kind_id)
                 style={Styles.login_text_input}
                 keyboardType="number-pad"
                 placeholderTextColor='grey'
+                value={pincode}
               />
              
 
@@ -1692,11 +1901,22 @@ setselectedValue(item.kind_id)
 }}>{'Only PDF or Image format is acceptable'}</Text> 
         </View>) : null}
 
-              <TouchableOpacity
+
+        <View style={Styles.campaign_name_contain}>
+                <TouchableOpacity
+                  style={Styles.campaign_btn_back}
+                  onPress={() => Back1()}>
+                  <Text style={Styles.campaign_text_upload}>Back</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
                 style={Styles.campaign_btn_next2}
                 onPress={() => Next2()}>
                 <Text style={Styles.campaign_text_upload}>Next</Text>
               </TouchableOpacity>
+              </View>
+
+              
             </View>
           ) : null}
 
@@ -1835,7 +2055,36 @@ setselectedValue(item.kind_id)
                   }
 
 
-<TextInput
+
+<View style={{flex: 1, marginTop: 15}}>
+        
+        <FlatList
+            data={data}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={renderItem}
+        />
+
+    </View>
+
+    <TouchableOpacity
+                  style={{
+                    width: 160,
+                    height: 45,
+                    // marginLeft: 12,
+                    marginTop: 15,
+                    backgroundColor: '#f55656',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    marginBottom: 10,
+                    borderRadius: 5,
+                  }}
+                  onPress={() => add_more(data.length + 1)}>
+                  <Text style={Styles.campaign_text_upload}>
+                    Add More
+                  </Text>
+                </TouchableOpacity>
+
+{/* <TextInput
                   placeholder="Please enter quantity"
                   onChangeText={text => setquantity(text)}
                   style={{
@@ -1857,7 +2106,9 @@ setselectedValue(item.kind_id)
                   placeholderTextColor='grey'
                 
                   
-                />
+                /> */}
+
+                
 
                 <TextInput
                   placeholder="Please elaborate about your campaign"
@@ -1884,7 +2135,15 @@ setselectedValue(item.kind_id)
                   
                 />
               </View>
-              <View style={Styles.campaign_name_contain}>
+              <View style={{
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignSelf: 'center',
+    paddingStart: 10,
+    paddingTop: 10,
+    paddingEnd: 10,
+    marginBottom: 180
+  }}>
                 <TouchableOpacity
                   style={Styles.campaign_btn_back}
                   onPress={() => Back()}>
@@ -1899,6 +2158,9 @@ setselectedValue(item.kind_id)
                 </TouchableOpacity>
               </View>
               </ScrollView>
+
+             
+
             </View>
           ) : null}
 
@@ -1934,6 +2196,48 @@ setselectedValue(item.kind_id)
            keyExtractor={item => item.kind_id}
           ItemSeparatorComponent={renderSeparator}
         />
+
+        
+     
+                                </View>
+
+                                {/* <TouchableOpacity onPress={() => { this.setState({ seachableModalVisible: false }) }}>
+                                    <View style={styles.cancelStyle}>
+                                        <Text style={{ fontSize: 20, alignSelf: 'center', marginTop: 16, color: 'white' }}>Cancel</Text>
+                                    </View>
+                                </TouchableOpacity> */}
+
+                            </View>
+                        </Modal>
+
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={seachableModalVisible1}
+                        >
+                            <View style={{ height: 500, marginTop: 112 }}>
+                                <View style={{
+          height: 232,
+          width: '80%',
+          alignSelf: 'center',
+          marginTop: 100,
+          backgroundColor: '#f55656',
+          borderRadius: 6
+        }}>
+        <FlatList
+          data={unitList}
+          renderItem={({ item }) => (
+          <View>
+        <TouchableOpacity onPress={() => selectItemOnDropDown1(item)}>
+        <Text style={{ padding: 10, color: 'white' }}>{item.kind_name} </Text>
+        </TouchableOpacity>
+      </View>
+      )} 
+           keyExtractor={item => item.kind_id}
+          ItemSeparatorComponent={renderSeparator}
+        />
+
+        
      
                                 </View>
 

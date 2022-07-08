@@ -33,6 +33,7 @@ class View_campaign extends Component {
     super(props);
     this.state = {
       cmpData: [],
+      statusBGColor: 'green',
       tableHead: [
         'No.',
         'Title',
@@ -53,11 +54,12 @@ class View_campaign extends Component {
   }
   
   campaign = async () => {
-    console.log(user_id);
+    
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
       user_id: user_id,
     };
+    console.log('log for track campaign:',user_id);
     var response = await API.post('campaign_details_by_user', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
@@ -222,22 +224,99 @@ source={{uri: base64Icon}}>
               </View> }
              
              
-                
+              <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Status:   
+                </Text>
+                { item.status != '1' &&  <View
+                  style={{width: 95,
+                    height: 33,
+                    backgroundColor: 'red',
+                    marginTop: 15,
+                    color: '#f55656',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 6,}}>
+                  <Text style={{
+    fontSize: 14,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+  }}>Inactive</Text>
+                </View> }
+
+                { item.status == '1' &&  <View
+                  style={{width: 95,
+                    height: 33,
+                    backgroundColor: 'green',
+                    marginTop: 15,
+                    color: '#f55656',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 6,}}>
+                  <Text style={{
+    fontSize: 14,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+  }}>Active</Text>
+                </View> }
+              </View>
+
+              <View style={{flexDirection: 'row', marginTop: 3}}>
+              <Text style={Styles.doner_title_font_Modified}>
+              Validity Status:   
+                </Text>
+                 <View
+                  style={{width: 135,
+                    height: 33,
+                    backgroundColor: 'grey',
+                    marginTop: 15,
+                    color: '#f55656',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 6,}}>
+                  <Text style={{
+    fontSize: 14,
+    alignSelf: 'center',
+    color: '#ffff',
+    fontWeight: '500',
+  }}>{item.validity}</Text>
+                </View> 
+
+              
+              </View>
                 
                 <TouchableOpacity
                   style={{width: '96%',
-                    height: 40,
+                    height: 46,
                     backgroundColor: '#f55656',
-                    marginTop: 10,
+                    marginTop: 15,
                     color: '#f55656',
                     justifyContent: 'center',
                     alignSelf: 'center',
                     borderRadius: 6,}}
                   onPress={() => this.props.navigation.navigate('Campaing_details', {
                     camp_id: item.campaign_id,
+                    camp_type: item.donation_mode
                   })}>
                   <Text style={Styles.donate_btn_text}>View</Text>
                 </TouchableOpacity>
+                {/* { item.status == '1' && <TouchableOpacity */}
+                 <TouchableOpacity
+                  style={{width: '96%',
+                    height: 46,
+                    backgroundColor: '#f55656',
+                    marginTop: 15,
+                    color: '#f55656',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 6,}}
+                  onPress={() => this.props.navigation.navigate('EditCampaign', {
+                    camp_id: item.campaign_id,
+                  })}>
+                  <Text style={Styles.donate_btn_text}>Edit</Text>
+                </TouchableOpacity> 
             </View>
           </CardItem>
         </Card>

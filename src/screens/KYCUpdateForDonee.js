@@ -612,6 +612,10 @@ else
        
         else if (this.state.selectedID== 'Address proof' || this.state.selectedID == 'Select Address Proof *') {
           Alert.alert('Address type', 'Please select address proof type');
+        }
+        else if(this.state.selectedBankSFileName == 'Upload your bank statement *')
+        {
+          Alert.alert('Bank Statement', 'Please upload your Bank Statement');
         }      
          else {
           // var logs = {
@@ -634,6 +638,7 @@ else
             formdata.append('address_proof_type', this.state.selectedID);
             formdata.append('address_proof_number', this.state.selectedKYCNumber);
             formdata.append('kyc_address_file', {uri: this.state.selectedIDSource, name: this.state.selectedIDName, type: this.state.selectedIDType});
+            formdata.append('back_details_file', {uri: this.state.selectedBankSFileSource, name: this.state.selectedBankSFileName, type: this.state.selectedBankSFileType});
             formdata.append('donee_type', this.state.selectedsecondValue);
             formdata.append('trust_certificate_file', '');
             formdata.append('website_link', '');
