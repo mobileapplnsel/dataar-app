@@ -98,6 +98,7 @@ class User_profile extends Component {
       selectedProfileImageType: '',
       selectedProfileImage: '',
       strdate: null,
+      strdateTemp: null,
       isStartPickerVisible: false,
       endDateString: '',
 
@@ -106,6 +107,9 @@ class User_profile extends Component {
       targetAmountString: '',
       isloading: true,
       capmain_details: [],
+      descrError: '',
+      amountString: '',
+      donation_mode: ''
       
 
     };
@@ -278,8 +282,9 @@ class User_profile extends Component {
 
         descriptionString: [...response.data.capmain_details][0]['campaign_details'],
         strdate: [...response.data.capmain_details][0]['campaign_end_date'],
-        
-
+        strdateTemp: [...response.data.capmain_details][0]['campaign_end_date'],
+        amountString: [...response.data.capmain_details][0]['campaign_target_amount'],
+        donation_mode: [...response.data.capmain_details][0]['donation_mode'],
         isloading: false,
       });
 
@@ -413,7 +418,7 @@ class User_profile extends Component {
   };
   setTargetAmount = value => {
     this.setState({
-      targetAmountString: value,
+      amountString: value,
     });
   };
   setSelfDonation = value => {
@@ -425,20 +430,34 @@ class User_profile extends Component {
     this.setState({
       descriptionString: value,
     });
+
+    if (value.length >= 50)
+    {
+      this.setState({descrError: ''})
+    }
+    else
+    {
+      this.setState({descrError: 'Description text must be minimum 50 characters'})
+    }
+
   };
    updateProfile = async () => {
-    if (this.state.fname.trim() == '')
+    if (this.state.descriptionString.trim() == '')
     {
-      Alert.alert('Warning', 'Please enter First Name');
+      Alert.alert('Warning', 'Please enter Campaign Description');
     }
-    else if (this.state.lname.trim() == '')
+    else if (this.state.descriptionString.trim().length < 50)
     {
-      Alert.alert('Warning', 'Please enter Last Name');
+      Alert.alert('Warning', 'Campaign description must be more than 50 characters');
     }
-    else if (this.state.pinCode.trim() == '')
+    else if (this.state.amountString.trim() == '')
     {
-      Alert.alert('Warning', 'Please enter PIN code');
+      Alert.alert('Warning', 'Please enter target amount');
     }
+    // else if (this.state.pinCode.trim() == '')
+    // {
+    //   Alert.alert('Warning', 'Please enter PIN code');
+    // }
     else
     {
       // var logs = {
@@ -451,42 +470,34 @@ class User_profile extends Component {
       // };
       // console.log('Update Profile logs: ', logs);
       // var response = await API.postWithoutHeader('update_user_profile_info', logs);
+
+console.log('start date = ', String(this.state.strdate))
+
       var formdata = new FormData();
 if (this.state.selectedProfileImageType == '')
 {
-  formdata.append('usrId', this.state.user_id);
-  formdata.append('firstname', this.state.fname);
-  formdata.append('lastname', this.state.lname);
-  formdata.append('phone', this.state.mobile);
-  formdata.append('email', this.state.email);
-  formdata.append('zipcode', this.state.pinCode);
-  formdata.append('address', this.state.addressString);
+  formdata.append('campaign_id', this.props.route.params.camp_id);
+  formdata.append('description', this.state.descriptionString);
+  formdata.append('campaign_end_date', String(new Date(this.state.strdate)));
+  formdata.append('campaign_image', '');
+  formdata.append('target_amount', this.state.amountString);
+  
+
 }
 else
 {
-  formdata.append('usrId', this.state.user_id);
-  formdata.append('firstname', this.state.fname);
-  formdata.append('lastname', this.state.lname);
-  formdata.append('phone', this.state.mobile);
-  formdata.append('email', this.state.email);
-  formdata.append('zipcode', this.state.pinCode);
-  formdata.append('address', this.state.addressString);
-  formdata.append('profile_image', {uri: this.state.selectedProfileImageSource, name: this.state.selectedProfileImage, type: this.state.selectedProfileImageType});
+  formdata.append('campaign_id', this.props.route.params.camp_id);
+  formdata.append('description', this.state.descriptionString);
+  formdata.append('campaign_end_date', String(new Date(this.state.strdate)));
+  formdata.append('target_amount', this.state.amountString);
+  formdata.append('campaign_image', {uri: this.state.selectedProfileImageSource, name: this.state.selectedProfileImage, type: this.state.selectedProfileImageType});
 }
         // var response = await API.post('register', logs);
-        var response = await API.postWithFormData('update_user_profile_info', formdata);
+        var response = await API.postWithFormData('update_campaign_by_donee', formdata);
   
-        
-
-
-
-
      // console.log(response);
      console.log('Update Profile response: ', response);
       if (response.status === 'success') {
-
-        await AsyncStorage.setItem('profile_image', response.profile_img);
-        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
         Toast.show(response.message, Toast.LONG)
         this.props.navigation.goBack()
       } else {
@@ -766,7 +777,7 @@ else
                   </TouchableOpacity>
                 </View>
 
-                <Text style={ {
+                {/* <Text style={ {
   marginTop: 5,
   marginLeft: 0,
   marginRight: 15,
@@ -775,7 +786,7 @@ else
   marginBottom: 10,
   // alignSelf: 'center',
   paddingLeft: 13
-}}>{'Description text must be minimum 50 characters'}</Text>
+}}>{this.state.descrError}</Text> */}
               
               <Text style={{
     fontSize: 17,
@@ -796,7 +807,7 @@ else
     marginTop: -5
   }}>
                 <Selector
-                  text={this.state.strdate ? moment(this.state.strdate).format('DD / MM / YYYY') : ''}
+                  text={this.state.strdateTemp ? moment(this.state.strdate).format('DD / MM / YYYY') : ''}
                   placeholder="End Date"
                   marginTop={normalize(15)}
                   // onPress={() => setShowPicker(true)}
@@ -805,6 +816,79 @@ else
                 />
               </View>
 
+               { this.state.donation_mode == '1' && <View>
+              <Text style={{
+    fontSize: 17,
+    // alignSelf: 'center',
+    color: 'grey',
+    fontWeight: '500',
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 20
+  }}>Target Amount:</Text>
+                <View style={{
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    marginLeft: 15,
+    marginRight: 15
+  }}>
+                  <TextInput
+                    style={{
+                      borderBottomColor: '#000',
+                      borderBottomWidth: 1,
+                      width: '90%',
+                      color: 'black',
+                      height: 43
+                    }}
+                    placeholder="Enter Target Amount"
+                    ref ={ref => this.inputText2 = ref}
+                    // editable={this.state.iseditablefname}
+                    onChangeText={value => this.setTargetAmount(value)}
+                    value={this.state.amountString} 
+                    keyboardType='decimal-pad'></TextInput>
+                  {/* </ListItem> */}
+                  <TouchableOpacity
+                    style={Styles.user_edit_profile_lbtext}
+                    onPress={() => this.targetAmountEdit()}>
+                    <Image
+                      style={{
+                        width: 24,
+                        height: 21,
+                        marginStart: 12,
+                        marginTop: 20,
+                        backgroundColor: 'transparent',
+                      }}
+                      source={require('../../src/assets/images/penicon.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+
+                <Text style={ {
+  marginTop: 5,
+  marginLeft: 0,
+  marginRight: 15,
+  color: 'red',
+  fontSize: 11,
+  marginBottom: 10,
+  // alignSelf: 'center',
+  paddingLeft: 13
+}}>{this.state.descrError}</Text>
+</View> }
+
+<TouchableOpacity
+            style={{width: '94%',
+            marginTop: 30,
+            // position: 'absolute',
+            height: 50,
+            backgroundColor: '#f55656',
+            bottom: 20,
+            color: '#f55656',
+            alignSelf:"center",
+            marginBottom: 40}}
+            onPress={() => this.updateProfile()}>
+            <Text style={Styles.login_text}>Submit Request</Text>
+          </TouchableOpacity>
+
               </View>
               
               
@@ -812,23 +896,12 @@ else
               
               </ScrollView>
 
-              <TouchableOpacity
-            style={{width: '94%',
-            position: 'absolute',
-            height: 50,
-            backgroundColor: '#f55656',
-            bottom: 20,
-            color: '#f55656',
-            alignSelf:"center",
-            marginBottom: 34}}
-            onPress={() => this.updateProfile()}>
-            <Text style={Styles.login_text}>Update</Text>
-          </TouchableOpacity>
+             
 
               <DateTimePicker
-        value={new Date(this.state.strdate) == null ? new Date(moment().toISOString()) : new Date(this.state.strdate)}
+        value={new Date(this.state.strdate)}
           maxDate={new Date("2040-12-31")}
-        minDate={new Date(this.state.strdate)}
+        minDate={new Date(this.state.strdateTemp)}
         dateTimePickerVisible={this.state.isStartPickerVisible}
         onDateChange={val => this.setState({strdate: val})}
         onBackdropPress={() => this.setState({isStartPickerVisible: false})}

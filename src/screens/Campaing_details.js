@@ -343,10 +343,11 @@ else
 {
     var logs = {
       user_id: user_id,
-      remarks: this.state.descriptionString
+      amount: this.state.descriptionString,
+      campaign_id: this.state.camp_id
     };
     console.log(logs);
-    var response = await API.post('raise_a_query', logs);
+    var response = await API.post('self_donation', logs);
     if (response.status == 'success') {
       // logout()
       
@@ -355,7 +356,7 @@ else
         response.message, // <- this part is optional, you can pass an empty string
         [
           //  {text: 'NO', onPress: () => console.log('No')}, //logout()
-          {text: 'OK', onPress: () => this.setState({raiseQueryString: ''})}, 
+          {text: 'OK', onPress: () => this.setState({descriptionString: ''})}, 
           
         ],
         {cancelable: false},

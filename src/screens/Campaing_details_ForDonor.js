@@ -96,6 +96,7 @@ class Campaing_details extends Component {
         capmain_details: [...response.data.capmain_details],
         campaign_owner_data: response.data.campaign_owner_data,
         isloading: false,
+        amount: [...response.data.total_donation_amountpaid]
       });
       console.log(this.state.cmpData);
     } else {
@@ -747,7 +748,7 @@ console.log('comment button clicked!!!!')
                     {'Name: '+this.state.campaign_owner_data['first_name'] + ' ' + this.state.campaign_owner_data['last_name']}
                   </Text>
 
-                  <Text style={{
+                  {/* <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -755,7 +756,7 @@ console.log('comment button clicked!!!!')
                     marginEnd: 20,
                   }}>
                     {'Address: '+this.state.campaign_owner_data['address']}
-                  </Text>
+                  </Text> */}
 
                   <Text style={{
                     fontSize: 18,

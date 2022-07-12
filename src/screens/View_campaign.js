@@ -228,10 +228,10 @@ source={{uri: base64Icon}}>
               <Text style={Styles.doner_title_font_Modified}>
               Status:   
                 </Text>
-                { item.status != '1' &&  <View
-                  style={{width: 95,
+                { item.status == '0' &&  <View
+                  style={{width: '80%',
                     height: 33,
-                    backgroundColor: 'red',
+                    // backgroundColor: 'yellow',
                     marginTop: 15,
                     color: '#f55656',
                     justifyContent: 'center',
@@ -239,16 +239,18 @@ source={{uri: base64Icon}}>
                     borderRadius: 6,}}>
                   <Text style={{
     fontSize: 14,
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
     color: '#ffff',
     fontWeight: '500',
-  }}>Inactive</Text>
+    color: 'black',
+    paddingTop: 5
+  }}>Pending for approval</Text>
                 </View> }
 
                 { item.status == '1' &&  <View
-                  style={{width: 95,
+                  style={{width: '80%',
                     height: 33,
-                    backgroundColor: 'green',
+                    // backgroundColor: 'green',
                     marginTop: 15,
                     color: '#f55656',
                     justifyContent: 'center',
@@ -256,10 +258,31 @@ source={{uri: base64Icon}}>
                     borderRadius: 6,}}>
                   <Text style={{
     fontSize: 14,
-    alignSelf: 'center',
+    alignSelf: 'flex-start',
     color: '#ffff',
     fontWeight: '500',
-  }}>Active</Text>
+    color: 'black',
+    paddingTop: 5
+  }}>Approved</Text>
+                </View> }
+
+                { item.status == '2' &&  <View
+                  style={{width: '80%',
+                    height: 33,
+                    // backgroundColor: 'green',
+                    marginTop: 15,
+                    color: '#f55656',
+                    justifyContent: 'center',
+                    alignSelf: 'center',
+                    borderRadius: 6,}}>
+                  <Text style={{
+    fontSize: 14,
+    alignSelf: 'flex-start',
+    color: '#ffff',
+    fontWeight: '500',
+    color: 'black',
+    paddingTop: 5
+  }}>Rejected</Text>
                 </View> }
               </View>
 
@@ -270,7 +293,7 @@ source={{uri: base64Icon}}>
                  <View
                   style={{width: 135,
                     height: 33,
-                    backgroundColor: 'grey',
+                    backgroundColor: 'null',
                     marginTop: 15,
                     color: '#f55656',
                     justifyContent: 'center',
@@ -278,9 +301,11 @@ source={{uri: base64Icon}}>
                     borderRadius: 6,}}>
                   <Text style={{
     fontSize: 14,
-    alignSelf: 'center',
-    color: '#ffff',
+    alignSelf: 'flex-start',
+    // color: '#ffff',
+    color: 'black',
     fontWeight: '500',
+    paddingTop: 4
   }}>{item.validity}</Text>
                 </View> 
 
@@ -302,8 +327,8 @@ source={{uri: base64Icon}}>
                   })}>
                   <Text style={Styles.donate_btn_text}>View</Text>
                 </TouchableOpacity>
-                {/* { item.status == '1' && <TouchableOpacity */}
-                 <TouchableOpacity
+                { item.status == '1' && 
+                <TouchableOpacity
                   style={{width: '96%',
                     height: 46,
                     backgroundColor: '#f55656',
@@ -316,7 +341,8 @@ source={{uri: base64Icon}}>
                     camp_id: item.campaign_id,
                   })}>
                   <Text style={Styles.donate_btn_text}>Edit</Text>
-                </TouchableOpacity> 
+                </TouchableOpacity>  
+                } 
             </View>
           </CardItem>
         </Card>

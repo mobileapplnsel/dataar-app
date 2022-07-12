@@ -540,7 +540,7 @@
 				CODE_SIGN_ENTITLEMENTS = Donation_app/Donation_app.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Lee & Nee Softwares (Exports) Ltd (S3VG3D7M66)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2.2;
+				CURRENT_PROJECT_VERSION = 2.3;
 				DEVELOPMENT_TEAM = S3VG3D7M66;
 				ENABLE_BITCODE = NO;
 				HEADER_SEARCH_PATHS = (
@@ -633,7 +633,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -658,7 +658,7 @@
 				CODE_SIGN_ENTITLEMENTS = Donation_app/Donation_app.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution: Lee & Nee Softwares (Exports) Ltd (S3VG3D7M66)";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2.2;
+				CURRENT_PROJECT_VERSION = 2.3;
 				DEVELOPMENT_TEAM = S3VG3D7M66;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -750,7 +750,7 @@
 					"$(inherited)",
 					"$(SDKROOT)/usr/lib/swift",
 				);
-				MARKETING_VERSION = 2.1;
+				MARKETING_VERSION = 5;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

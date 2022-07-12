@@ -556,6 +556,8 @@ const StartCampaign = ({navigation}) => {
   };
   const Start_Campaign = () => {
 
+    
+
      if (selCamp == '2')
      {
       if (selectedValue == '') {
@@ -686,8 +688,26 @@ const StartCampaign = ({navigation}) => {
     var formdata = new FormData();
 
 
+
+
     if (selCamp == 2) 
     {
+
+
+      var totalQty = 0
+
+    for (var i = 0; i < data.length; i++) { 
+      
+      var qtyInt = parseInt(data[i]['qty'], 10)
+
+      totalQty = totalQty + qtyInt
+          
+      
+    }
+
+    console.log('quantity====> ', String(totalQty));
+
+
       formdata.append('user_id', user_id);
       formdata.append('campaign_name', Title);
       formdata.append('donation_mode', selCamp);
@@ -699,7 +719,7 @@ const StartCampaign = ({navigation}) => {
       formdata.append('kind_id', selectedValue);
       formdata.append('filter_by_type', selectID);
       formdata.append('zip', pincode);
-      formdata.append('campaign_target_qty', quantity);
+      formdata.append('campaign_target_qty', String(totalQty));
       formdata.append('campaign_note', KindMsg);
       formdata.append('items', JSON.stringify(data));
 
@@ -948,7 +968,7 @@ const SelectUnit = (index) =>
         </View>
         <View style={{flexDirection:'column', width: '28%', marginRight: '2%'}}>
         <Text style={{marginBottom: 5}}>Unit </Text>
-        { Platform.OS === 'ios' ? 
+        {/* { Platform.OS === 'android' ?  */}
 <TouchableOpacity onPress={() => SelectUnit(index)}>
 <View style={{borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}>
             <View style={{flex:1, maxWidth: 414, backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
@@ -960,11 +980,11 @@ const SelectUnit = (index) =>
               </View>
               </View>
               </TouchableOpacity> 
-:
+{/* :
              
 
 
-
+<View style={{borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}>
                 <Picker
                   selectedValue={selectedValue}
                   style={{
@@ -983,9 +1003,9 @@ const SelectUnit = (index) =>
                   {kind.map((item, index) => (
                     <Picker.Item label={item.kind_name} value={item.kind_id} />
                   ))}
-                </Picker>
+                </Picker></View>
 
-                  }
+                  } */}
                  
 
         </View>
