@@ -36,7 +36,7 @@ export default class API {
       console.log(url, options);
       // console.log(options);
       fetch(url, options)
-        .then(response => response.json())
+        .then(response => response.text())
         .then(responseJson => {
           resolve(responseJson);
           console.log(responseJson);

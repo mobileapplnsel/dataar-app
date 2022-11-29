@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -15,7 +15,7 @@ import {
   // TextInput,
 } from 'native-base';
 var Styles = require('../assets/files/Styles');
-import {AuthContext} from '../context';
+import { AuthContext } from '../context';
 import API from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 import {
@@ -30,14 +30,14 @@ import {
   LoginManager,
 } from 'react-native-fbsdk';
 import Feather from 'react-native-vector-icons/Feather';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import AppPreLoader from '../components/AppPreLoader';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import KeyboardManager from 'react-native-keyboard-manager';
-import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
+// import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
   const [Email, setemail] = useState('');
   const [Mobile, setmobile] = useState('');
   const [password, setpassword] = useState('');
@@ -58,33 +58,33 @@ const Login = ({navigation}) => {
   };
   // const contextType = AuthContext;
   useEffect(() => {
-    
+
 
     if (Platform.OS === 'android') {
       BackHandler.addEventListener('hardwareBackPress', backBtnPressed)
-   
-       return () =>
-         BackHandler.removeEventListener('hardwareBackPress', onBackPress)
-      
-     }
-    else
-    {
-    KeyboardManager.setEnable(true);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress)
+
     }
-    
-    
-    
+    else {
+      KeyboardManager.setEnable(true);
+    }
+
+
+
   }, []);
 
   useEffect(() => {
     if (Platform.OS === 'ios') {
-    // console.warn('Iffff');
-    // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
-    return appleAuth.onCredentialRevoked(async () => {
-      console.warn('If this function executes, User Credentials have been Revoked');
-    });}
+      // console.warn('Iffff');
+      // onCredentialRevoked returns a function that will remove the event listener. useEffect will call this function when the component unmounts
+      // return appleAuth.onCredentialRevoked(async () => {
+      //   console.warn('If this function executes, User Credentials have been Revoked');
+      // });
+    }
   }, []);
- 
+
   const onBackPress = () => {
     return true;
   };
@@ -93,7 +93,7 @@ const Login = ({navigation}) => {
     const isFocused = navigation.isFocused();
 
     const willFocusSubscription1 = navigation.addListener('focus', () => {
-      
+
       setisloading(false);
       GoogleSignin.configure({
         scopes: ['email'], // what API you want to access on behalf of the user, default is email and profile
@@ -103,27 +103,31 @@ const Login = ({navigation}) => {
         forceCodeForRefreshToken: true, // [Android] related to `serverAuthCode`, read the docs link below *.
       })
 
-  });
+    });
 
-  return willFocusSubscription1;
+    return willFocusSubscription1;
   }, []);
-   const backBtnPressed = () => {
-    
-    Alert.alert(
-      'Warning',
-      'Do you want to close the app?', // <- this part is optional, you can pass an empty string
-      [
-        {text: 'NO', onPress: () => console.log('No')},
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
-        
-      ],
-      {cancelable: false},
-    )
+  const backBtnPressed = () => {
+    if (navigation.isFocused()) {
+
+    Alert.alert("Warning", "Are you sure you want to close the App?", [{ text: "Cancel", onPress: () => {}, style: "cancel" }, { text: "ok", onPress: () => this.handleLogout() }], { cancelable: false });
     return true;
+    }
+    // Alert.alert(
+    //   'Warning',
+    //   'Do you want to close the app?', // <- this part is optional, you can pass an empty string
+    //   [
+    //     { text: 'NO', onPress: () => console.log('No') },
+    //     { text: 'YES', onPress: () => BackHandler.exitApp() },
+
+    //   ],
+    //   { cancelable: false },
+    // )
+    // return true;
   };
   const signIngoo = async () => {
     try {
-      
+
       await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
       console.log('userInfooooo', userInfo);
@@ -135,7 +139,7 @@ const Login = ({navigation}) => {
           lastName: userInfo.user.familyName,
           email: userInfo.user.email,
           googleToken: userInfo.idToken,
-          device_id:'firebasetokenid',
+          device_id: 'firebasetokenid',
           device_type: 'A',
           usertype: selectedValue,
           fcm_token: fcm_token
@@ -145,7 +149,7 @@ const Login = ({navigation}) => {
         console.log('response', response);
         if (response.status == 'success') {
           // navigation.navigate('OtpVerify', {mobile: Mobile});
-          var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
+          var isLoggedInForOneRupee = await AsyncStorage.getItem('isLoggedInForOneRupee');
           console.log(response.userdata[0].user_type);
           if (response.userdata[0].user_type !== null) {
             if (response.userdata[0].user_type == 0) {
@@ -165,31 +169,29 @@ const Login = ({navigation}) => {
               );
               var token = await AsyncStorage.getItem('token');
 
-          await AsyncStorage.setItem('profile_image', response.profile_image);
-        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
+              await AsyncStorage.setItem('profile_image', response.profile_image);
+              await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
               console.log('token', token);
-             // setisloading(true);
-              if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-          setTimeout(() => {
-            navigation.replace('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
-            
-          }, 1000);
-        }
-else
-{
-              setTimeout(() => {
-                navigation.replace('Dashboard_donation_forDonor');
-                // setisloading(false);
-                setselectedValue('');
-              }, 1000);
-            }
+              // setisloading(true);
+              if (isLoggedInForOneRupee == 'yes') {
+                AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+                setTimeout(() => {
+                  navigation.replace('OneRupeeDonation', {
+                    donate_amt: '100',
+                    donation_mode: 'dsadas',
+                    campaign_id: '',
+                    kind_id: '',
+                  });
+
+                }, 1000);
+              }
+              else {
+                setTimeout(() => {
+                  navigation.replace('Dashboard_donation_forDonor');
+                  // setisloading(false);
+                  setselectedValue('');
+                }, 1000);
+              }
             } else {
               await AsyncStorage.setItem('token', response.token);
               await AsyncStorage.setItem(
@@ -207,26 +209,24 @@ else
               await AsyncStorage.setItem('profile_image', response.profile_image);
               await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
               setisloading(true);
-              if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-          setTimeout(() => {
-            navigation.replace('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
-            
-          }, 1000);
-        }
-else
-{
-              setTimeout(() => {
-                navigation.replace('Dashboard');
-                // setisloading(false);
-              }, 1000);
-            }
+              if (isLoggedInForOneRupee == 'yes') {
+                AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+                setTimeout(() => {
+                  navigation.replace('OneRupeeDonation', {
+                    donate_amt: '100',
+                    donation_mode: 'dsadas',
+                    campaign_id: '',
+                    kind_id: '',
+                  });
+
+                }, 1000);
+              }
+              else {
+                setTimeout(() => {
+                  navigation.replace('Dashboard');
+                  // setisloading(false);
+                }, 1000);
+              }
             }
           } else {
             navigation.replace('logintype', {
@@ -251,8 +251,8 @@ else
       }
     }
   };
-const onAppleButtonPressTest = async () => {
-  setisloading(true);
+  const onAppleButtonPressTest = async () => {
+    setisloading(true);
 
     var fcm_token = await AsyncStorage.getItem('FCMtoken');
 
@@ -264,12 +264,12 @@ const onAppleButtonPressTest = async () => {
     };
 
     var response = await API.post('login_with_apple', logs);
-    console.log ('login_with_apple response: ', response)
+    console.log('login_with_apple response: ', response)
 
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log(response.userdata[0].user_type);
-      var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
+      var isLoggedInForOneRupee = await AsyncStorage.getItem('isLoggedInForOneRupee');
       if (response.userdata[0].user_type !== null) {
         if (response.userdata[0].user_type == 0) {
           console.log(response.token);
@@ -283,27 +283,25 @@ const onAppleButtonPressTest = async () => {
           var token = await AsyncStorage.getItem('token');
           console.log('token', token);
           // setisloading(true);
-          if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-          setTimeout(() => {
-            navigation.replace('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
-            
-          }, 1000);
-        }
-else
-{
-          setTimeout(() => {
-            navigation.replace('Dashboard_donation_forDonor');
-            // setisloading(false);
-            setselectedValue('');
-          }, 1000);
-        }
+          if (isLoggedInForOneRupee == 'yes') {
+            AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+            setTimeout(() => {
+              navigation.replace('OneRupeeDonation', {
+                donate_amt: '100',
+                donation_mode: 'dsadas',
+                campaign_id: '',
+                kind_id: '',
+              });
+
+            }, 1000);
+          }
+          else {
+            setTimeout(() => {
+              navigation.replace('Dashboard_donation_forDonor');
+              // setisloading(false);
+              setselectedValue('');
+            }, 1000);
+          }
         } else {
           await AsyncStorage.setItem('token', response.token);
           await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
@@ -314,27 +312,25 @@ else
           );
 
           setisloading(true);
-          if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-          setTimeout(() => {
-            navigation.replace('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
-            
-          }, 1000);
-        }
-else
-{
-          setTimeout(() => {
-            navigation.replace('Dashboard');
-            // setisloading(false);
-            setselectedValue('');
-          }, 1000);
-        }
+          if (isLoggedInForOneRupee == 'yes') {
+            AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+            setTimeout(() => {
+              navigation.replace('OneRupeeDonation', {
+                donate_amt: '100',
+                donation_mode: 'dsadas',
+                campaign_id: '',
+                kind_id: '',
+              });
+
+            }, 1000);
+          }
+          else {
+            setTimeout(() => {
+              navigation.replace('Dashboard');
+              // setisloading(false);
+              setselectedValue('');
+            }, 1000);
+          }
         }
       } else {
         navigation.replace('logintype', {
@@ -344,129 +340,123 @@ else
     } else {
       Alert.alert(response.status, response.message);
     }
-}
+  }
 
   const onAppleButtonPress = async () => {
 
-    const appleAuthRequestResponse = await appleAuth.performRequest({
-      requestedOperation: appleAuth.Operation.LOGIN,
-      requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
-    });
-  
-     const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
-  
-    if (credentialState === appleAuth.State.AUTHORIZED) {
+    // const appleAuthRequestResponse = await appleAuth.performRequest({
+    //   requestedOperation: appleAuth.Operation.LOGIN,
+    //   requestedScopes: [appleAuth.Scope.EMAIL, appleAuth.Scope.FULL_NAME],
+    // });
+
+    // const credentialState = await appleAuth.getCredentialStateForUser(appleAuthRequestResponse.user);
+
+    // if (credentialState === appleAuth.State.AUTHORIZED) {
 
 
-  setisloading(true);
+    //   setisloading(true);
 
-    var fcm_token = await AsyncStorage.getItem('FCMtoken');
+    //   var fcm_token = await AsyncStorage.getItem('FCMtoken');
 
-    var logs = {
-      firstName: appleAuthRequestResponse.fullName.givenName,
-      lastName: appleAuthRequestResponse.fullName.familyName,
-      apple_id: appleAuthRequestResponse.user,
-      fcm_token: fcm_token
-    };
+    //   var logs = {
+    //     firstName: appleAuthRequestResponse.fullName.givenName,
+    //     lastName: appleAuthRequestResponse.fullName.familyName,
+    //     apple_id: appleAuthRequestResponse.user,
+    //     fcm_token: fcm_token
+    //   };
 
-    var response = await API.post('login_with_apple', logs);
-    console.log ('login_with_apple response: ', response)
+    //   var response = await API.post('login_with_apple', logs);
+    //   console.log('login_with_apple response: ', response)
 
-    if (response.status == 'success') {
-      // navigation.navigate('OtpVerify', {mobile: Mobile});
-      console.log(response.userdata[0].user_type);
-      var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
-      if (response.userdata[0].user_type !== null) {
-        if (response.userdata[0].user_type == 0) {
-          console.log(response.token);
-          await AsyncStorage.setItem('token', String(response.token));
-          await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
-          await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
-          await AsyncStorage.setItem(
-            'user_type',
-            response.userdata[0].user_type,
-          );
-          await AsyncStorage.setItem('profile_image', response.profile_image);
-        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
-          var token = await AsyncStorage.getItem('token');
-          console.log('token', token);
-          // setisloading(true);
-          if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-          setTimeout(() => {
-            navigation.replace('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
-            
-          }, 1000);
-        }
-else
-{
-          setTimeout(() => {
-            navigation.replace('Dashboard_donation_forDonor');
-            // setisloading(false);
-            setselectedValue('');
-          }, 1000);
-        }
-        } else {
-          await AsyncStorage.setItem('token', response.token);
-          await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
-          await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
-          await AsyncStorage.setItem(
-            'user_type',
-            response.userdata[0].user_type,
-          );
-          await AsyncStorage.setItem('profile_image', response.profile_image);
-          await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
-          setisloading(true);
-          if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-          setTimeout(() => {
-            navigation.replace('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
-            
-          }, 1000);
-        }
-else
-{
-          setTimeout(() => {
-            navigation.replace('Dashboard');
-            // setisloading(false);
-            setselectedValue('');
-          }, 1000);
-        }
-        }
-      } else {
+    //   if (response.status == 'success') {
+    //     // navigation.navigate('OtpVerify', {mobile: Mobile});
+    //     console.log(response.userdata[0].user_type);
+    //     var isLoggedInForOneRupee = await AsyncStorage.getItem('isLoggedInForOneRupee');
+    //     if (response.userdata[0].user_type !== null) {
+    //       if (response.userdata[0].user_type == 0) {
+    //         console.log(response.token);
+    //         await AsyncStorage.setItem('token', String(response.token));
+    //         await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
+    //         await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
+    //         await AsyncStorage.setItem(
+    //           'user_type',
+    //           response.userdata[0].user_type,
+    //         );
+    //         await AsyncStorage.setItem('profile_image', response.profile_image);
+    //         await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
+    //         var token = await AsyncStorage.getItem('token');
+    //         console.log('token', token);
+    //         // setisloading(true);
+    //         if (isLoggedInForOneRupee == 'yes') {
+    //           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+    //           setTimeout(() => {
+    //             navigation.replace('OneRupeeDonation', {
+    //               donate_amt: '100',
+    //               donation_mode: 'dsadas',
+    //               campaign_id: '',
+    //               kind_id: '',
+    //             });
 
-        if (appleAuthRequestResponse.fullName.givenName == null || appleAuthRequestResponse.fullName.givenName == '')
-        {
-          navigation.replace('logintypeForiOS', {
-            user_id: appleAuthRequestResponse.user,
-          });
-        }
-  else
-  {
+    //           }, 1000);
+    //         }
+    //         else {
+    //           setTimeout(() => {
+    //             navigation.replace('Dashboard_donation_forDonor');
+    //             // setisloading(false);
+    //             setselectedValue('');
+    //           }, 1000);
+    //         }
+    //       } else {
+    //         await AsyncStorage.setItem('token', response.token);
+    //         await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
+    //         await AsyncStorage.setItem('apple_id', response.userdata[0].apple_id);
+    //         await AsyncStorage.setItem(
+    //           'user_type',
+    //           response.userdata[0].user_type,
+    //         );
+    //         await AsyncStorage.setItem('profile_image', response.profile_image);
+    //         await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
+    //         setisloading(true);
+    //         if (isLoggedInForOneRupee == 'yes') {
+    //           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+    //           setTimeout(() => {
+    //             navigation.replace('OneRupeeDonation', {
+    //               donate_amt: '100',
+    //               donation_mode: 'dsadas',
+    //               campaign_id: '',
+    //               kind_id: '',
+    //             });
 
-        navigation.replace('logintype', {
-          user_id: response.userdata[0].user_id,
-          loginThrough: 'apple'
-        });
-      }
-      }
-    } else {
-      Alert.alert(response.status, response.message);
-    }
-  
-    }
+    //           }, 1000);
+    //         }
+    //         else {
+    //           setTimeout(() => {
+    //             navigation.replace('Dashboard');
+    //             // setisloading(false);
+    //             setselectedValue('');
+    //           }, 1000);
+    //         }
+    //       }
+    //     } else {
+
+    //       if (appleAuthRequestResponse.fullName.givenName == null || appleAuthRequestResponse.fullName.givenName == '') {
+    //         navigation.replace('logintypeForiOS', {
+    //           user_id: appleAuthRequestResponse.user,
+    //         });
+    //       }
+    //       else {
+
+    //         navigation.replace('logintype', {
+    //           user_id: response.userdata[0].user_id,
+    //           loginThrough: 'apple'
+    //         });
+    //       }
+    //     }
+    //   } else {
+    //     Alert.alert(response.status, response.message);
+    //   }
+
+    // }
   }
   const signInfb = () => {
     return new Promise((resolve, reject) => {
@@ -518,7 +508,7 @@ else
     });
   };
   const fblogin = async (dataval, accessToken) => {
-   setisloading(true);
+    setisloading(true);
     var fcm_token = await AsyncStorage.getItem('FCMtoken');
     var logs = {
       // fullName: dataval.first_name + ' ' + dataval.last_name,
@@ -533,12 +523,12 @@ else
       fcm_token: fcm_token
     };
     var response = await API.post('login_with_facebook', logs);
-    console.log ('fb response: ', response)
+    console.log('fb response: ', response)
 
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log(response.userdata[0].user_type);
-      var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
+      var isLoggedInForOneRupee = await AsyncStorage.getItem('isLoggedInForOneRupee');
       if (response.userdata[0].user_type !== null) {
         if (response.userdata[0].user_type == 0) {
           console.log(response.token);
@@ -550,31 +540,29 @@ else
             response.userdata[0].user_type,
           );
           await AsyncStorage.setItem('profile_image', response.profile_image);
-        await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
+          await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
           var token = await AsyncStorage.getItem('token');
           console.log('token', token);
           // setisloading(true);
-          if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-          setTimeout(() => {
-            navigation.replace('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
-            
-          }, 1000);
-        }
-else
-{
-          setTimeout(() => {
-            navigation.replace('Dashboard_donation_forDonor');
-            // setisloading(false);
-            setselectedValue('');
-          }, 1000);
-        }
+          if (isLoggedInForOneRupee == 'yes') {
+            AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+            setTimeout(() => {
+              navigation.replace('OneRupeeDonation', {
+                donate_amt: '100',
+                donation_mode: 'dsadas',
+                campaign_id: '',
+                kind_id: '',
+              });
+
+            }, 1000);
+          }
+          else {
+            setTimeout(() => {
+              navigation.replace('Dashboard_donation_forDonor');
+              // setisloading(false);
+              setselectedValue('');
+            }, 1000);
+          }
         } else {
           await AsyncStorage.setItem('token', response.token);
           await AsyncStorage.setItem('user_id', response.userdata[0].user_id);
@@ -586,27 +574,25 @@ else
           await AsyncStorage.setItem('profile_image', response.profile_image);
           await AsyncStorage.setItem('profile_name', response.userdata[0].first_name + ' ' + response.userdata[0].last_name);
           setisloading(true);
-          if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-          setTimeout(() => {
-            navigation.replace('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
-            
-          }, 1000);
-        }
-else
-{
-          setTimeout(() => {
-            navigation.replace('Dashboard');
-            // setisloading(false);
-            setselectedValue('');
-          }, 1000);
-        }
+          if (isLoggedInForOneRupee == 'yes') {
+            AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+            setTimeout(() => {
+              navigation.replace('OneRupeeDonation', {
+                donate_amt: '100',
+                donation_mode: 'dsadas',
+                campaign_id: '',
+                kind_id: '',
+              });
+
+            }, 1000);
+          }
+          else {
+            setTimeout(() => {
+              navigation.replace('Dashboard');
+              // setisloading(false);
+              setselectedValue('');
+            }, 1000);
+          }
         }
       } else {
         navigation.replace('logintype', {
@@ -618,117 +604,110 @@ else
       Alert.alert(response.status, response.message);
     }
   };
-  const googlelog = async () => {};
+  const googlelog = async () => { };
   const Login = async () => {
     var fcm_token = await AsyncStorage.getItem('FCMtoken');
-    if (Email.trim() == '')
-    {
+    if (Email.trim() == '') {
       Alert.alert('Warning', 'Please enter Mobile or Email');
     }
-    else if (password.trim() == '')
-    {
+    else if (password.trim() == '') {
       Alert.alert('Warning', 'Please enter Password');
     }
-    else
-    {
-    var logs = {
-      username: Email.trim(),
-      password: password,
-      fcm_token: fcm_token
-    };
-    var response = await API.post('login', logs);
-    // navigation.closeDrawer();
-    var isLoggedInForOneRupee =await AsyncStorage.getItem('isLoggedInForOneRupee');
-    // navigation.closeDrawer()
-   // console.log('isLoggedInForOneRupee: ', isLoggedInForOneRupee);
-    console.log('response: ', response);
-    if (response.status === '1') {
-      // await React.useContext.signIn(response.token);
-      if (response.user_type == 0) {
-        if(response.pan_number !="")
-        {
-          await AsyncStorage.setItem('pan_number', response.pan_number);
-        }
-        
-        await AsyncStorage.setItem('token', String(response.token));
-        await AsyncStorage.setItem('user_id', response.user_id);
-        await AsyncStorage.setItem('google_token', '');
-        await AsyncStorage.setItem('user_type', response.user_type);
-        await AsyncStorage.setItem('kyc_verified', response.kyc_verified);
-        await AsyncStorage.setItem('profile_image', response.profile_img);
-        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
-        var token = await AsyncStorage.getItem('token');
-        console.log('token', token);
-        setisloading(true);
+    else {
+      var logs = {
+        username: Email.trim(),
+        password: password,
+        fcm_token: fcm_token
+      };
+      var response = await API.post('login', logs);
+      // navigation.closeDrawer();
+      var isLoggedInForOneRupee = await AsyncStorage.getItem('isLoggedInForOneRupee');
+      // navigation.closeDrawer()
+      // console.log('isLoggedInForOneRupee: ', isLoggedInForOneRupee);
+      console.log('response: ', response);
+      if (response.status === '1') {
+        // await React.useContext.signIn(response.token);
+        if (response.user_type == 0) {
+          if (response.pan_number != "") {
+            await AsyncStorage.setItem('pan_number', response.pan_number);
+          }
 
-        
-        if (isLoggedInForOneRupee == 'yes')
-        {
-          AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+          await AsyncStorage.setItem('token', String(response.token));
+          await AsyncStorage.setItem('user_id', response.user_id);
+          await AsyncStorage.setItem('google_token', '');
+          await AsyncStorage.setItem('user_type', response.user_type);
+          await AsyncStorage.setItem('kyc_verified', response.kyc_verified);
+          await AsyncStorage.setItem('profile_image', response.profile_img);
+          await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
+          var token = await AsyncStorage.getItem('token');
+          console.log('token', token);
+          setisloading(true);
+
+
+          if (isLoggedInForOneRupee == 'yes') {
+            AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+            setTimeout(() => {
+              navigation.replace('OneRupeeDonation', {
+                donate_amt: '100',
+                donation_mode: 'dsadas',
+                campaign_id: '',
+                kind_id: '',
+              });
+              // setisloading(false);
+              setemail('');
+              setpassword('');
+            }, 1000);
+          }
+          else {
+            setTimeout(() => {
+              navigation.replace('Dashboard_donation_forDonor');
+              // setisloading(false);
+              setemail('');
+              setpassword('');
+            }, 1000);
+          }
+
+        } else {
+          await AsyncStorage.setItem('token', response.token);
+          await AsyncStorage.setItem('user_id', response.user_id);
+          await AsyncStorage.setItem('google_token', '');
+          await AsyncStorage.setItem('user_type', response.user_type);
+          await AsyncStorage.setItem('kyc_verified', response.kyc_verified);
+          await AsyncStorage.setItem('profile_image', response.profile_img);
+          await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
+          if (response.pan_number != "") {
+            await AsyncStorage.setItem('pan_number', response.pan_number);
+          }
+          setisloading(true);
+          //         if (isLoggedInForOneRupee == 'yes')
+          //         {
+          //           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
+          //           setTimeout(() => {
+          //             navigation.navigate('OneRupeeDonation', {
+          //               donate_amt: '100',
+          //               donation_mode: 'dsadas',
+          //               campaign_id: '',
+          //               kind_id: '',
+          //             });
+
+          //           }, 1000);
+          //         }
+          // else
+          // {
           setTimeout(() => {
-            navigation.replace('OneRupeeDonation', {
-              donate_amt: '100',
-              donation_mode: 'dsadas',
-              campaign_id: '',
-              kind_id: '',
-            });
+            navigation.replace('Dashboard');
             // setisloading(false);
-    setemail('');
-    setpassword(''); 
+            setemail('');
+            setpassword('');
           }, 1000);
         }
-else
-{
-  setTimeout(() => {
-    navigation.replace('Dashboard_donation_forDonor');
-    // setisloading(false);
-    setemail('');
-    setpassword('');
-  }, 1000);
-}
-        
+        //   }
       } else {
-        await AsyncStorage.setItem('token', response.token);
-        await AsyncStorage.setItem('user_id', response.user_id);
-        await AsyncStorage.setItem('google_token', '');
-        await AsyncStorage.setItem('user_type', response.user_type);
-        await AsyncStorage.setItem('kyc_verified', response.kyc_verified);
-        await AsyncStorage.setItem('profile_image', response.profile_img);
-        await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
-        if(response.pan_number !="")
-        {
-          await AsyncStorage.setItem('pan_number', response.pan_number);
-        }
-        setisloading(true);
-//         if (isLoggedInForOneRupee == 'yes')
-//         {
-//           AsyncStorage.setItem('isLoggedInForOneRupee', 'no');
-//           setTimeout(() => {
-//             navigation.navigate('OneRupeeDonation', {
-//               donate_amt: '100',
-//               donation_mode: 'dsadas',
-//               campaign_id: '',
-//               kind_id: '',
-//             });
-            
-//           }, 1000);
-//         }
-// else
-// {
-        setTimeout(() => {
-          navigation.replace('Dashboard');
-          // setisloading(false);
-          setemail('');
-          setpassword('');
-        }, 1000);
+        Alert.alert(response.status, response.message);
       }
-   //   }
-    } else {
-      Alert.alert(response.status, response.message);
     }
-  }
   };
-  const signInlind = () => {};
+  const signInlind = () => { };
   const register = () => {
     navigation.navigate('SignUp');
   };
@@ -746,9 +725,9 @@ else
         <SafeAreaView style={Styles.login_main_header}></SafeAreaView>
         <View style={Styles.login_text_main}>
           <Image
-            style={{width: 90, height: 80, marginStart: 40, marginTop: 20}}
+            style={{ width: 90, height: 80, marginStart: 40, marginTop: 20 }}
             source={require('../../src/assets/images/heart.png')}
-            // resizeMode="contain"
+          // resizeMode="contain"
           />
           <Text style={Styles.login_text_font}>Login</Text>
           <Text style={Styles.login_text_font1}>Sign in to continue</Text>
@@ -768,37 +747,37 @@ else
             secureTextEntry={true}
           /> */}
 
-<View
+          <View
+            style={{
+              flexDirection: 'row',
+              marginTop: 14,
+              borderBottomWidth: 1,
+              paddingRight: 10,
+              marginStart: 10,
+              marginEnd: 10,
+            }}>
+            <TextInput
+              placeholder="Password"
+              onChangeText={text => setTasktipass(text)}
               style={{
-                flexDirection: 'row',
-                marginTop: 14,
-                borderBottomWidth: 1,
-                paddingRight: 10,
-                marginStart: 10,
-                marginEnd: 10,
-              }}>
-              <TextInput
-                placeholder="Password"
-                onChangeText={text => setTasktipass(text)}
-                style={{
-                  flex: 1,
-                  paddingTop: 0,
-                  fontSize: 16,
-                  height: 40,
-                  color: 'black'
-                }}
-                keyboardType="default"
-                placeholderTextColor='grey'
-                secureTextEntry={!isPasswordHidden}
-              />
-              <TouchableOpacity onPress={updateSecureText}>
-                {!isPasswordHidden ? (
-                  <Feather name="eye-off" color="gray" size={20} />
-                ) : (
-                  <Feather name="eye" color="green" size={20} />
-                )}
-              </TouchableOpacity>
-            </View>
+                flex: 1,
+                paddingTop: 0,
+                fontSize: 16,
+                height: 40,
+                color: 'black'
+              }}
+              keyboardType="default"
+              placeholderTextColor='grey'
+              secureTextEntry={!isPasswordHidden}
+            />
+            <TouchableOpacity onPress={updateSecureText}>
+              {!isPasswordHidden ? (
+                <Feather name="eye-off" color="gray" size={20} />
+              ) : (
+                <Feather name="eye" color="green" size={20} />
+              )}
+            </TouchableOpacity>
+          </View>
 
           <TouchableOpacity
             onPress={() => navigation.navigate('ForgetPassScreen')}>
@@ -819,27 +798,27 @@ else
           <View style={Styles.login_social_contain}>
 
 
-          { Platform.OS === 'ios' && <TouchableOpacity onPress={() => onAppleButtonPress()}>
+            {Platform.OS === 'ios' && <TouchableOpacity onPress={() => onAppleButtonPress()}>
               <Image
-                style={{width: 40, height: 40, marginStart: 0, marginTop: 20}}
+                style={{ width: 40, height: 40, marginStart: 0, marginTop: 20 }}
                 source={require('../../src/assets/images/apple_dark.png')}
-                // resizeMode="contain"
+              // resizeMode="contain"
               />
-            </TouchableOpacity> }
+            </TouchableOpacity>}
 
             <TouchableOpacity onPress={() => signInfb()}>
               <Image
-                style={{width: 40, height: 40, marginStart: 10, marginTop: 20}}
+                style={{ width: 40, height: 40, marginStart: 10, marginTop: 20 }}
                 source={require('../../src/assets/images/fb.png')}
-                // resizeMode="contain"
+              // resizeMode="contain"
               />
             </TouchableOpacity>
-            
+
             <TouchableOpacity onPress={() => signIngoo()}>
               <Image
-                style={{width: 40, height: 40, marginStart: 10, marginTop: 20}}
+                style={{ width: 40, height: 40, marginStart: 10, marginTop: 20 }}
                 source={require('../../src/assets/images/goo.png')}
-                // resizeMode="contain"
+              // resizeMode="contain"
               />
             </TouchableOpacity>
             {/* <TouchableOpacity onPress={() => signInlind()}>

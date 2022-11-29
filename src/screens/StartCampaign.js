@@ -51,7 +51,7 @@ import CheckBox from '@react-native-community/checkbox';
 const RenderComponent = (props) => {
   return (<TextInput
   key={props.index}
-      style={{borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
+      style={{ borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4,color:'gray'}}
       value={props.data[props.index].item}
       onChangeText={val => {
           let newArray = [...props.data];
@@ -65,8 +65,9 @@ const RenderComponent = (props) => {
 const RenderComponent1 = (props) => {
   return (<TextInput
   key={props.index}
+  
   keyboardType = 'decimal-pad'
-      style={{borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
+      style={{color:'gray' ,borderWidth: 1, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
       value={props.data[props.index].qty}
       onChangeText={val => {
           let newArray = [...props.data];
@@ -146,11 +147,7 @@ const StartCampaign = ({navigation}) => {
   const [descriptionWarning, setdescriptionWarning] = useState('Description text must be minimum 50 characters');
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
 
-  const [unitList, setunitList] = useState([{"created_at": "2021-06-09 02:58:51", "kind_id": "kg", "kind_name": "Kilogram", "status": "1", "updated_at": "2022-05-18 03:19:42"},
-   {"created_at": "2021-08-23 02:30:52", "kind_id": "m", "kind_name": "Meter", "status": "1", "updated_at": "2021-08-23 02:30:52"}, 
-   {"created_at": "2021-08-23 02:31:13", "kind_id": "L", "kind_name": "Litre", "status": "1", "updated_at": "2021-08-23 02:31:42"}, 
-   {"created_at": "2022-05-18 03:20:44", "kind_id": "pound", "kind_name": "Pound", "status": "1", "updated_at": "2022-05-18 03:20:44"},
-    {"created_at": "2022-05-18 03:20:44", "kind_id": "Ft", "kind_name": "Feet", "status": "1", "updated_at": "2022-05-18 03:20:44"}])
+  const [unitList, setunitList] = useState([])
   const [seachableModalVisible1, setseachableModalVisible1] = useState(false);
   const [unitSelectedIndex, setunitSelectedIndex] = useState(0);
 
@@ -554,6 +551,24 @@ const StartCampaign = ({navigation}) => {
       Alert.alert(response.status, response.message);
     }
   };
+
+
+  const getUnitList = async () => {
+    var response = await API.post('kind_unit_list');
+    console.log('kind_unit_list', response);
+    if (response.status == 'success') {
+      
+      setunitList(response.data)
+      // ArrPref1.push({name: 'All', id: 'all',})
+      console.log(response.data);
+      
+    } else {
+      Alert.alert(response.status, response.message);
+    }
+  };
+
+
+
   const Start_Campaign = () => {
 
     
@@ -686,10 +701,6 @@ const StartCampaign = ({navigation}) => {
   const Start_CampaignNow = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
     var formdata = new FormData();
-
-
-
-
     if (selCamp == 2) 
     {
 
@@ -813,11 +824,16 @@ const StartCampaign = ({navigation}) => {
       
     } else {
       setprogress(false)
-      Alert.alert(response.status, response.message);
-      navigation.navigate('Dashboard');
+    
+      Alert.alert(response.status, response.message, [
+        {text: 'OK', onPress: () => navigation.navigate('Dashboard')},
+      ],
+      {cancelable: false},);
+      
     }
   };
   const startDate = () => {
+
     // setisStart(true);
   };
   const endDate = () => {
@@ -841,6 +857,7 @@ const StartCampaign = ({navigation}) => {
     }
     fetchkind();
     getPreferences();
+   
   }, []);
   const user = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -887,7 +904,7 @@ const StartCampaign = ({navigation}) => {
    }
    const selectItemOnDropDown = (item) => 
   {
-
+ 
 console.log('selectItemOnDropDown', item)
 setselectedKindValue(item.kind_name)
 setseachableModalVisible(false)
@@ -902,10 +919,6 @@ setselectedValue(item.kind_id)
     //   this.setState({ seachableModalVisible: false, selectedParcelType2: item.name,})
     // }
     
-
-    
-
-    
   }
 
   const selectItemOnDropDown1 = (item) => 
@@ -914,7 +927,7 @@ setselectedValue(item.kind_id)
 setseachableModalVisible1(false)
 
     let newArray = [...data];
-    newArray[unitSelectedIndex].unit = item.kind_id
+    newArray[unitSelectedIndex].unit = item.unit
     setData(newArray);
         
   }
@@ -950,15 +963,15 @@ setseachableModalVisible1(false)
 const SelectUnit = (index) => 
   {
 
-    
+    getUnitList();
    setunitSelectedIndex(index);
     setseachableModalVisible1(true)
   }
 
   const renderItem = ({item, index}) => (
-    <View style={{padding: 10}}>
+    <View style={{padding: 5}}>
       <View style={{flexDirection:'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 0}}>
-      <View style={{flexDirection:'column', width: '40%', marginRight: '2%'}}>
+      <View style={{flexDirection:'column', width: '30%', marginRight: '2%'}}>
         <Text style={{marginBottom: 5}}>Item Name</Text>
         <RenderComponent item={item} index={index} data={data} setData={setData} />
         </View>
@@ -1009,14 +1022,14 @@ const SelectUnit = (index) =>
                  
 
         </View>
-        <View style={{flexDirection:'column', width: '6%', marginRight: '2%',}}>
-                  <TouchableOpacity onPress={() => removeCategoryItem(index)}>
-            <Image style={{ resizeMode: 'contain', height: 37, width: 37, marginTop: 21, tintColor: '#f55656'
+       
+                  <TouchableOpacity  style={{flexDirection:'column', width: '6%', }} onPress={() => removeCategoryItem(index)}>
+            <Image style={{ resizeMode: 'contain', height: 32, width: 32, marginTop: 21, tintColor: '#f55656'
 }}
 source={require('../../src/assets/images/outline_remove_circle_outline_black_36pt_2x.png')}>
 </Image> 
 </TouchableOpacity>
-        </View>
+       
         </View>
     </View>
 );
@@ -1355,11 +1368,6 @@ const add_more = (id) => {
                 );
               }}
             />
-
-
-
-
-
 
         <Text style={ {
   marginTop: 5,
@@ -2050,13 +2058,15 @@ const add_more = (id) => {
 :
              
 
-
-
+            <View style={{ backgroundColor: null, flexDirection:'row', justifyContent:'space-between'}}>
+                
                 <Picker
                   selectedValue={selectedValue}
                   style={{
                     height: 50,
-                    width: '80%',
+                    width: '50%',
+                    color:'black',
+                    backgroundColor:'white',
                     borderColor: '#000',
                     alignSelf: 'center',
                     borderWidth: 1,
@@ -2066,11 +2076,17 @@ const add_more = (id) => {
                     // console.log(itemValue)
                     // Alert.alert(itemValue)
                   }>
-                  <Picker.Item label="Select one" value="" />
+                  <Picker.Item label="Select one" color='gray' value="" />
                   {kind.map((item, index) => (
-                    <Picker.Item label={item.kind_name} value={item.kind_id} />
+                    <Picker.Item label={item.kind_name} color='gray' value={item.kind_id} />
                   ))}
                 </Picker>
+               
+                
+                <Image source={require("../../src/assets/images/down_arrow.png")} style={{width:24, height:24,marginRight:200,marginTop:15}} />
+               
+                
+              </View>
 
                   }
 
@@ -2189,6 +2205,33 @@ const add_more = (id) => {
     
 
         </ImageBackground>
+
+
+
+        <Modal transparent={true} animationType="none" visible={progress}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          //  backgroundColor: `rgba(0,0,0,${0.6})`,
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        <View
+          style={{
+            padding: 13,
+            backgroundColor: 'grey',
+            borderRadius: 3,
+            marginTop: '90%'
+          }}
+        >
+          <ActivityIndicator animating={progress} color={'white'} size="large" />
+          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+        </View>
+      </View>
+    </Modal>
         
         <Modal
                             animationType="slide"
@@ -2249,7 +2292,7 @@ const add_more = (id) => {
           renderItem={({ item }) => (
           <View>
         <TouchableOpacity onPress={() => selectItemOnDropDown1(item)}>
-        <Text style={{ padding: 10, color: 'white' }}>{item.kind_name} </Text>
+        <Text style={{ padding: 10, color: 'white' }}>{item.unit} </Text>
         </TouchableOpacity>
       </View>
       )} 
@@ -2276,7 +2319,7 @@ const add_more = (id) => {
       <DateTimePicker
         value={strdate == null ? new Date(moment().toISOString()) : strdate}
           maxDate={new Date("2040-12-31")}
-        minDate={new Date("2010-12-31")}
+        minDate={new Date()}
         dateTimePickerVisible={isStartPickerVisible}
         onDateChange={val => setSdate(val)}
         onBackdropPress={() => setisStartPickerVisible(false)}

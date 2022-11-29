@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-class DonationDetails extends Component {
+class ContactDonee extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,4 +25,4 @@ class DonationDetails extends Component {
   }
 }
 
-export default DonationDetails;
+export default ContactDonee;

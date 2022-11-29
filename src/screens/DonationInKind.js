@@ -52,6 +52,10 @@ class DonationAmount extends Component {
       remarksError: '',
       cmpData: [],
       capmain_details: [],
+      campaign_name:'',
+      campaign_details:'',
+      expiry_date:'',
+      start_date:'',
       campaign_owner_data: {},
       tableHead: ['Donor Name', 'Date', 'Amount', 'Status'],
       camp_id: props.route.params.camp_id,
@@ -66,11 +70,11 @@ class DonationAmount extends Component {
       campaignImageURI: '',
       starCount: 5,
       sharableURL: '',
-      data: [
-        {id: 1, item: "item 1", qty: '100', unit: 'kg'}, {id: 2, item: "item 2", qty: '200', unit: 'L'},
-         {id: 1, item: "item 3", qty: '300', unit: 'm'}, {id: 4, item: "item 4", qty: '400', unit: 'pound'}, 
+      data: [],
+      data_list:[
+        {id: 1, item_name: '', item_quantity: '', item_unit: '',donated_quantity:''},
         
-    ]
+      ],
     };
   }
   componentDidMount() {
@@ -91,22 +95,34 @@ class DonationAmount extends Component {
     var logs = {
       campaign_id: this.state.campaign_id//this.state.camp_id,
     };
-    var response = await API.post('campaign_details', logs);
+    var response = await API.post('open_contact_donee_page', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log('campaign_details response',response.data);
       
       
-      var base64String = response.data.capmain_details[0]['campaign_image']
-      this.setState({campaignImageURI: base64String, sharableURL: response.data.campaign_details_url})
+    //  var base64String = response.data.capmain_details[0]['campaign_image']
+    //  this.setState({campaignImageURI: base64String, sharableURL: response.data.campaign_details_url})
 
 
       this.setState({
-        cmpData: [...response.data.donations],
-        capmain_details: [...response.data.capmain_details],
-        campaign_owner_data: response.data.campaign_owner_data,
+        campaign_name:response.data.campaign_data.campaign_name,
+        campaign_details:response.data.campaign_data.campaign_details,
+        expiry_date:response.data.campaign_data.campaign_end_date,
+        start_date:response.data.campaign_data.campaign_start_date,
+        data:[...response.data.kind_list],
+        data_list :response.data.kind_list.map(value => ({ item_name: `${value.item_name}`,
+        item_quantity: `${value.qty}`,
+        item_unit: `${value.unit}`,
+       })),
+        // cmpData: [...response.data.donations],
+        // capmain_details: [...response.data.campaign_data.campaign_details],
+        // campaign_owner_data: response.data.campaign_owner_data,
         isloading: false,
       });
+
+   
+
       console.log(this.state.cmpData);
     } else {
       Alert.alert(response.status, response.message);
@@ -161,23 +177,27 @@ class DonationAmount extends Component {
   donate = async () => {
 
     // console.log('donate qty index: ', this.state['donateQty'+1])
+     console.log(this.state.data_list)
+  //   if (this.state.remarksString.trim() == '')
+  //   {
+  //     this.setState({remarksError: 'Please enter note'})
+  //   }
     
-    if (this.state.remarksString.trim() == '')
-    {
-      this.setState({remarksError: 'Please enter note'})
-    }
+  //  else
+  //  {
     
-   else
-   {
     
-      var user_id = await AsyncStorage.getItem('user_id');
+    var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
-      user_id: user_id,
+       user_id: user_id,
       campaign_id: this.state.campaign_id,
-      message: this.state.remarksString
+      // message: this.state.remarksString,
+      kind_id: this.state.kind_id,
     };
-    console.log(logs);
-    var response = await API.post('contact_donee', logs);
+    var campaign_data = {campaign_data:logs,
+      kind_list:this.state.data_list}
+    console.log(JSON.stringify(campaign_data));
+    var response = await API.post('kind_donation_submit', campaign_data);
     if (response.status == 'success') {
       console.log('contact_donee response', response);
       // Toast.show(response.message, Toast.LONG)
@@ -189,8 +209,20 @@ class DonationAmount extends Component {
     } else {
       Alert.alert(response.status, response.message);
     }
+    // var response = await API.post('contact_donee', logs);
+    // if (response.status == 'success') {
+    //   console.log('contact_donee response', response);
+    //   // Toast.show(response.message, Toast.LONG)
+    //   Alert.alert('success', response.message, [
+    //     {text: 'OK', onPress: () => this.props.navigation.goBack()},
+    //   ],
+    //   {cancelable: false},);
+        
+    // } else {
+    //   Alert.alert(response.status, response.message);
+    // }
   
-   }
+   
     
   };
   startInkind = async () => {
@@ -276,46 +308,72 @@ class DonationAmount extends Component {
     
 
      renderItem = ({item, index}) => (
+    
       <View style={{padding: 10}}>
         <View style={{flexDirection:'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 0}}>
         <View style={{flexDirection:'column', width: '40%', marginRight: '2%'}}>
-          <Text style={{marginBottom: 5}}>Item Name</Text>
+          <Text style={{marginBottom: 5,color:'black'}}>Item Name</Text>
           <TextInput
           key={index}
-              style={{borderWidth: .5, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
-              value={this.state.data[index].item}
+              style={{borderWidth: .5,color:'black',borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
+              value={this.state.data[index].item_name}
               onChangeText={val => {
-                  console.log('dsdsd')
+               
+                // let newArray = [];
+                // newArray[index].item = val
+                // props.setData(newArray);
+                
+                console.log(val);
+                  
               }}
               // editable = {false}
           />
           </View>
           <View style={{flexDirection:'column', width: '28%', marginRight: '2%'}}>
-          <Text style={{marginBottom: 5}}>Qty + Unit </Text>
+          <Text style={{marginBottom: 5,color:'black',color:'black'}}>Quantity</Text>
           <TextInput
           key={index}
-              style={{borderWidth: .5, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
+              style={{borderWidth: .5, borderColor: '#f55656',color:'black', height: 40, paddingLeft: 4, borderRadius: 4}}
               value={this.state.data[index].qty + ' ' + this.state.data[index].unit}
               onChangeText={val => {
-                console.log('dsdsd')
+                // let newArray = [...this.state.data];
+                // newArray[index].qty = val
+                // this.setState({data_list:newArray})
+               
+                // console.log(data_list);
+                
             }}
               // editable = {false}
           />
           </View>
           <View style={{flexDirection:'column', width: '28%', marginRight: '2%'}}>
-          <Text style={{marginBottom: 5, fontSize: 12, marginTop: 2}}>Donate Quantity </Text>
+          <Text style={{marginBottom: 5, fontSize: 12, marginTop: 2,color:'black'}}>Donate Qty </Text>
           <TextInput
           key={index}
           keyboardType = 'decimal-pad'
-              style={{borderWidth: 1.5, borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4}}
+              style={{borderWidth: 1.5, borderColor: '#f55656', height: 40,color:'black', paddingLeft: 4, borderRadius: 4}}
               value={this.state['donateQty'+index]}
+              placeholder="0"
               onChangeText={val => {
-                this.setState({['donateQty'+index]: val})
+                 this.setState({['donateQty'+index]: val})
+                
+                
+                 let newArray = [...this.state.data_list];
+                 newArray[index].donated_quantity = val
+                
+                 
+                  
+                this.setState({
+                  data_list: this.state.data_list
+                })
+                 console.log(this.state.data_list);
+                 
               }}
           />
           </View>
           </View>
       </View>
+     
   );
   render() {
 
@@ -325,7 +383,7 @@ class DonationAmount extends Component {
     }
 
     return (
-      <ScrollView>
+     
         <Container>
           <ImageBackground
             source={require('../../src/assets/images/bg.jpg')}
@@ -398,10 +456,10 @@ class DonationAmount extends Component {
               </View> */}
             </SafeAreaView>
 
-            <ScrollView style={Styles.dashboard_main_contain}>
+            <ScrollView >
               <View style={Styles.campaign_details_contain}>
 
-              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:10, backgroundColor: 'null', flex: 1, marginTop: 6}}>
+              {/* <View style={{ marginLeft: 0, marginRight: 0, borderRadius:10, backgroundColor: 'null', flex: 1, marginTop: 6}}>
 <Image style={{
   
     resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 10, width: '100%', 
@@ -410,22 +468,24 @@ class DonationAmount extends Component {
 // source={require('../../src/assets/images/daatar_banner.jpg')}
 >
 </Image> 
-</View>
+</View> */}
 
 
 
-              <Text style={{ marginStart: 5, fontWeight: 'bold', fontSize: 20,marginTop:23 }}>
+              {/* <Text style={{ marginStart: 5, fontWeight: 'bold', fontSize: 20,marginTop:23 }}>
                     Campaign Details : 
-                  </Text>
+                  </Text> */}
                   
                   <Text style={{
                     fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
+            
+                    marginTop: 10,
                     marginStart: 20, 
                     marginEnd: 20,
+                   
+                  
                   }}>
-                    {'Camapign Name: '+this.state.capmain_details[0]['campaign_name']}
+                    {'Camapign Name: '+this.state.campaign_name}
                   </Text>
                 
                 
@@ -436,7 +496,7 @@ class DonationAmount extends Component {
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    {'Camapign Details: '+this.state.capmain_details[0]['campaign_details']}
+                    {'Camapign Details: '+this.state.campaign_details}
                   </Text>
                 
 
@@ -448,7 +508,7 @@ class DonationAmount extends Component {
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    Start Date: {this.state.capmain_details[0]['campaign_start_date']}
+                    Start Date: {this.state.start_date}
                   </Text>
 
                   <Text style={{
@@ -458,11 +518,11 @@ class DonationAmount extends Component {
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    Expiry Date: {this.state.capmain_details[0]['campaign_end_date']}
+                    Expiry Date: {this.state.expiry_date}
                   </Text>
                 
                 
-                  { this.state.capmain_details[0]['donation_mode'] == '1' &&  <Text style={{
+                  {/* { this.state.capmain_details[0]['donation_mode'] == '1' &&  <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -504,9 +564,9 @@ class DonationAmount extends Component {
                     Target Amount:{' '}
                     {this.state.capmain_details[0]['campaign_target_amount']}
                   </Text> }
+                 */}
                 
-                
-                  { this.state.capmain_details[0]['donation_mode'] == '2' && <Text style={{
+                  {/* { this.state.capmain_details[0]['donation_mode'] == '2' && <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -517,9 +577,9 @@ class DonationAmount extends Component {
                     {this.state.capmain_details[0]['campaign_target_qty']}
                   </Text> }
 
-            
+             */}
                 
-
+{/* 
                 <Text style={{ marginStart: 5, fontWeight: 'bold', fontSize: 20, marginTop: 14 }}>
                     Campaign Owner Details :
                   </Text>
@@ -573,9 +633,19 @@ class DonationAmount extends Component {
                     marginEnd: 20,
                   }}>
                     {''}
-                  </Text>
+                  </Text> */}
 
                   <View style={{flex: 1, marginTop: 15}}>
+                  <Text style={{
+                    fontSize: 18,
+                    fontWeight: '500',
+                   
+                    marginStart: 20, 
+                    fontWeight:'bold',
+                    marginEnd: 20,
+                  }}>
+                    Unit List
+                  </Text>
         
         <FlatList
             data={this.state.data}
@@ -590,7 +660,7 @@ class DonationAmount extends Component {
 
               <View style={{
     // backgroundColor: "#fff",
-        height: 173,
+        height: 1,
         // borderRadius: 25,
         // padding: '5%',
         marginLeft: '5%',
@@ -613,7 +683,7 @@ class DonationAmount extends Component {
 
 
 
-<Text style={{paddingLeft:13,color: 'black', fontSize: 13, fontWeight: 'bold'}}>Notes</Text>
+{/* <Text style={{paddingLeft:13,color: 'black', fontSize: 13, fontWeight: 'bold'}}>Notes</Text>
 
 <TextInput style={{
     
@@ -652,10 +722,10 @@ class DonationAmount extends Component {
         marginBottom: -5,
         alignSelf: 'flex-start',
         marginLeft: 13
-    }}>{this.state.remarksError}</Text>
+    }}>{this.state.remarksError}</Text> */}
 
         </View>
-
+{/* 
         <Text style={{
           paddingLeft: 17,
           paddingRight: 17,
@@ -676,7 +746,7 @@ class DonationAmount extends Component {
         alignSelf: 'center',
         textAlignVertical: 'center',
         textAlign: 'center'
-    }}>{'Please type your message here and the Donee will contact you for your kind Donation.'}</Text>
+    }}>{'Please type your message here and the Donee will contact you for your kind Donation.'}</Text> */}
               <TouchableOpacity
                 style={{
                   width: 100,
@@ -715,7 +785,7 @@ class DonationAmount extends Component {
 
           </ImageBackground>
         </Container>
-      </ScrollView>
+     
     );
   }
 }

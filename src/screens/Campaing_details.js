@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -34,6 +34,8 @@ class Campaing_details extends Component {
     super(props);
     this.state = {
       cmpData: [],
+      ListData: [],
+      d_status:'',
       capmain_details: [],
       tableHead: ['Donor Name', 'Date', 'Amount', 'Status'],
       camp_id: props.route.params.camp_id,
@@ -56,7 +58,7 @@ class Campaing_details extends Component {
     var response = await API.post('campaign_details', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
-      console.log('response.data: ',response.data.capmain_details);
+      console.log('response.data: ', response.data);
       var arr = new Array();
       var amountVal = 0;
       for (var i = 0; i < response.data.donations.length; i++) {
@@ -74,9 +76,10 @@ class Campaing_details extends Component {
         });
       }
       var base64String = response.data.capmain_details[0]['campaign_image']
-      var base64Icon = 'data:image/png;base64,'+base64String
+      var base64Icon = 'data:image/png;base64,' + base64String
       this.setState({
-        cmpData: [...response.data.donations],
+        cmpData: [...response.data.kind_list],
+        ListData:[...response.data.donations],
         capmain_details: [...response.data.capmain_details],
         campaignImageURI: base64String,
         isloading: false,
@@ -115,12 +118,12 @@ class Campaing_details extends Component {
       Alert.alert(response.status, response.message);
     }
   };
-  renderlog1 = ({item, index}) => {
+  renderlog1 = ({ item, index }) => {
     return (
-      <Card style={{overflow: 'hidden'}}>
-      <CardItem>
-      <View style={{flexDirection: 'column'}}>
-        {/* <View
+      <Card style={{ overflow: 'hidden' }}>
+        <CardItem>
+          <View style={{ flexDirection: 'column' }}>
+            {/* <View
           style={{
             flexDirection: 'row',
             borderWidth: 1,
@@ -151,34 +154,34 @@ class Campaing_details extends Component {
           </View>
         </View> */}
 
-<View style={{flexDirection: 'row', marginTop: -23}}>
+            <View style={{ flexDirection: 'row', marginTop: -23 }}>
               <Text style={Styles.doner_title_font_Modified}>
-              Donor Name:   
-                </Text>
-                <Text style={Styles.doner_title_font}>
-                  {item.donor_name}
-                </Text>
-              </View>
+                Donor Name:
+              </Text>
+              <Text style={Styles.doner_title_font}>
+                {item.donor_name}
+              </Text>
+            </View>
 
-              <View style={{flexDirection: 'row', marginTop: 3}}>
+            <View style={{ flexDirection: 'row', marginTop: 3 }}>
               <Text style={Styles.doner_title_font_Modified}>
-              Date:   
-                </Text>
-                <Text style={Styles.doner_title_font}>
-                  {item.updated_at}
-                </Text>
-              </View>
+                Date:
+              </Text>
+              <Text style={Styles.doner_title_font}>
+                {item.updated_at}
+              </Text>
+            </View>
 
-              <View style={{flexDirection: 'row', marginTop: 3}}>
+            <View style={{ flexDirection: 'row', marginTop: 3 }}>
               <Text style={Styles.doner_title_font_Modified}>
-              Amount:   
-                </Text>
-                <Text style={Styles.doner_title_font}>
-                  {item.amountpaid}
-                </Text>
-              </View>
+                Amount:
+              </Text>
+              <Text style={Styles.doner_title_font}>
+                {item.amountpaid}
+              </Text>
+            </View>
 
-              {/* <View style={{flexDirection: 'row', marginTop: 3}}>
+            {/* <View style={{flexDirection: 'row', marginTop: 3}}>
               <Text style={Styles.doner_title_font_Modified}>
               Status:   
                 </Text>
@@ -186,48 +189,101 @@ class Campaing_details extends Component {
                   {item.status}
                 </Text>
               </View> */}
-      </View>
-      </CardItem>
-        </Card>
+          </View>
+        </CardItem>
+      </Card>
     );
   };
-  renderlog = ({item, index}) => {
-    return (
-      <View style={{flexDirection: 'row'}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            borderWidth: 1,
-            width: '100%',
-            height: 40,
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <View style={{alignItems: 'center', marginStart: 6}}>
-            <Text style={Styles.sub_text_font1}>{item.donor_name}</Text>
-          </View>
-          <View style={{alignItems: 'center'}}>
-            <Text style={Styles.sub_text_font1}>{item.updated_at}</Text>
-          </View>
-          <View style={{alignItems: 'center'}}>
-            <Text style={Styles.sub_text_font1}>{item.amountpaid}</Text>
-          </View>
-          <View style={{alignItems: 'center', marginEnd: 6}}>
-            {item.donee_approved === '0' ? (
-              <Text style={Styles.sub_text_font1}>{item.status}</Text>
-            ) : (
-              <TouchableOpacity
-                style={{height: 25, width: 80, backgroundColor: '#64d182'}}
-                onPress={() => this.approve(item)}>
-                <Text style={Styles.sub_text_font1}>Approve</Text>
-              </TouchableOpacity>
-            )}
-          </View>
+
+
+  renderItem = ({ item, index }) => (
+
+    <View style={{ padding: 5 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'flex-start', marginTop: 0 }}>
+        <View style={{ flexDirection: 'column', width: '40%', marginRight: '2%' }}>
+          <Text style={{ marginBottom: 5, color: 'black' }}>Item Name</Text>
+          <TextInput
+            key={index}
+            style={{ borderWidth: .5, color: 'black', borderColor: '#f55656', height: 40, paddingLeft: 4, borderRadius: 4 }}
+            value={item.item_name}
+            editable={false}
+          />
+        </View>
+        <View style={{ flexDirection: 'column', width: '28%', marginRight: '2%' }}>
+          <Text style={{ marginBottom: 5, color: 'black', color: 'black' }}>Quantity</Text>
+          <TextInput
+            key={index}
+            style={{ borderWidth: .5, borderColor: '#f55656', color: 'black', height: 40, paddingLeft: 4, borderRadius: 4 }}
+            value={item.qty}
+            editable={false}
+          />
+        </View>
+        <View style={{ flexDirection: 'column', width: '28%', marginRight: '2%' }}>
+          <Text style={{ marginBottom: 5, fontSize: 12, marginTop: 2, color: 'black' }}>Unit</Text>
+          <TextInput
+            key={index}
+            keyboardType='decimal-pad'
+            style={{ borderWidth: .5, borderColor: '#f55656', height: 40, color: 'black', paddingLeft: 4, borderRadius: 4 }}
+            value={item.unit}
+            editable={false}
+          />
         </View>
       </View>
+    </View>
+
+  );
+
+  renderlog = ({ item, index }) => {
+    return (
+      <TouchableOpacity activeOpacity={0.8} onPress={() => this.props.navigation.navigate('Campaing_kind_donor_details', { item })}>
+        <Card style={{ overflow: 'hidden' }} >
+          <CardItem >
+            <View style={{ flexDirection: 'column' }}>
+              <View style={{ flexDirection: 'row', marginTop: -23 }}>
+                <Text style={Styles.doner_title_font_Modified}>
+                  Donor Name:
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.donor_name}
+                </Text>
+                {item.donation_status =="1" ? <View style={{ borderRadius:10,borderColor:'black',borderWidth:1, marginTop: 15,marginLeft:15,justifyContent: 'flex-end',backgroundColor: 'green', width: 70, height: 32,alignContent:'center' }}>
+                <Text style={{fontSize:12,color: 'white',textAlign:'center',textAlignVertical:'center',marginBottom:6}}>
+                  Completed
+                </Text>
+                </View> :
+                <View style={{ borderRadius:10, borderColor:'black',borderWidth:1,marginTop: 15,marginLeft:12,justifyContent: 'flex-end',backgroundColor: 'yellow', width: 70, height: 22,alignContent:'center' }}>
+                <Text style={{fontSize:12,color: 'black',textAlign:'center',textAlignVertical:'center',marginBottom:6}}>
+                  Pending
+                </Text>
+                </View>}
+                
+
+              </View>
+
+              <View style={{ flexDirection: 'row', marginTop: 3 }}>
+                <Text style={Styles.doner_title_font_Modified}>
+                  Date:
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.created_at}
+                </Text>
+              </View>
+
+              <View style={{ flexDirection: 'row', marginTop: 3 }}>
+                <Text style={Styles.doner_title_font_Modified}>
+                  Donation Number:
+                </Text>
+                <Text style={Styles.doner_title_font}>
+                  {item.donation_number}
+                </Text>
+              </View>
+            </View>
+          </CardItem>
+        </Card>
+      </TouchableOpacity>
     );
   };
-  renderItemComment = ({item, index}) => {
+  renderItemComment = ({ item, index }) => {
     console.log(item.usr_pos_imgComment);
     return (
       <View
@@ -241,8 +297,8 @@ class Campaing_details extends Component {
             // width: '30%',
           }
         }>
-        
-        <View style={[{flexDirection: 'row', marginTop: -10, marginLeft: 12}]}>
+
+        <View style={[{ flexDirection: 'row', marginTop: -10, marginLeft: 12 }]}>
           <Text
             style={[
               {
@@ -275,102 +331,16 @@ class Campaing_details extends Component {
               marginStart: 18,
             },
           ]}></View>
-        <View style={[{marginStart: 28, width: '60%'}]}>
-          
-            <Text style={[{marginTop: 3, color: '#000'}]}>
-              {item.user_TagComment}
-            </Text>
+        <View style={[{ marginStart: 28, width: '60%' }]}>
+
+          <Text style={[{ marginTop: 3, color: '#000' }]}>
+            {item.user_TagComment}
+          </Text>
         </View>
       </View>
     );
   };
-   remarksTyping = async (text) => {
-    this.setState({raiseQueryString: text, maxLengthh1: 5000 - text.length})
-   
-  }
-  setDescription = value => {
-    this.setState({
-      descriptionString: value,
-    });
-  };
-  descriptionEdit = async () => {
-    this.inputText1.focus()
-  };
-   submitQuery = async () => {
-    var user_id = await AsyncStorage.getItem('user_id');
-    if (this.state.raiseQueryString.trim() == '')
-    {
-      Alert.alert('Alert', 'Please enter your query');
-    }
-else
-{
-    var logs = {
-      user_id: user_id,
-      remarks: this.state.raiseQueryString
-    };
-    console.log(logs);
-    var response = await API.post('raise_a_query', logs);
-    if (response.status == 'success') {
-      // logout()
-      
-      Alert.alert(
-        response.status,
-        response.message, // <- this part is optional, you can pass an empty string
-        [
-          //  {text: 'NO', onPress: () => console.log('No')}, //logout()
-          {text: 'OK', onPress: () => this.setState({raiseQueryString: ''})}, 
-          
-        ],
-        {cancelable: false},
-      )
-        
-        
-     
-    } else {
-      Alert.alert(response.status, response.message);
-    }
-
-  }
   
-  };
-  submitSelfDonation = async () => {
-    var user_id = await AsyncStorage.getItem('user_id');
-    if (this.state.descriptionString.trim() == '')
-    {
-      Alert.alert('Alert', 'Please enter amount');
-    }
-else
-{
-    var logs = {
-      user_id: user_id,
-      amount: this.state.descriptionString,
-      campaign_id: this.state.camp_id
-    };
-    console.log(logs);
-    var response = await API.post('self_donation', logs);
-    if (response.status == 'success') {
-      // logout()
-      
-      Alert.alert(
-        response.status,
-        response.message, // <- this part is optional, you can pass an empty string
-        [
-          //  {text: 'NO', onPress: () => console.log('No')}, //logout()
-          {text: 'OK', onPress: () => this.setState({descriptionString: ''})}, 
-          
-        ],
-        {cancelable: false},
-      )
-        
-        
-     
-    } else {
-      Alert.alert(response.status, response.message);
-    }
-
-  }
-  
-  };
   render() {
     var loaded = this.state.isloading;
     if (loaded) {
@@ -378,54 +348,52 @@ else
     }
 
     var donation_type = ''
-     if (this.state.capmain_details[0]['donation_mode'] == '1')
-     {
+    if (this.state.capmain_details[0]['donation_mode'] == '1') {
       donation_type = 'Money'
-     }
-     else
-     {
+    }
+    else {
       donation_type = 'In Kind'
-     }
+    }
 
     return (
-      
-        <Container>
-          <ImageBackground
-            source={require('../../src/assets/images/bg.jpg')}
-            style={Styles.login_main}>
-            <SafeAreaView style={Styles.dashboard_main_header}>
-              <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity
-                  onPress={() => this.props.navigation.goBack()}>
-                  <Image
-                    style={{
-                      width: 30,
-                      height: 30,
-                      marginStart: 10,
-                      // marginTop: 20,
-                      backgroundColor: 'transparent',
-                      alignSelf: 'center',
-                    }}
-                    source={require('../../src/assets/images/back.png')}
-                    // resizeMode="contain"dashboard_main_btn
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Image
-                    style={{
-                      width: 40,
-                      height: 40,
-                      marginStart: 10,
-                      // marginTop: 20,
-                      backgroundColor: 'transparent',
-                      alignSelf: 'center',
-                    }}
-                    source={require('../../src/assets/images/heart1.png')}
-                    // resizeMode="contain"dashboard_main_btn
-                  />
-                </TouchableOpacity>
-              </View>
-              <View style={Styles.dashboard_main_headers}>
+
+      <Container>
+        <ImageBackground
+          source={require('../../src/assets/images/bg.jpg')}
+          style={Styles.login_main}>
+          <SafeAreaView style={Styles.dashboard_main_header}>
+            <View style={Styles.dashboard_main_headers}>
+              <TouchableOpacity
+                onPress={() => this.props.navigation.goBack()}>
+                <Image
+                  style={{
+                    width: 30,
+                    height: 30,
+                    marginStart: 10,
+                    // marginTop: 20,
+                    backgroundColor: 'transparent',
+                    alignSelf: 'center',
+                  }}
+                  source={require('../../src/assets/images/back.png')}
+                // resizeMode="contain"dashboard_main_btn
+                />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Image
+                  style={{
+                    width: 40,
+                    height: 40,
+                    marginStart: 10,
+                    // marginTop: 20,
+                    backgroundColor: 'transparent',
+                    alignSelf: 'center',
+                  }}
+                  source={require('../../src/assets/images/heart1.png')}
+                // resizeMode="contain"dashboard_main_btn
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={Styles.dashboard_main_headers}>
               {/* <TouchableOpacity
                 onPress={() => this.props.navigation.navigate('Search_screen')}>
                   <Image
@@ -456,60 +424,91 @@ else
                     // resizeMode="contain"dashboard_main_btn
                   />
                 </TouchableOpacity> */}
+            </View>
+          </SafeAreaView>
+          <ScrollView style={Styles.dashboard_main_contain}>
+            <View style={Styles.campaign_details_contain}>
+
+              <View style={{ marginLeft: 0, marginRight: 0, borderRadius: 4, backgroundColor: 'null', marginTop: -16 }}>
+                <Image style={{
+
+                  resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%',
+                }}
+                  source={{ uri: this.state.campaignImageURI }}
+                // source={require('../../src/assets/images/daatar_banner.jpg')}
+                >
+                </Image>
               </View>
-            </SafeAreaView>
-            <ScrollView style={Styles.dashboard_main_contain}>
-              <View style={Styles.campaign_details_contain}>
 
-              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', marginTop: -16}}>
-<Image style={{
-  
-    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
-}}
- source={{uri: this.state.campaignImageURI}}
-// source={require('../../src/assets/images/daatar_banner.jpg')}
->
-</Image> 
-</View>
+              <View style={{alignItems:'flex-start', marginTop: 3 }}>
+                <Text style={{fontSize: 18,
+                  fontWeight: '500',
+                  numberOfLines:1,
+                   ellipsizeMode:'tail',
+                  marginStart: 7,
+                  fontWeight: 'bold',
+                  marginEnd: 5,
+                 }}>
+                  {this.state.capmain_details[0]['campaign_details']}
+                </Text>
+              </View>
 
-                <View style={{alignSelf: 'center', marginTop: 3}}>
-                  <Text style={Styles.campaign_text_font1}>
-                    {this.state.capmain_details[0]['campaign_details']}
-                  </Text>
+              <View style={Styles.campaign_details_date_contain}>
+                <Text style={Styles.sub_text_font1}>
+                  Start Date: {this.state.capmain_details[0]['campaign_start_date']}
+                </Text>
+                <Text style={Styles.sub_text_font1}>
+                  {'   '}
+                  Expiry Date: {this.state.capmain_details[0]['campaign_end_date']}
+                </Text>
+                <Text style={Styles.sub_text_font1}>
+                  Donation Type:{' '}
+                  {donation_type}
+                </Text>
+              </View>
+              <View style={Styles.campaign_details_text_contain}>
+               
                 </View>
+                <View >
+                <Text style={{
+                  fontSize: 18,
+                  fontWeight: '500',
 
-                <View style={Styles.campaign_details_date_contain}>
-                  <Text style={Styles.sub_text_font1}>
-                    Start Date: {this.state.capmain_details[0]['campaign_start_date']}
-                  </Text>
-                  <Text style={Styles.sub_text_font1}>
-                    {'   '}
-                    Expiry Date: {this.state.capmain_details[0]['campaign_end_date']}
-                  </Text>
-                </View>
-                <View style={Styles.campaign_details_text_contain}>
-                  <Text style={Styles.sub_text_font1}>
-                    Donation Type:{' '}
-                    {donation_type}
-                  </Text>
-                 { this.state.capmain_details[0]['donation_mode'] == '1' && <Text style={Styles.sub_text_font1}>
-                    {'   '}
-                    Amount Recived: {this.state.amount}
-                  </Text> }
-                </View>
-                <View style={Styles.campaign_details_text_contain}>
-                { this.state.capmain_details[0]['donation_mode'] == '1' && <Text style={Styles.sub_text_font1}>
-                    Target Amount:{' '}
-                    {this.state.capmain_details[0]['campaign_target_amount']}
-                  </Text> }
+                  marginStart: 7,
+                  fontWeight: 'bold',
+                  marginEnd: 5,
+                  marginBottom:20
+                }}>
 
-                  { this.state.capmain_details[0]['donation_mode'] == '2' && <Text style={Styles.sub_text_font1}>
-                    Target Quantity:{' '}
-                    {this.state.capmain_details[0]['campaign_target_qty']}
-                  </Text> }
+                  Item List
+                  
+                </Text>
 
-                </View>
-                {/* <View style={Styles.campaign_details_text_contain}>
+                <FlatList
+                  data={this.state.cmpData}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={(item, index) => this.renderItem(item, index)}
+                />
+                
+                {/* {this.state.capmain_details[0]['donation_mode'] == '1' && <Text style={Styles.sub_text_font1}>
+                  {'   '}
+                  Amount Recived: {this.state.amount}
+                </Text>} */}
+              </View>
+              <View style={Styles.campaign_details_text_contain}>
+                {/* {this.state.capmain_details[0]['donation_mode'] == '1' && <Text style={Styles.sub_text_font1}>
+                  Target Amount:{' '}
+                  {this.state.capmain_details[0]['campaign_target_amount']}
+                </Text>}
+
+                {this.state.capmain_details[0]['donation_mode'] == '2' && <Text style={Styles.sub_text_font1}>
+                  Target Quantity:{' '}
+                  {this.state.capmain_details[0]['campaign_target_qty']}
+                </Text>} */}
+                
+              </View>
+             
+              {/* <View style={Styles.campaign_details_text_contain}>
                   <Text style={Styles.sub_text_font1}>
                     Comments: 
                   </Text>
@@ -517,7 +516,7 @@ else
                     {'   '} Like: 
                   </Text>
                 </View> */}
-             
+
               {/* <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
                 <Row
                   data={this.state.tableHead}
@@ -525,149 +524,38 @@ else
                   textStyle={{margin: 6, textAlign: 'center'}}
                 />
               </Table> */}
-            { this.state.capmain_details[0]['donation_mode'] == '1' &&  <FlatList
-                data={this.state.cmpData}
-                renderItem={this.renderlog1}
-                keyExtractor={(item, id) => id.toString()}
-              /> }
-               <Text style={Styles.sub_text_font1}>
-                    
-                  </Text>
+               <Text  style={{
+                  fontSize: 18,
+                  fontWeight: '500',
+
+                  marginStart: 7,
+                  fontWeight: 'bold',
+                  marginEnd: 5,
+                }}>
+                  Donation List
+                </Text>
+              {this.state.capmain_details[0]['donation_mode'] == '1' &&
+                <FlatList
+                  data={this.state.ListData}
+                  renderItem={this.renderlog1}
+                  keyExtractor={(item, id) => id.toString()}
+                />}
+              {this.state.capmain_details[0]['donation_mode'] == '2' &&
+                <FlatList
+                  data={this.state.ListData}
+                  renderItem={this.renderlog}
+                  keyExtractor={(item, id) => id.toString()}
+                />}
+              <Text style={Styles.sub_text_font1}>
+
+              </Text>
+
+            </View>
+          </ScrollView>
+        </ImageBackground>
 
 
-                  <Text style={{
-    fontSize: 17,
-    // alignSelf: 'center',
-    color: 'grey',
-    fontWeight: '500',
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 20,
-    marginBottom: 10
-  }}>Raise your query:</Text>
-
-                  <TextInput style={{
-    
-    width: null,
-    marginLeft: 17,
-    borderRadius: 0,
-    marginRight: 17,
-    backgroundColor: 'white',
-    fontSize: 12,
-    height: 80,
-    color: 'gray',
-   borderColor: 'black',
-   borderWidth: 1,
-      padding: 5,
-      paddingTop: 5,
-      
-    
-    }}
-                placeholder={'Type your query here...'}
-                multiline={true}
-     numberOfLines={5}
-     textAlignVertical={'top'}
-                placeholderTextColor={'grey'}
-                value = {this.state.raiseQueryString}
-                maxLength={5000}
-                onChangeText={(text) => this.remarksTyping(text)}
-                ></TextInput>
-<Text style={{ fontSize: 11, alignSelf: 'flex-start', marginTop: 5, color: '#f55656', marginLeft: 17, marginBottom: 7, fontWeight: '400' }}>{this.state.maxLengthh1+' Character remaining'}</Text>
-
-
-<TouchableOpacity
-                  style={{width: '94%',
-                    height: 46,
-                    backgroundColor: '#f55656',
-                    marginTop: 15,
-                    color: '#f55656',
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    borderRadius: 6,}}
-                  onPress={() => this.submitQuery()}>
-                  <Text style={Styles.donate_btn_text}>Submit Query</Text>
-                </TouchableOpacity>
-
-              { this.props.route.params.camp_type == '1' &&  <Text style={{
-    fontSize: 17,
-    // alignSelf: 'center',
-    color: 'grey',
-    fontWeight: '500',
-    marginLeft: 15,
-    marginRight: 15,
-    marginTop: 20
-  }}>Self-Donation:</Text> }
-
-  { this.props.route.params.camp_type == '1' &&  <View style={{
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    marginLeft: 15,
-    marginRight: 15
-  }}> 
-                  <TextInput
-                    style={{
-                      borderBottomColor: '#000',
-                      borderBottomWidth: 1,
-                      width: '90%',
-                      color: 'black',
-                      height: 43,
-                      backgroundColor: 'white'
-                    }}
-                    keyboardType='decimal-pad'
-                    placeholder="Enter amount"
-                    placeholderTextColor='grey'
-                    ref ={ref => this.inputText1 = ref}
-                    // editable={this.state.iseditablefname}
-                    onChangeText={value => this.setDescription(value)}
-                    value={this.state.descriptionString}
-                    ></TextInput>
-                  {/* </ListItem> */}
-                  <TouchableOpacity
-                    style={Styles.user_edit_profile_lbtext}
-                    onPress={() => this.descriptionEdit()}>
-                    <Image
-                      style={{
-                        width: 24,
-                        height: 21,
-                        marginStart: 12,
-                        marginTop: 20,
-                        backgroundColor: 'transparent',
-                      }}
-                      source={require('../../src/assets/images/penicon.png')}
-                    />
-                  </TouchableOpacity>
-                </View> }
-
-                { this.props.route.params.camp_type == '1' &&  <Text style={ {
-  marginTop: 5,
-  marginLeft: 0,
-  marginRight: 15,
-  color: 'green',
-  fontSize: 11,
-  marginBottom: 10,
-  // alignSelf: 'center',
-  paddingLeft: 13
-}}>{'Make a self donation'}</Text> }
-
-{ this.props.route.params.camp_type == '1' && <TouchableOpacity
-                  style={{width: '94%',
-                    height: 46,
-                    backgroundColor: '#f55656',
-                    marginTop: 15,
-                    color: '#f55656',
-                    justifyContent: 'center',
-                    alignSelf: 'center',
-                    borderRadius: 6,
-                  marginBottom: 60}}
-                  onPress={() => this.submitSelfDonation()}>
-                  <Text style={Styles.donate_btn_text}>Submit Donation</Text>
-                </TouchableOpacity> }
-                </View>
-            </ScrollView>
-          </ImageBackground>
-
-          
-        </Container>
+      </Container>
     );
   }
 }
