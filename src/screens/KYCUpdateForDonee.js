@@ -1478,7 +1478,6 @@ onValueChange={
            
              
             </View>
-
             </ScrollView>
             { this.state.progress && <ActivityIndicator size="large" color="#f55656" style={{opacity:1,
              position: 'absolute',

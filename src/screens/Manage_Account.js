@@ -284,7 +284,7 @@ class User_profile extends Component {
                   fontWeight: 'bold',
                 }}
                 keyboardType="default"
-                placeholderTextColor='grey'
+                //placeholderTextColor={'grey'}
                 secureTextEntry={!this.state.isPasswordHidden}
               />
               <TouchableOpacity onPress={()=> this.updateSecureText()}>
@@ -322,7 +322,7 @@ class User_profile extends Component {
                   color: 'black'
                 }}
                 keyboardType="default"
-                placeholderTextColor={'grey'}
+                //ßplaceholderTextColor={'grey'}
                 secureTextEntry={!this.state.isConfirmPasswordHidden}
               />
               <TouchableOpacity onPress={()=> this.updateSecureText1()}>
