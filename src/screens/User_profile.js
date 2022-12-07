@@ -32,6 +32,7 @@ import {
   launchCamera,
   launchImageLibrary
 } from 'react-native-image-picker';
+import AppPreLoader from '../components/AppPreLoader';
 var Styles = require('../assets/files/Styles');
 const requestCameraPermission = async () => {
   if (Platform.OS === 'android') {
@@ -442,6 +443,10 @@ else
     
   };
   render() {
+    var loaded = this.state.isloading;
+    if (loaded) {
+      return <AppPreLoader />;
+    }
     return (
       <Container>
        

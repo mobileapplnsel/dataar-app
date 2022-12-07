@@ -39,6 +39,7 @@ class View_campaign extends Component {
     this.state = {
       isloading: true,
       cmpData: [],
+      campaignvalue:'',
       statusBGColor: 'green',
       tableHead: [
         'No.',
@@ -181,6 +182,7 @@ class View_campaign extends Component {
                     camp_id={item.campaign_id}
                   />
                   <RiseEnquery
+                  camp_id={item.campaign_id}
                   />
                 </View>
               </View>

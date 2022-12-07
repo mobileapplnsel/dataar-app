@@ -8,7 +8,7 @@ var Styles = require('../assets/files/Styles');
 
 const deviceWidth = Dimensions.get('window').width;
 
-export default function RiseEnquery() {
+export default function RiseEnquery(props) {
     const [visible, setVisible] = useState(false);
     const [progress, setprogress] = useState(false);
      const [maxLegth, setMaxLegth] = useState(5000);
@@ -22,7 +22,8 @@ export default function RiseEnquery() {
         }
         else {
             var logs = {
-                user_id: user_id,
+                //user_id: user_id,
+                campaign_id: props?.camp_id,
                 remarks: raiseQueryString
             };
             console.log(logs);
@@ -42,6 +43,7 @@ export default function RiseEnquery() {
                 )
             } else {
                 Alert.alert(response.status, response.message);
+                setprogress(false);
             }
 
         }
