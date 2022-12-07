@@ -167,18 +167,54 @@ class Campaing_details extends Component {
               <Text style={Styles.doner_title_font_Modified}>
                 Date:
               </Text>
+
+              <View style ={{
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+              }}>
+
               <Text style={Styles.doner_title_font}>
-                {item.updated_at}
+                {(item.updated_at).substring(0 , 11).split("-").reverse().join("-") + " " +((item.updated_at).substring(11 , 13) > 12 ? ((item.updated_at).substring(11 , 13))%12 : (item.updated_at).substring(11 , 13)) + ":" +(item.updated_at).substring(14 , 16) }
               </Text>
+
+             {(item.updated_at).substring(11 , 13) > 12 ? (<Text style={Styles.doner_title_font}>
+              PM
+              </Text>) : (AM)
+  }
+
+             
+
+              </View>
             </View>
 
             <View style={{ flexDirection: 'row', marginTop: 3 }}>
               <Text style={Styles.doner_title_font_Modified}>
                 Amount:
               </Text>
+
+<View style={{
+  flexDirection: 'row'
+}}>
+<Image
+                    style={{
+                      width: 15,
+                      height: 15,
+                     // marginStart: 10,
+                      //marginEnd: 10,
+                      // marginTop: 20,
+                      marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                    }}
+                    source={require('../../src/assets/images/rupee.png')}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+
               <Text style={Styles.doner_title_font}>
                 {item.amountpaid}
               </Text>
+
+              </View>
             </View>
 
             {/* <View style={{flexDirection: 'row', marginTop: 3}}>
@@ -455,11 +491,11 @@ class Campaing_details extends Component {
 
               <View style={Styles.campaign_details_date_contain}>
                 <Text style={Styles.sub_text_font1}>
-                  Start Date: {this.state.capmain_details[0]['campaign_start_date']}
+                  Start Date: {(this.state.capmain_details[0]['campaign_start_date']).split("-").reverse().join("-")}
                 </Text>
                 <Text style={Styles.sub_text_font1}>
                   {'   '}
-                  Expiry Date: {this.state.capmain_details[0]['campaign_end_date']}
+                  Expiry Date: {(this.state.capmain_details[0]['campaign_end_date']).split("-").reverse().join("-")}
                 </Text>
                 <Text style={Styles.sub_text_font1}>
                   Donation Type:{' '}
