@@ -10,13 +10,15 @@ import {
   Alert,
   FlatList,
   Animated,
-  Platform
+  Platform,
+  ActivityIndicator
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
 import AsyncStorage from '@react-native-community/async-storage';
 var Styles = require('../assets/files/Styles');
 import Feather from 'react-native-vector-icons/Feather';
+import Modal from 'react-native-modal';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import KeyboardManager from 'react-native-keyboard-manager';
 class User_profile extends Component {
@@ -28,6 +30,7 @@ class User_profile extends Component {
       lname: '',
       email: '',
       mobile: '',
+      progress: false,
       iseditablefname: false,
       iseditablelname: false,
       image: '',
@@ -139,7 +142,7 @@ class User_profile extends Component {
       new_password: this.state.passwordString,
     };
     console.log(logs);
-    
+    this.setState({progress: true})
       var response = await API.post('change_password', logs);
       console.log(response);
       if (response.status == 'success') {
@@ -152,12 +155,14 @@ class User_profile extends Component {
           response.message, // <- this part is optional, you can pass an empty string
           [
             {text: 'OK', onPress: () => this.props.navigation.goBack()},
+            this.setState({progress: false})
           ],
           {cancelable: false},
         );
         
       } else {
         Alert.alert(response.status, response.message);
+        this.setState({progress: false})
       }
     
   }
@@ -284,7 +289,7 @@ class User_profile extends Component {
                   fontWeight: 'bold',
                 }}
                 keyboardType="default"
-                placeholderTextColor='grey'
+                //placeholderTextColor={'grey'}
                 secureTextEntry={!this.state.isPasswordHidden}
               />
               <TouchableOpacity onPress={()=> this.updateSecureText()}>
@@ -322,7 +327,7 @@ class User_profile extends Component {
                   color: 'black'
                 }}
                 keyboardType="default"
-                placeholderTextColor={'grey'}
+                //ßplaceholderTextColor={'grey'}
                 secureTextEntry={!this.state.isConfirmPasswordHidden}
               />
               <TouchableOpacity onPress={()=> this.updateSecureText1()}>
@@ -363,6 +368,31 @@ class User_profile extends Component {
             {/* </View> */}
           </ImageBackground>
         </ScrollView>
+
+        <Modal transparent={true} animationType="none" visible={this.state.progress}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          //  backgroundColor: `rgba(0,0,0,${0.6})`,
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        <View
+          style={{
+            padding: 13,
+            backgroundColor: 'grey',
+            borderRadius: 3,
+            marginTop: '40%'
+          }}
+        >
+          <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
+          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+        </View>
+      </View>
+    </Modal>
       </Container>
     );
   }
