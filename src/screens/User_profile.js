@@ -28,7 +28,6 @@ import PickerDob from '../components/Picker';
 import cameraIcon from '../../src/assets/images/outline_photo_camera_black_48.png';
 import GalleryIcon from '../../src/assets/images/outline_collections_black_48.png';
 import DocumentPicker from 'react-native-document-picker';
-import AppPreLoader from '../components/AppPreLoader';
 import {
   launchCamera,
   launchImageLibrary
@@ -85,7 +84,6 @@ class User_profile extends Component {
       lname: '',
       email: '',
       mobile: '',
-      isloading: false,
       iseditablefname: false,
       iseditablelname: false,
       image: '',
@@ -431,12 +429,6 @@ else
      // console.log(response);
      console.log('Update Profile response: ', response);
       if (response.status === 'success') {
-        this.setState({
-         
-          isloading: true,
-          
-          
-        });
 
         await AsyncStorage.setItem('profile_image', response.profile_img);
         await AsyncStorage.setItem('profile_name', response.first_name + ' ' + response.last_name);
@@ -450,10 +442,6 @@ else
     
   };
   render() {
-    var loaded = this.state.isloading;
-    if (loaded) {
-      return <AppPreLoader />;
-    }
     return (
       <Container>
        

@@ -69,6 +69,9 @@ const deviceHeight =
     this.props.navigation.navigate('View_campaign');
   };
    StartCampaign = async (flag) => {
+    this.setState({
+      progress:true
+  })
     var token = await AsyncStorage.getItem('token');
     var kyc_verified = await AsyncStorage.getItem('kyc_verified');
     var pan_number = await AsyncStorage.getItem('pan_number');
@@ -84,6 +87,9 @@ const deviceHeight =
     var response = await API.post('kyc_status', logs);
     if (response.status == 'success') {
       console.log(response.userdata.pan_number);
+      this.setState({
+        progress:false
+    })
       if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
         {
           if(response.userdata.pan_number!='')
@@ -1027,9 +1033,9 @@ const deviceHeight =
             <View
               style={{
                 padding: 13,
-                backgroundColor: 'grey',
+                backgroundColor: 'red',
                 borderRadius: 3,
-                marginTop: '90%'
+                marginTop: '80%'
               }}
             >
               <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />

@@ -42,6 +42,7 @@ import {navigationRef} from './Route';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
 import SideMenu from '../navigations/SideMenu';
+import Campaing_kind_donor_details from '../screens/Campaing_kind_donor_details';
 const AuthStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const DrawerCamp = createDrawerNavigator();
@@ -341,6 +342,13 @@ const HomeStackScreenDonee = ({navigation}) => (
       }}
     />
 
+    <HomeStack_nav.Screen
+      name="Campaing_kind_donor_details"
+      component={Campaing_kind_donor_details}
+      options={{
+        headerShown: false,
+      }}
+    />
     <HomeStack_nav.Screen
       name="User_profile_forDonee"
       component={User_profile_forDonee}

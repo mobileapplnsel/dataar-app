@@ -51,7 +51,6 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import messaging from '@react-native-firebase/messaging';
-import { appleAuth, AppleButton } from '@invertase/react-native-apple-authentication';
 import { useIsFocused } from "@react-navigation/native";
 // import Strings from '../utils/Strings';
 const CustomSidebarMenu = props => {
