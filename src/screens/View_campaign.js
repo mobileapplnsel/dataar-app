@@ -240,9 +240,27 @@ source={{uri: base64Icon}}>
                 <Text style={Styles.doner_title_font_Modified}>
                   Target Amount:
                 </Text>
+
+                <Image
+                    style={{
+                      width: 15,
+                      height: 15,
+                     // marginStart: 10,
+                      //marginEnd: 10,
+                      // marginTop: 20,
+                      marginTop: 20,
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                    }}
+                    source={require('../../src/assets/images/rupee.png')}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
                 <Text style={Styles.doner_title_font}>
                   {item.campaign_target_amount}
                 </Text>
+
+
+
               </View>}
 
               {item.donation_mode == '2' && <View style={{ flexDirection: 'row', marginTop: 3 }}>
@@ -368,7 +386,10 @@ source={{uri: base64Icon}}>
                 })}>
                 <Text style={Styles.donate_btn_text}>View</Text>
               </TouchableOpacity>
-              {item.status == '1' &&
+
+
+              
+              {/* {item.status == '1' &&
                 <TouchableOpacity
                   style={{
                     width: '96%',
@@ -385,7 +406,7 @@ source={{uri: base64Icon}}>
                   })}>
                   <Text style={Styles.donate_btn_text}>Edit</Text>
                 </TouchableOpacity>
-              }
+              } */}
             </View>
           </CardItem>
         </Card>

@@ -174,12 +174,14 @@ class Campaing_details extends Component {
               }}>
 
               <Text style={Styles.doner_title_font}>
-                {(item.updated_at).substring(0 , 11).split("-").reverse().join("-") + " " +((item.updated_at).substring(11 , 13) > 12 ? ((item.updated_at).substring(11 , 13))%12 : (item.updated_at).substring(11 , 13)) + ":" +(item.updated_at).substring(14 , 16) }
+                {(item.updated_at).substring(0 , 10).split("-").reverse().join("-") + " " +((item.updated_at).substring(11 , 13) > 12 ? ((item.updated_at).substring(11 , 13))%12 : (item.updated_at).substring(11 , 13)) + ":" +(item.updated_at).substring(14 , 16) }
               </Text>
 
              {(item.updated_at).substring(11 , 13) > 12 ? (<Text style={Styles.doner_title_font}>
               PM
-              </Text>) : (AM)
+              </Text>) : (<Text style={Styles.doner_title_font}>
+              AM
+              </Text>)
   }
 
              
@@ -501,6 +503,32 @@ class Campaing_details extends Component {
                   Donation Type:{' '}
                   {donation_type}
                 </Text>
+
+
+                <View style={{flexDirection: 'row'}}> 
+
+                <Text style={Styles.sub_text_font1}>
+                  Target amount:{' '}</Text>
+                  <Image
+                    style={{
+                      width: 15,
+                      height: 15,
+                     // marginStart: 10,
+                      //marginEnd: 10,
+                      // marginTop: 20,
+                     
+                      backgroundColor: 'transparent',
+                      alignSelf: 'center',
+                    }}
+                    source={require('../../src/assets/images/rupee.png')}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+
+                  <Text>
+                  {(this.state.capmain_details[0]['campaign_target_amount'])}
+                </Text>
+
+                </View>
               </View>
               <View style={Styles.campaign_details_text_contain}>
                

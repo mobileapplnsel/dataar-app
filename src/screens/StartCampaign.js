@@ -816,6 +816,8 @@ const StartCampaign = ({navigation}) => {
 
     if (response.status == 'success') {
       setprogress(false)
+      console.log("hjsfwjgfwgfheaj")
+      //this.props.navigation.navigate('RiseEnquery')
       // Alert.alert('Alert', 'Campaign added successfully and waiting for admin approval');
       Alert.alert('success', 'Campaign added successfully and waiting for admin approval.', [
         {text: 'OK', onPress: () => navigation.navigate('Dashboard')},
@@ -823,8 +825,8 @@ const StartCampaign = ({navigation}) => {
       {cancelable: false},);
       
     } else {
-      setprogress(false)
-    
+      setprogress(false) 
+      console.log("hjsfwjgfwgfheaj")
       Alert.alert(response.status, response.message, [
         {text: 'OK', onPress: () => navigation.navigate('Dashboard')},
       ],
