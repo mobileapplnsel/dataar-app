@@ -491,15 +491,28 @@ class Campaing_details extends Component {
                 </Text>
               </View>
 
-              <View style={Styles.campaign_details_date_contain}>
-                <Text style={Styles.sub_text_font1}>
+              <View style={{
+                justifyContent: 'flex-start',
+                alignItems: 'flex-start',
+                marginLeft: 8,
+                marginTop: 20
+              }}>
+                <Text style={{
+                  fontWeight: 'bold',
+                }}>
                   Start Date: {(this.state.capmain_details[0]['campaign_start_date']).split("-").reverse().join("-")}
                 </Text>
-                <Text style={Styles.sub_text_font1}>
-                  {'   '}
+                <Text style={{
+                  fontWeight: 'bold',
+                  marginTop: 2
+                }}>
+                 
                   Expiry Date: {(this.state.capmain_details[0]['campaign_end_date']).split("-").reverse().join("-")}
                 </Text>
-                <Text style={Styles.sub_text_font1}>
+                <Text style={{
+                  fontWeight: 'bold',
+                  marginTop: 2
+                }}>
                   Donation Type:{' '}
                   {donation_type}
                 </Text>
@@ -507,46 +520,41 @@ class Campaing_details extends Component {
 
                 <View style={{flexDirection: 'row'}}> 
 
-                <Text style={Styles.sub_text_font1}>
+                <Text style={{
+                  fontWeight: 'bold',
+                  marginTop: 2
+                }}>
                   Target amount:{' '}</Text>
                   <Image
                     style={{
                       width: 15,
                       height: 15,
-                     // marginStart: 10,
-                      //marginEnd: 10,
-                      // marginTop: 20,
-                     
                       backgroundColor: 'transparent',
                       alignSelf: 'center',
+                      marginTop: 2
                     }}
                     source={require('../../src/assets/images/rupee.png')}
-                    // resizeMode="contain"dashboard_main_btn
+                    
                   />
 
-                  <Text>
+<Text style={{
+                  fontWeight: 'bold',
+                  marginTop: 2
+                }}>
                   {(this.state.capmain_details[0]['campaign_target_amount'])}
                 </Text>
 
                 </View>
               </View>
+
+
               <View style={Styles.campaign_details_text_contain}>
                
                 </View>
                 <View >
-                <Text style={{
-                  fontSize: 18,
-                  fontWeight: '500',
 
-                  marginStart: 7,
-                  fontWeight: 'bold',
-                  marginEnd: 5,
-                  marginBottom:20
-                }}>
 
-                  Item List
-                  
-                </Text>
+               
 
                 <FlatList
                   data={this.state.cmpData}
