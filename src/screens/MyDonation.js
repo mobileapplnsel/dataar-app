@@ -515,6 +515,9 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                
     
                   <View style={{flexDirection: 'row', marginTop: 3}}>
+
+
+
                   <Text style={Styles.doner_title_font_Modified}>
                   Donation date:   
                     </Text>
@@ -532,7 +535,14 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                     </Text>
                   </View>
 
-
+                  <View style={{flexDirection: 'row', marginTop: 3}}>
+                  <Text style={Styles.doner_title_font_Modified}>
+                  Donation status:
+                    </Text>
+                    <Text style={Styles.doner_title_font}>
+                      {item.updated_at}
+                    </Text>
+                  </View>
                  
                 
                     
