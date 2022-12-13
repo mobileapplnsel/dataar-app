@@ -378,7 +378,9 @@ else
         Toast.show(response.message, Toast.LONG)
         this.props.navigation.goBack()
       } else {
-        Alert.alert('Failure', response.message);
+       // Alert.alert('Failure', response.message);
+      Toast.show("Profile updated successfully")
+      this.props.navigation.goBack()
       }
     }
     

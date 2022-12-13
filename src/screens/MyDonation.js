@@ -111,12 +111,12 @@ class View_campaign extends Component {
     var logs = {
       user_id: user_id,
     };
-    var response = await API.post('donations_by_donor', logs);
+    var response = await API.post('kind_donations_by_donor', logs);
     if (response.status == 'success') {
       this.setState({
         progress: false,
       })
-      console.log('campaign_details_by_user: ', response.data);
+      //console.log('campaign_details_by_user: ', response.data);
 
       this.setState({
         cmpData2: response.data.donations,
