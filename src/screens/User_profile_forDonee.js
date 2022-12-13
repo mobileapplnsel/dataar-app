@@ -13,7 +13,8 @@ import {
   ActivityIndicator,
   StyleSheet,
   Platform,
-  PermissionsAndroid
+  PermissionsAndroid,
+  Modal
 } from 'react-native';
 import {Container, Card, CardItem, Body, ListItem, List} from 'native-base';
 import API from '../services/api';
@@ -315,6 +316,9 @@ class User_profile extends Component {
 
   };
    updateProfile = async () => {
+    this.setState({
+      progress: true,
+    })
     if (this.state.fname.trim() == '')
     {
       Alert.alert('Warning', 'Please enter First Name');
@@ -772,7 +776,31 @@ else
             ) : null} */}
             {/* </View> */}
           </ImageBackground>
-        
+          <Modal transparent={true} animationType="none" visible={this.state.progress}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          // backgroundColor: `rgba(0,0,0,${0.6})`,
+          width: '100%',
+          height: '100%',
+          // marginTop: 400
+        }}
+      >
+        <View
+          style={{
+            padding: 13,
+            backgroundColor: 'grey',
+            borderRadius: 3,
+            marginTop: '40%'
+          }}
+        >
+          <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
+          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+        </View>
+      </View>
+    </Modal>
       </Container>
     );
   }
