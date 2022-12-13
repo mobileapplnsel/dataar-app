@@ -20,6 +20,8 @@ import View_campaign from '../screens/View_campaign';
 import EditCampaign from '../screens/EditCampaign';
 import Campaing_details from '../screens/Campaing_details';
 import Campaing_details_ForDonor from '../screens/Campaing_details_ForDonor';
+import Campaing_details_ForDonor2 from '../screens/Campaing_details_ForDonor2';
+
 import DonationAmount from '../screens/DonationAmount';
 import DonationInKind from '../screens/DonationInKind';
 import OneRupeeDonation from '../screens/OneRupeeDonation';
@@ -43,6 +45,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
 import SideMenu from '../navigations/SideMenu';
 import Campaing_kind_donor_details from '../screens/Campaing_kind_donor_details';
+
 const AuthStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 const DrawerCamp = createDrawerNavigator();
@@ -127,6 +130,15 @@ const HomeStackScreenForDonerOnly = ({navigation}) => (
         headerShown: false,
       }}
     />
+
+<HomeStack_nav.Screen
+      name="Campaing_details_ForDonor2"
+      component={Campaing_details_ForDonor2}
+      options={{
+        headerShown: false,
+      }}
+    />
+
     <HomeStack_nav.Screen
       name="Donation_details"
       component={Donation_details}
@@ -488,6 +500,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="EditCampaign" component={EditCampaign} />
     <AuthStack.Screen name="Campaing_details" component={Campaing_details} />
     <AuthStack.Screen name="Campaing_details_ForDonor" component={Campaing_details_ForDonor} />
+    <AuthStack.Screen name="Campaing_details_ForDonor2" component={Campaing_details_ForDonor2} />
     <AuthStack.Screen name="KYCUpdateForDonee" component={KYCUpdateForDonee} />
     <AuthStack.Screen name="KYCUpdateForDonor" component={KYCUpdateForDonor} />
     <AuthStack.Screen name="DonationInKind" component={DonationInKind} />

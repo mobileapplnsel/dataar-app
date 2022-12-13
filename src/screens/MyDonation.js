@@ -12,8 +12,10 @@ import {
   FlatList,
   ActivityIndicator,
   StyleSheet,
+  Dimensions,
   PermissionsAndroid,
-  Modal
+  Modal,
+  Button
 } from 'react-native';
 import {
   Container,
@@ -34,11 +36,23 @@ import {
   Cell,
 } from 'react-native-table-component';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import normalize from '../components/normalize';
+const deviceWidth = Dimensions.get('window').width;
+const deviceHeight =
+  Platform.OS === 'ios'
+    ? Dimensions.get('window').height
+    : Dimensions.get('window').height;
 class View_campaign extends Component {
   constructor(props) {
     super(props);
     this.state = {
       cmpData: [],
+      cmpData2: [], 
+      modalVisible: false,
+      modalComment: false,
+      moneybutton: true,
+      kindbutton: false,
+      comment: '',
       tableHead: [
         'No.',
         'Title',
@@ -56,8 +70,15 @@ class View_campaign extends Component {
       ],
       widthArr: [40, 180, 80, 80, 40, 120, 60],
       progress: false,
-      progressName: 'Loading...'
+      progressName: 'Loading...',
+      btnbgcolor: '#D0CFCE',
+      btnbgcolor1: 'rgba(246, 244, 243, 1)',
+      btnbgcolor2: 'rgba(246, 244, 243, 1)',
     };
+  }
+
+  setModalVisible = (visible) => {
+    this.setState({ modalVisible: visible });
   }
   
   campaign = async () => {
@@ -83,6 +104,31 @@ class View_campaign extends Component {
       Alert.alert(response.status, response.message);
     }
   };
+
+  campaign2 = async () => {
+    console.log(user_id);
+    var user_id = await AsyncStorage.getItem('user_id');
+    var logs = {
+      user_id: user_id,
+    };
+    var response = await API.post('donations_by_donor', logs);
+    if (response.status == 'success') {
+      this.setState({
+        progress: false,
+      })
+      console.log('campaign_details_by_user: ', response.data);
+
+      this.setState({
+        cmpData2: response.data.donations,
+      });
+    } else {
+      this.setState({
+        progress: true,
+      })
+      Alert.alert(response.status, response.message);
+    }
+  };
+
   actualDownload = (pdfurl) => {
     const { dirs } = RNFetchBlob.fs;
 
@@ -270,9 +316,13 @@ this.setState({
       this.props.navigation.navigate('LogIn');
     }
   };
+
+ 
+
+
   renderlog = ({item, index}) => {
     
-    
+  
 var donation_type = ''
      if (item.donation_mode == '1')
      {
@@ -354,7 +404,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
               Receipt Number:   
                 </Text>
                 <Text style={Styles.doner_title_font}>
-                  {item.reciept_no}
+                  {item.receipt_no}
                 </Text>
               </View> }
                 
@@ -379,7 +429,137 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
       
     );
   };
+
+  renderlog1 = ({item, index}) => {
+    
+    
+    var donation_type = ''
+         if (item.donation_mode == '1')
+         {
+          donation_type = 'Money'
+         }
+         else
+         {
+          donation_type = 'In Kind'
+         }
+    
+        const wish = item.like_status == 1 ? true : false;
+        console.log(wish)
+        return (
+          
+          <TouchableOpacity
+          // onPress={() => this.setState({
+          //   modalVisible: this.setModalVisible
+          // }
+          //   )}
+          style=
+          {{flex: 1, marginLeft: 10, marginRight: 10}} key={item.campaign_id}>
+            <Card style={{overflow: 'hidden',}}>
+              <CardItem>
+                <View style={{flexDirection: 'column', flex: 1}}>
+                 
+                      
+                      {/* <Image
+                    style={{
+                      width: 30,
+                      height: 30,
+                      
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                      
+                    }}
+                    source={require('../../src/assets/images/view.png')}
+                    // resizeMode="contain"dashboard_main_btn
+                  /> */}
+                 
+    
+                  <View style={{flexDirection:'row', marginTop: 0, height: 40,}}>
+                <View style={{width: '80%', 
+                flexDirection: 'row', 
+                justifyContent: 'space-between'}}>
+    
+                <TouchableOpacity
+                      onPress={() => this.props.navigation.navigate('Campaing_details_ForDonor2', {
+                        camp_id: item.campaign_id,
+                      })}>
+                    <Text style={{fontSize: 16,
+        alignSelf: 'flex-start',
+        color: '#000',
+        fontWeight: '700',}}>{item.campaign_name}</Text>
+                  </TouchableOpacity> 
+
+
+<TouchableOpacity>
+                  <Image
+                    style={{
+                      width: 20,
+                      height: 20,
+                      //marginStart: 10,
+                      // marginTop: 20,
+                      backgroundColor: 'transparent',
+                     
+                    }}
+                    source={require('../../src/assets/images/view.png')}
+                    // resizeMode="contain"dashboard_main_btn
+                  />
+    </TouchableOpacity>
+                </View>
+    
+    
+    
+      {item.kind_id == '0' && <View style={{width: '20%',}}>
+                
+    </View> }
+                </View> 
+                  
+               
+    
+                  <View style={{flexDirection: 'row', marginTop: 3}}>
+                  <Text style={Styles.doner_title_font_Modified}>
+                  Donation date:   
+                    </Text>
+                    <Text style={Styles.doner_title_font}>
+                      {item.updated_at}
+                    </Text>
+                  </View>
+
+                  <View style={{flexDirection: 'row', marginTop: 3}}>
+                  <Text style={Styles.doner_title_font_Modified}>
+                  Donation number:
+                    </Text>
+                    <Text style={Styles.doner_title_font}>
+                      {item.updated_at}
+                    </Text>
+                  </View>
+
+
+                 
+                
+                    
+                    {/* <TouchableOpacity
+                      style={{width: '96%',
+                        height: 40,
+                        backgroundColor: '#f55656',
+                        marginTop: 10,
+                        color: '#f55656',
+                        justifyContent: 'center',
+                        alignSelf: 'center',
+                        borderRadius: 6,}}
+                      onPress={() => this.props.navigation.navigate('Campaing_details', {
+                        camp_id: item.campaign_id,
+                      })}>
+                      <Text style={Styles.donate_btn_text}>View</Text>
+                    </TouchableOpacity> */}
+                </View>
+              </CardItem>
+            </Card>
+          </TouchableOpacity>
+          
+        );
+      };
+
   render() {
+  const { modalVisible } = this.state;
     return (
       
         <Container>
@@ -422,87 +602,85 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                     My Donation
                   </Text>
               </View>
-              {/* <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
-                  <Image
-                    style={{
-                      width: 30,
-                      height: 30,
-                      marginStart: 40,
-                      // marginTop: 20,
-                      backgroundColor: 'transparent',
-                      alignSelf: 'center',
-                    }}
-                    source={require('../../src/assets/images/search.png')}
-                    // resizeMode="contain"dashboard_main_btn
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.user()}>
-                  <Image
-                    style={{
-                      width: 30,
-                      height: 30,
-                      marginStart: 10,
-                      marginEnd: 10,
-                      // marginTop: 20,
-                      backgroundColor: 'transparent',
-                      alignSelf: 'center',
-                    }}
-                    source={require('../../src/assets/images/user.png')}
-                    // resizeMode="contain"dashboard_main_btn
-                  />
-                </TouchableOpacity>
-              </View> */}
+         
             </SafeAreaView>
-            {/* <ScrollView horizontal={true}> */}
-            {/* <ScrollView> */}
-            {/* <View style={Styles.dashboard_main_contain}> */}
-              {/* <FlatList
-                data={this.state.cmpData}
-                renderItem={this.renderlog}
-                keyExtractor={(item, campaign_id) => campaign_id.toString()}
-              /> */}
-              {/* <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}> */}
-              {/* <ScrollView style={{marginTop: -1}}> */}
-
-
-
-
-              {/* <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
-                <Row
-                  data={this.state.tableHead}
-                  style={{height: 50, backgroundColor: '#537791'}}
-                  textStyle={{textAlign: 'center', fontWeight: '100'}}
-                />
-                {this.state.cmpData.map((rowData, index) => (
-                  <TableWrapper
-                    key={index}
-                    style={{flexDirection: 'row'}}
-                    widthArr={this.state.widthArr}>
-                    {rowData.map((cellData, cellIndex) => (
-                      <Cell
-                        key={cellIndex}
-                        data={
-                          cellIndex === 6
-                            ? this.element(cellData, index)
-                            : cellData
-                        }
-                        textStyle={{margin: 6}}
-                        widthArr={this.state.widthArr}
-                      />
-                    ))}
-                  </TableWrapper>
-                ))}
-              </Table> */}
+  
 
  
+<View style={{
+  //flex:1, 
+  //maxWidth: 414, 
+  backgroundColor: null, 
+  flexDirection:'row', 
+  justifyContent:'flex-end',
+  alignItems: 'flex-end',
+  marginRight: 10
+  }}>
+            <TouchableOpacity
+              
+                style={[
+                  Styles2.donate_btn,
+               //   { backgroundColor: this.state.btnbgcolor },
+                  { backgroundColor: this.state.moneybutton == true? '#D0CFCE' : 'white' },
+              ]}
+                onPress={() => {
+                
+                this.setState({
+                  moneybutton: true,
+                  kindbutton: false,
+                })
+               this.campaign()
+              }
+                }>
+                <Text style={Styles2.login_text}>Money</Text>
+              </TouchableOpacity>
 
-<FlatList
+              <TouchableOpacity
+               
+                style={[
+                  Styles2.donate_btn1,
+                 // { backgroundColor: this.state.btnbgcolor1 },
+                 { backgroundColor: this.state.kindbutton == true? '#D0CFCE' : 'white' },
+              ]}
+                onPress={() => {
+                  this.setState({
+                    moneybutton: false,
+                    kindbutton: true,
+                  })
+                 // this.campaign2()
+                }
+                }>
+                <Text style={Styles2.login_text}>Kind</Text>
+              </TouchableOpacity>
+
+             
+              </View>
+
+
+
+{this.state.moneybutton == true? (<FlatList
+
+              style={{
+                marginTop: 20
+              }}
               data={this.state.cmpData}
               renderItem={this.renderlog}
               keyExtractor={(item, id) => id.toString()}
-            />
-<Modal
+            />) : (
+
+<FlatList
+
+style={{
+  marginTop: 20
+}}
+data={this.state.cmpData}
+renderItem={this.renderlog1}
+keyExtractor={(item, id) => id.toString()}
+/>) }
+
+
+
+{/* <Modal
             transparent={true}
             animationType={'none'}
             visible={this.state.progress}
@@ -516,7 +694,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                   </Text>
                 </View>
             </View>
-        </Modal>
+        </Modal> */}
               {/* <Text style={{color: '#f55656', fontWeight: '800', alignSelf: 'center', fontSize: 26, marginTop: '60%', marginBottom: 10}}>
           
              </Text> */}
@@ -525,7 +703,22 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
             {/* </View> */}
             {/* </ScrollView> */}
             {/* </ScrollView> */}
+
+
           </ImageBackground>
+
+
+          <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            Alert.alert("Modal has been closed.");
+            this.setModalVisible(!modalVisible);
+          }}
+        />
+
+        
         </Container>
      
     );
@@ -552,4 +745,79 @@ activityIndicatorWrapper: {
     color: 'green',
   },
 });
+
+
+const Styles2 = StyleSheet.create({
+  donate_btn: {
+    width: 100,
+    height: 50,
+    // backgroundColor: 'rgba(246, 244, 243, 1)',
+    marginTop: 20,
+    alignSelf: 'center',
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius: 6
+  },
+  amount_text_input: {
+    marginLeft: 10,
+    marginRight: 10,
+    // backgroundColor: '#dcdedc',
+    height: 45,
+    borderBottomColor: '#000',
+    borderBottomWidth: 1,
+    paddingTop: 0,
+    textAlign: 'center',
+    textAlignVertical: 'center',
+    color: 'black'
+  },
+  buttonContainer: {
+    margin: 20
+  },
+  donate_btn1: {
+    width: 100,
+    height: 50,
+    // backgroundColor: 'rgba(246, 244, 243, 1)',
+    marginTop: 20,
+    alignSelf: 'center',
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius: 6
+  },
+  donate_btn2: {
+    width: 100,
+    height: 50,
+    // backgroundColor: 'rgba(246, 244, 243, 1)',
+    marginTop: 20,
+    alignSelf: 'center',
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius: 6
+  },
+  login_text: {
+    fontSize: 18,
+    alignSelf: 'center',
+    alignItems: 'center',
+    paddingTop: 12,
+    color: '#f55656',
+    fontWeight: '700',
+  },
+  errorHint: {
+    marginTop: 3,
+    color: 'red',
+    fontSize: 11,
+    marginBottom: -5,
+    marginLeft: 10,
+},
+buttonStyle: {
+  alignItems: 'center',
+  flexDirection: 'row',
+  backgroundColor: '#DDDDDD',
+  padding: 5,
+},
+imageIconStyle: {
+  height: 20,
+  width: 20,
+  resizeMode: 'stretch',
+},
+})
 export default View_campaign;
