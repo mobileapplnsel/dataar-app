@@ -116,11 +116,12 @@ class View_campaign extends Component {
       this.setState({
         progress: false,
       })
-      //console.log('campaign_details_by_user: ', response.data);
+      console.log('campaign_details_by_user: ', response.data);
 
       this.setState({
         cmpData2: response.data.donations,
       });
+      console.log("Data======", cmpData2)
     } else {
       this.setState({
         progress: true,
@@ -522,7 +523,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                   Donation date:   
                     </Text>
                     <Text style={Styles.doner_title_font}>
-                      {item.updated_at}
+                      {item.created_at}
                     </Text>
                   </View>
 
@@ -531,7 +532,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                   Donation number:
                     </Text>
                     <Text style={Styles.doner_title_font}>
-                      {item.updated_at}
+                      {item.donation_number}
                     </Text>
                   </View>
 
@@ -540,7 +541,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                   Donation status:
                     </Text>
                     <Text style={Styles.doner_title_font}>
-                      {item.updated_at}
+                      {item.donation_status}
                     </Text>
                   </View>
                  
@@ -657,7 +658,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                     moneybutton: false,
                     kindbutton: true,
                   })
-                 // this.campaign2()
+                 this.campaign2()
                 }
                 }>
                 <Text style={Styles2.login_text}>Kind</Text>
@@ -683,7 +684,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
 style={{
   marginTop: 20
 }}
-data={this.state.cmpData}
+data={this.state.cmpData2}
 renderItem={this.renderlog1}
 keyExtractor={(item, id) => id.toString()}
 />) }
