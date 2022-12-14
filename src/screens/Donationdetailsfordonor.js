@@ -69,11 +69,11 @@ class Donationdetailsfordonor extends Component {
 
 
       this.setState({
-       // cmpData: [...response.data.donations],
+        cmpData: response.data.donation_details,
       //  capmain_details: [...response.data.capmain_details],
         
       });
-      console.log(this.state.cmpData);
+      console.log("Data====",this.state.cmpData);
     } else {
       //Alert.alert(response.status, response.message);
     }
@@ -221,8 +221,14 @@ class Donationdetailsfordonor extends Component {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <View style={{alignItems: 'center', marginStart: 6}}>
-            <Text style={Styles.sub_text_font1}>Abc</Text>
+        <View style={{alignItems: 'center', marginStart: 6}}>
+            <Text style={Styles.sub_text_font1}>{item.item_name}</Text>
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <Text style={Styles.sub_text_font1}>{item.item_quantity} {item.item_unit}</Text>
+          </View>
+          <View style={{alignItems: 'center', marginRight: 10}}>
+            <Text style={Styles.sub_text_font1}>{item.donated_quantity}</Text>
           </View>
           
           
@@ -302,8 +308,7 @@ class Donationdetailsfordonor extends Component {
               
                 
                
-
-            
+         
   
 
 
@@ -368,165 +373,32 @@ class Donationdetailsfordonor extends Component {
 
 
                   <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
+                    fontSize: 16,
+                    fontWeight: '700',
+                    marginTop: 50,
+                    marginLeft: 5
                   }}>
-                    Expiry Date:
+                   Items
                   </Text>
                 
+                  <FlatList
+
+style={{
+  marginTop: 20
+}}
+data={this.state.cmpData}
+renderItem={this.renderlog}
+keyExtractor={(item, id) => id.toString()}
+/>
+        
                 
-                <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    
-                    {'Donation Type: Money'}
-                  </Text> 
-
-                  <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    
-                    
-                  </Text> 
-
-                 <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    Amount Recived: 
-                  </Text> 
-
-                <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    Target Amount:{' '}
-                   
-                  </Text> 
-                
-                
-                <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    Target Quantity:{' '}
-                   
-                  </Text> 
-
-                  <TouchableOpacity
-                    style={[
-                      {
-                        marginTop: 13,
-                        marginStart: 20, 
-                        marginEnd: 20,
-                        justifyContent: 'center',
-                        width: 170,
-                      },
-                    ]}
-                    //onPress={() => this.comment()}
-                    >
-                  <Text style={{
-                    fontSize: 19,
-                    fontWeight: '500',
-                    fontStyle: 'italic',
-                    textDecorationLine: 'underline'
-                  }}>
-                    Review & Ratings
-                  </Text>
-                  </TouchableOpacity>
-                
-
-                <Text style={{ marginStart: 5, fontWeight: 'bold', fontSize: 20, marginTop: 14 }}>
-                    Campaign Owner Details :
-                  </Text>
-
-
-                  <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                  </Text>
-
-                  {/* <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    {'Address: '+this.state.campaign_owner_data['address']}
-                  </Text> */}
-
-                  <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                   
-                  </Text>
-
-                  <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    
-                  </Text>
-
-                  <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    {''}
-                  </Text>
-
                   
               </View>
 
               
 
-              {/* <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
-                <Row
-                  data={this.state.tableHead}
-                  style={{height: 40, backgroundColor: '#f1f8ff'}}
-                  textStyle={{margin: 6, textAlign: 'center'}}
-                />
-              </Table>
-              <FlatList
-                data={this.state.cmpData}
-                renderItem={this.renderlog}
-                keyExtractor={(item, id) => id.toString()}
-              /> */}
+              
+             
 
 
 
