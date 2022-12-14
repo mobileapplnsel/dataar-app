@@ -231,8 +231,8 @@ class Donationdetailsfordonor extends Component {
             }}>
             <Text style={Styles.sub_text_font1}>{item.item_quantity} {item.item_unit}</Text>
           </View>
-          <View style={{alignItems: 'center', marginRight: 50}}>
-            <Text style={Styles.sub_text_font1}>{item.donated_quantity}</Text>
+          <View style={{alignItems: 'center', marginRight: 45}}>
+            <Text style={Styles.sub_text_font1}>{item.donated_quantity} {item.item_unit}</Text>
           </View>
           
           
