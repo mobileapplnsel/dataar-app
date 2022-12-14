@@ -224,10 +224,14 @@ class Donationdetailsfordonor extends Component {
         <View style={{alignItems: 'center', marginStart: 6}}>
             <Text style={Styles.sub_text_font1}>{item.item_name}</Text>
           </View>
-          <View style={{alignItems: 'center'}}>
+          <View style={{
+            alignItems: 'center',
+            width: '30%',
+            marginLeft: -10
+            }}>
             <Text style={Styles.sub_text_font1}>{item.item_quantity} {item.item_unit}</Text>
           </View>
-          <View style={{alignItems: 'center', marginRight: 10}}>
+          <View style={{alignItems: 'center', marginRight: 50}}>
             <Text style={Styles.sub_text_font1}>{item.donated_quantity}</Text>
           </View>
           
@@ -380,11 +384,55 @@ class Donationdetailsfordonor extends Component {
                   }}>
                    Items
                   </Text>
+
+                  <View style={{
+                    flexDirection: 'row',
+                   
+                    }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            borderWidth: 1,
+            width: '100%',
+            height: 40,
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginTop: 20
+          }}>
+        <View style={{alignItems: 'center', marginStart: 6}}>
+            <Text style={{
+                fontSize: 15,
+                fontWeight: '700',
+
+            }}>Item name</Text>
+          </View>
+          <View style={{
+            alignItems: 'center',
+            width: '30%',
+            marginLeft: 20
+            }}>
+            <Text style={{
+                fontSize: 15,
+                fontWeight: '700',
+                
+            }}>Target Quantity</Text>
+          </View>
+          <View style={{alignItems: 'center', marginRight: 10}}>
+            <Text style={{
+                fontSize: 15,
+                fontWeight: '700',
+                width: '60%'
+            }}>Donated Quantity</Text>
+          </View>
+          
+          
+        </View>
+      </View>
                 
                   <FlatList
 
 style={{
-  marginTop: 20
+ // marginTop: 20
 }}
 data={this.state.cmpData}
 renderItem={this.renderlog}
