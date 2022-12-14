@@ -480,9 +480,11 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                 justifyContent: 'space-between'}}>
     
                 <TouchableOpacity
-                      onPress={() => this.props.navigation.navigate('Campaing_details_ForDonor2', {
-                        camp_id: item.campaign_id,
-                      })}>
+                      // onPress={() => this.props.navigation.navigate('Campaing_details_ForDonor2', {
+                      //   camp_id: item.campaign_id,
+                      // })}
+                      
+                      >
                     <Text style={{fontSize: 16,
         alignSelf: 'flex-start',
         color: '#000',
@@ -522,9 +524,28 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                   <Text style={Styles.doner_title_font_Modified}>
                   Donation date:   
                     </Text>
-                    <Text style={Styles.doner_title_font}>
+                    {/* <Text style={Styles.doner_title_font}>
                       {item.created_at}
-                    </Text>
+                    </Text> */}
+                      <View style ={{
+                flexDirection: 'row',
+                justifyContent: 'space-between'
+              }}>
+
+              <Text style={Styles.doner_title_font}>
+                {(item.created_at).substring(0 , 10).split("-").reverse().join("-") + " " +((item.created_at).substring(11 , 13) > 12 ? ((item.created_at).substring(11 , 13))%12 : (item.created_at).substring(11 , 13)) + ":" +(item.created_at).substring(14 , 16) }
+              </Text>
+
+             {(item.created_at).substring(11 , 13) > 12 ? (<Text style={Styles.doner_title_font}>
+              PM
+              </Text>) : (<Text style={Styles.doner_title_font}>
+              AM
+              </Text>)
+  }
+
+             
+
+              </View>
                   </View>
 
                   <View style={{flexDirection: 'row', marginTop: 3}}>
