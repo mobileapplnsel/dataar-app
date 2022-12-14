@@ -294,6 +294,7 @@ this.setState({
         onPress={() =>
           this.props.navigation.navigate('Campaing_details', {
             camp_id: data,
+
           })
         }>
         <View
@@ -460,18 +461,7 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                 <View style={{flexDirection: 'column', flex: 1}}>
                  
                       
-                      {/* <Image
-                    style={{
-                      width: 30,
-                      height: 30,
-                      
-                      // marginTop: 20,
-                      backgroundColor: 'transparent',
-                      
-                    }}
-                    source={require('../../src/assets/images/view.png')}
-                    // resizeMode="contain"dashboard_main_btn
-                  /> */}
+                  
                  
     
                   <View style={{flexDirection:'row', marginTop: 0, height: 40,}}>
@@ -492,18 +482,26 @@ source={require('../../src/assets/images/outline_file_download_black_48.png')}>
                   </TouchableOpacity> 
 
 
-<TouchableOpacity>
+<TouchableOpacity  
+onPress={() => this.props.navigation.navigate('Donationdetailsfordonor',{
+  donation_id: item.donation_number,
+  campaign_name: item.campaign_name,
+  donation_number: item.donation_number,
+  donation_date: item.created_at,
+}
+                      
+                      )}
+                      >
                   <Image
                     style={{
                       width: 20,
                       height: 20,
-                      //marginStart: 10,
-                      // marginTop: 20,
+                     
                       backgroundColor: 'transparent',
                      
                     }}
                     source={require('../../src/assets/images/view.png')}
-                    // resizeMode="contain"dashboard_main_btn
+                    
                   />
     </TouchableOpacity>
                 </View>

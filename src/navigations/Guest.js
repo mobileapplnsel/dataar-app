@@ -45,6 +45,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 import AsyncStorage from '@react-native-community/async-storage';
 import SideMenu from '../navigations/SideMenu';
 import Campaing_kind_donor_details from '../screens/Campaing_kind_donor_details';
+import Donationdetailsfordonor from '../screens/Donationdetailsfordonor';
 
 const AuthStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -257,9 +258,18 @@ const HomeStackScreenDoner = ({navigation}) => (
         headerShown: false,
       }}
     />
+    
     <HomeStack_nav.Screen
       name="splash"
       component={SplashScreen}
+      options={{
+        headerShown: false,
+      }}
+    />
+
+<HomeStack_nav.Screen
+      name="Donationdetailsfordonor"
+      component={Donationdetailsfordonor}
       options={{
         headerShown: false,
       }}
@@ -506,6 +516,7 @@ const AuthStackScreen = () => (
     <AuthStack.Screen name="DonationInKind" component={DonationInKind} />
     <AuthStack.Screen name="My_Donation_Details" component={My_Donation_Details} />
     <AuthStack.Screen name="ThankYou" component={ThankYou} />
+    <AuthStack.Screen name="Donationdetailsfordonor" component={Donationdetailsfordonor} />
     
     <HomeStack_nav.Screen
       name="DonationAmount"

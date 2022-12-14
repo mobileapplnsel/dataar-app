@@ -47,191 +47,168 @@ class Donationdetailsfordonor extends Component {
       capmain_details: [],
       campaign_owner_data: {},
       tableHead: ['Donor Name', 'Date', 'Amount', 'Status'],
-      camp_id: props.route.params.camp_id,
-      isloading: true,
-      amount: 0,
-      modalComment: false,
-      modalCommentVal: '',
-      commentArr: [],
-      comment: '',
-      isVisible: false,
-      shareHeight: 360,
-      campaignImageURI: '',
-      starCount: 5,
-      sharableURL: ''
+      donation_id: props.route.params.donation_id,
     };
   }
   campaign = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
-      campaign_id: this.state.camp_id,
+      donation_number: this.state.donation_id
     };
-    var response = await API.post('campaign_details', logs);
+    var response = await API.post('view_kind_donation_details', logs);
     if (response.status == 'success') {
-      // navigation.navigate('OtpVerify', {mobile: Mobile});
-      console.log(response.data);
+      
+      console.log("Response=====",response.data);
       var arr = new Array();
       var amountVal = 0;
-      // for (var i = 0; i < response.data.donations.length; i++) {
-      //   arr.push([
-      //     response.data.donations[i]['donor_name'],
-      //     response.data.donations[i]['updated_at'],
-      //     response.data.donations[i]['amountpaid'],
-      //     response.data.donations[i]['status'],
-      //   ]);
-      //   console.log(arr);
-      //   amountVal =
-      //     amountVal + parseInt(response.data.donations[i]['amountpaid']);
-      //   this.setState({
-      //     amount: amountVal,
-      //   });
-      // }
-      var base64String = response.data.capmain_details[0]['campaign_image']
-      var base64Icon = 'data:image/png;base64,'+base64String
-      this.setState({campaignImageURI: base64String, sharableURL: response.data.campaign_details_url})
+      
+     
+    //   var base64String = response.data.capmain_details[0]['campaign_image']
+    //   var base64Icon = 'data:image/png;base64,'+base64String
+    //   this.setState({campaignImageURI: base64String, sharableURL: response.data.campaign_details_url})
 
 
       this.setState({
-        cmpData: [...response.data.donations],
-        capmain_details: [...response.data.capmain_details],
-        campaign_owner_data: response.data.campaign_owner_data,
-        isloading: false,
-        amount: [...response.data.total_donation_amountpaid]
+       // cmpData: [...response.data.donations],
+      //  capmain_details: [...response.data.capmain_details],
+        
       });
       console.log(this.state.cmpData);
     } else {
-      Alert.alert(response.status, response.message);
+      //Alert.alert(response.status, response.message);
     }
   };
+
   componentDidMount() {
     this.campaign();
-    console.log('campaign', this.props.route.params.camp_id);
+    console.log('donation id', this.props.route.params.donation_id);
+    console.log('campaign name', this.props.route.params.campaign_name)
   }
-  ContactDonee = async item => {
+//   ContactDonee = async item => {
 
-    console.log("ContactDonee selected item: ",item);
+//     console.log("ContactDonee selected item: ",item);
 
-    this.props.navigation.navigate('DonationInKind', {
-      campaign_id: this.state.capmain_details[0]['campaign_id'],
-              kind_id: this.state.capmain_details[0]['kind_id'],
-    });
+//     this.props.navigation.navigate('DonationInKind', {
+//       campaign_id: this.state.capmain_details[0]['campaign_id'],
+//               kind_id: this.state.capmain_details[0]['kind_id'],
+//     });
     
-  }
-  Donate = async item => {
-    var token = await AsyncStorage.getItem('token');
-    var kyc_verified = await AsyncStorage.getItem('kyc_verified');
-    var pan_number = await AsyncStorage.getItem('pan_number');
-    console.log("pan_number",pan_number);
+//   }
+//   Donate = async item => {
+//     var token = await AsyncStorage.getItem('token');
+//     var kyc_verified = await AsyncStorage.getItem('kyc_verified');
+//     var pan_number = await AsyncStorage.getItem('pan_number');
+//     console.log("pan_number",pan_number);
 
-    console.log(token);
-
-
-    if (token != null && token !== '') {
+//     console.log(token);
 
 
-      var user_id = await AsyncStorage.getItem('user_id');
-    var logs = {
-      user_id: user_id,
-    };
-    console.log(logs);
-    var response = await API.post('kyc_status', logs);
-    if (response.status == 'success') {
-      console.log(response.userdata.pan_number);
-      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
-        {
-          if(response.userdata.pan_number!='')
-          {
-            this.props.navigation.navigate('DonationAmount', {
-              donate_amt: this.state.capmain_details[0]['campaign_target_amount'],
-              donation_mode: this.state.capmain_details[0]['donation_mode'],
-              campaign_id: this.state.capmain_details[0]['campaign_id'],
-              kind_id: this.state.capmain_details[0]['kind_id'],
-            })
-          }
-        }
-        else
-          {
-            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
-            {
-              Alert.alert("Alert", "Your Kyc is currently under review. We will let you know once your KYC gets approved.");
-            }
-            else{
-              Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
-                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
-              ],
-              {cancelable: false},);
-            }
+//     if (token != null && token !== '') {
+
+
+//       var user_id = await AsyncStorage.getItem('user_id');
+//     var logs = {
+//       user_id: user_id,
+//     };
+//     console.log(logs);
+//     var response = await API.post('kyc_status', logs);
+//     if (response.status == 'success') {
+//       console.log(response.userdata.pan_number);
+//       if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
+//         {
+//           if(response.userdata.pan_number!='')
+//           {
+//             this.props.navigation.navigate('DonationAmount', {
+//               donate_amt: this.state.capmain_details[0]['campaign_target_amount'],
+//               donation_mode: this.state.capmain_details[0]['donation_mode'],
+//               campaign_id: this.state.capmain_details[0]['campaign_id'],
+//               kind_id: this.state.capmain_details[0]['kind_id'],
+//             })
+//           }
+//         }
+//         else
+//           {
+//             if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
+//             {
+//               Alert.alert("Alert", "Your Kyc is currently under review. We will let you know once your KYC gets approved.");
+//             }
+//             else{
+//               Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+//                 {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
+//               ],
+//               {cancelable: false},);
+//             }
     
           
-          }
+//           }
         
         
         
-      // this.setState({
-      //   pan_number:response.,
-      // });
-      // setcmpData(response.data);
-    } else {
-      Alert.alert(response.status, response.message);
-    }
+//       // this.setState({
+//       //   pan_number:response.,
+//       // });
+//       // setcmpData(response.data);
+//     } else {
+//       Alert.alert(response.status, response.message);
+//     }
 
-  }
+//   }
 
-    //   if(kyc_verified!=0 && kyc_verified!='')
-    //   {
-    //     if(pan_number!='')
-    //     {
-    //       this.props.navigation.navigate('DonationAmount', {
-    //         donate_amt: item.campaign_target_amount,
-    //         donation_mode: item.donation_mode,
-    //         campaign_id: item.campaign_id,
-    //         kind_id: item.kind_id,
-    //       });
-    //     }
-    //   }
-    //   else
-    //   {
-    //     if(pan_number!='' && pan_number!=null)
-    //     {
-    //       Alert.alert("Alert", "Kyc under the processing");
-    //     }
-    //     else{
-    //       Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
-    //         {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
-    //       ],
-    //       {cancelable: false},);
-    //     }
+//     //   if(kyc_verified!=0 && kyc_verified!='')
+//     //   {
+//     //     if(pan_number!='')
+//     //     {
+//     //       this.props.navigation.navigate('DonationAmount', {
+//     //         donate_amt: item.campaign_target_amount,
+//     //         donation_mode: item.donation_mode,
+//     //         campaign_id: item.campaign_id,
+//     //         kind_id: item.kind_id,
+//     //       });
+//     //     }
+//     //   }
+//     //   else
+//     //   {
+//     //     if(pan_number!='' && pan_number!=null)
+//     //     {
+//     //       Alert.alert("Alert", "Kyc under the processing");
+//     //     }
+//     //     else{
+//     //       Alert.alert("Alert", "Please submit your KYC for approval, click Ok to go to KYC page",  [
+//     //         {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
+//     //       ],
+//     //       {cancelable: false},);
+//     //     }
 
       
-    //   }
+//     //   }
     
-     else {
-      this.props.navigation.navigate('LogIn');
-    }
-  };
+//      else {
+//       this.props.navigation.navigate('LogIn');
+//     }
+//   };
 
 
-  user = async () => {
-    var token = await AsyncStorage.getItem('token');
-    console.log(token);
-    if (token != null && token !== '') {
-      this.props.navigation.navigate('User profile');
-    } else {
-      this.props.navigation.navigate('LogIn');
-    }
-  };
-  approve = async item => {
-    var user_id = await AsyncStorage.getItem('user_id');
-    var logs = {
-      donation_id: this.state.camp_id,
-      donee_approved: '1',
-      approved_donee_id: item.approved_donee_id,
-    };
-    var response = await API.post('donee_approval', logs);
-    if (response.status == 'success') {
-      Alert.alert(response.status, response.message);
-    }
-  };
+//   user = async () => {
+//     var token = await AsyncStorage.getItem('token');
+//     console.log(token);
+//     if (token != null && token !== '') {
+//       this.props.navigation.navigate('User profile');
+//     } else {
+//       this.props.navigation.navigate('LogIn');
+//     }
+//   };
+//   approve = async item => {
+//     var user_id = await AsyncStorage.getItem('user_id');
+//     var logs = {
+//       donation_id: this.state.donation_id,
+//       donee_approved: '1',
+//       approved_donee_id: item.approved_donee_id,
+//     };
+//     var response = await API.post('donee_approval', logs);
+//     if (response.status == 'success') {
+//       Alert.alert(response.status, response.message);
+//     }
+//   };
   renderlog = ({item, index}) => {
     return (
       <View style={{flexDirection: 'row'}}>
@@ -245,196 +222,19 @@ class Donationdetailsfordonor extends Component {
             alignItems: 'center',
           }}>
           <View style={{alignItems: 'center', marginStart: 6}}>
-            <Text style={Styles.sub_text_font1}>{item.donor_name}</Text>
+            <Text style={Styles.sub_text_font1}>Abc</Text>
           </View>
-          <View style={{alignItems: 'center'}}>
-            <Text style={Styles.sub_text_font1}>{item.updated_at}</Text>
-          </View>
-          <View style={{alignItems: 'center'}}>
-            <Text style={Styles.sub_text_font1}>{item.amountpaid}</Text>
-          </View>
-          <View style={{alignItems: 'center', marginEnd: 6}}>
-            {item.donee_approved === '0' ? (
-              <Text style={Styles.sub_text_font1}>{item.status}</Text>
-            ) : (
-              <TouchableOpacity
-                style={{height: 25, width: 80, backgroundColor: '#64d182'}}
-                onPress={() => this.approve(item)}>
-                <Text style={Styles.sub_text_font1}>Approve</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      </View>
-    );
-  };
-  shareCampaign = async () => {
-    // this.modalizeRefComment.current.open();    campaign_details_url
-    console.log('item.campaign_details_url'+ this.state.sharableURL);
-    try {
-      const result = await Share.share({
-       title: 'Campaign Link',
-  message: 'Here is the Campaign link of Dataar App: ' + this.state.sharableURL, 
-  url: item.campaign_details_url
-      });
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // dismissed
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-    
-  };
-  comment = () => {
-    // this.modalizeRefComment.current.open();
-    // console.log(item);
-console.log('comment button clicked!!!!')
-
-    this.setState(
-      {
-        modalComment: true,
-        campaign_id: this.state.camp_id,
-        commentArr: [],
-        starCount: 5,
-      },
-      this.commetFetch,
-    );
-  };
-  commetFetch = async () => {
-    var token = await AsyncStorage.getItem('token');
-    var user_id = await AsyncStorage.getItem('user_id');
-    if (token != null && token !== '') {
-      // navigation.navigate('StartCampaign');
-      var logs = {
-        user_id: user_id,
-        campaign_id: this.state.camp_id,
-      };
-      var response = await API.post('campaign_comments_list', logs);
-      if (response.status == 'success') {
-        this.setState({
-          commentArr: [...response.comments_data],
-        });
-        console.log(this.state.commentArr);
-      } else {
-      }
-    } else {
-    }
-  };
-  renderItemComment = ({item, index}) => {
-    console.log(item.usr_pos_imgComment);
-    return (
-      <View
-        style={{
-          backgroundColor: '#fff',
-          marginTop: 10,
-          marginStart: 20,
-          borderRadius: 10,
-          marginBottom: 10,
-          // width: '30%',
-        }}>
-        <View style={[{flexDirection: 'row', marginTop: -10, marginLeft: 12}]}>
-          <Text
-            style={[
-              {
-                marginTop: 3,
-                color: '#000',
-                marginStart: 14,
-                fontWeight: 'bold',
-              },
-            ]}>
-            {item.User_Name1}
-          </Text>
-
           
-
-          {/* <Text
-            style={[
-              {
-                marginTop: 3,
-                color: '#000',
-                marginStart: 14,
-                fontWeight: 'bold',
-              },
-            ]}>
-            {'@'}
-            {item.User_Name}
-          </Text> */}
-        </View>
-        <View
-          style={[
-            {
-              flex: 1,
-              height: 2,
-              marginStart: 18,
-            },
-          ]}></View>
-        <View style={[{marginStart: 13, width: '60%'}]}>
           
-          <Text style={[{marginTop: 3, color: '#000', fontWeight: 'bold'}]}>{item.comment_user_name}</Text>
-          <Text style={[{marginTop: 3, color: '#000'}]}>{item.comment}</Text>
-          <View
-              style={{
-                marginTop: 10,
-                width: 120,
-              }}>
-                 <StarRating       
-        disabled={false}
-        maxStars={5}
-        rating={parseInt(item.rating)}
-        starSize = {20}
-        // selectedStar={(rating) => this.onStarRatingPress(rating)}
-        fullStarColor={'#ff5c5c'}
-      />
-      </View>
         </View>
       </View>
     );
   };
-  commentText = val => {
-    console.log(val);
-    this.setState({
-      comment: val,
-    });
-  };
-  commentSend = async () => {
-    var token = await AsyncStorage.getItem('token');
-    var user_id = await AsyncStorage.getItem('user_id');
-    if (token != null && token !== '') {
-      // navigation.navigate('StartCampaign');
-      var logs = {
-        user_id: user_id,
-        campaign_id: this.state.camp_id,
-        comment: this.state.comment,
-        rating: String(this.state.starCount)
-      };
-      var response = await API.post('campaign_comment', logs);
-      if (response.status == 'success') {
-        console.log(response.status);
-        // Toast.show(response.message, Toast.LONG)
-        this.setState({
-          comment: '',
-          modalComment: false,
-          campaign_id: '',
-          rating: 0,
-          starCount: 5,
-        });
-      }
-    } else {
-      this.props.navigation.navigate('LogIn');
-    }
-  };
-  onStarRatingPress(rating) {
-    this.setState({
-      starCount: rating
-    });
-  }
  
+  
+  
+  
+  
   render() {
     var loaded = this.state.isloading;
     if (loaded) {
@@ -479,172 +279,94 @@ console.log('comment button clicked!!!!')
                 </TouchableOpacity>
 
                 <Text style={{marginLeft: 24, fontSize: 19, fontWeight: '900', color: 'white', textAlignVertical: 'center'}}>
-                    Campaign Details
+                    Donation Details
                   </Text>
 
               </View>
-              {/* <View style={Styles.dashboard_main_headers}>
-                <TouchableOpacity>
-                  <Image
-                    style={{
-                      width: 30,
-                      height: 30,
-                      marginStart: 40,
-                      // marginTop: 20,
-                      backgroundColor: 'transparent',
-                      alignSelf: 'center',
-                    }}
-                    source={require('../../src/assets/images/search.png')}
-                    // resizeMode="contain"dashboard_main_btn
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => this.user()}>
-                  <Image
-                    style={{
-                      width: 30,
-                      height: 30,
-                      marginStart: 10,
-                      marginEnd: 10,
-                      // marginTop: 20,
-                      backgroundColor: 'transparent',
-                      alignSelf: 'center',
-                    }}
-                    source={require('../../src/assets/images/user.png')}
-                    // resizeMode="contain"dashboard_main_btn
-                  />
-                </TouchableOpacity>
-              </View> */}
+             
             </SafeAreaView>
             <ScrollView style={Styles.dashboard_main_contain}>
               <View style={Styles.campaign_details_contain}>
 
               <View style={{ marginLeft: 0, marginRight: 0, borderRadius:10, backgroundColor: 'null', flex: 1, marginTop: 6}}>
-<Image style={{
-  
-    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 10, width: '100%', 
-}}
- source={{uri: this.state.campaignImageURI}}
-// source={require('../../src/assets/images/daatar_banner.jpg')}
->
-</Image> 
+
 </View>
 
 <View
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  marginBottom: 20
-                  // backgroundColor: '#5ca7f2',
-                }}>
-                <TouchableOpacity
-                    style={[
-                      {
-                        marginTop: 20,
-                        alignSelf: 'center',
-    alignItems: 'center',
-                      },
-                    ]}
-                    onPress={() => this.shareCampaign()}>
-                <Text style={{
-    fontSize: 14,
-    color: '#757373',
-    fontWeight: '500',
-  }}>
-                 Share
-                </Text>
-                </TouchableOpacity>
-                <View
-                  style={{
-                    width: 90,
-                    height: 40,
-                    marginRight: 10,
-                    marginTop: 19,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                  }}
-                  // onStartShouldSetResponder={() => this.comment(item)}
-                >
-
-{/* onPress={() => this.comment()} */}
                   
-                </View>
-                {/* <TouchableOpacity
-                  style={Styles.donate_btn_now}
-                  onPress={() => this.Donate()}>
-                  <Text style={Styles.donate_btn_text}>Donate Now</Text>
-                </TouchableOpacity> */}
+                  alignItems: 'center',
+                  //marginBottom: 20,
+                   backgroundColor: '#5ca7f2',
+                }}>
+              
+                
+               
 
-                { this.state.capmain_details[0]['donation_mode'] == '1' && <TouchableOpacity
-                  style={Styles.donate_btn_now}
-                  onPress={() => this.Donate()}>
-                  <Text style={{
-    fontSize: 21,
-    alignSelf: 'center',
-    color: '#ffff',
-    fontWeight: '500',
-    textAlignVertical: 'center',
-    textAlign: 'center',
-    marginTop: -4
-  }}>Donate Now</Text>
-                </TouchableOpacity>
-  }
+            
+  
 
-{ this.state.capmain_details[0]['donation_mode'] == '2' && <TouchableOpacity
-                  style={Styles.donate_btn_now}
-                  onPress={() => this.ContactDonee()}>
-                  <Text style={{
-    fontSize: 17,
-    alignSelf: 'center',
-    color: '#ffff',
-    fontWeight: '500',
-    textAlignVertical: 'center',
-    textAlign: 'center',
-    marginTop: -4
-  }}>Contact Donee</Text>
-                </TouchableOpacity>
-  }
+
+  
 
 
               </View>
 
-              <Text style={{ marginStart: 5, fontWeight: 'bold', fontSize: 20, }}>
-                    Campaign Details : 
-                  </Text>
+             
+                  
                   
                   <Text style={{
                     fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    {'Camapign Name: '+this.state.capmain_details[0]['campaign_name']}
-                  </Text>
-                
-                
-                  <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
-                  }}>
-                    {'Camapign Details: '+this.state.capmain_details[0]['campaign_details']}
-                  </Text>
-                
+                    fontWeight: '700',
+                    marginLeft: 5
 
-                
-                  <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
                   }}>
-                    Start Date: {this.state.capmain_details[0]['campaign_start_date']}
+                   {this.props.route.params.campaign_name}
+                  </Text>
+                
+                  
+                  <Text style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    marginLeft: 5,
+                    marginTop: 10
+
+                  }}>
+                  Donation number: {this.props.route.params.donation_number}
                   </Text>
 
+                  <View style ={{
+                flexDirection: 'row',
+                //justifyContent: 'space-between'
+              }}>
+                  <Text style={{
+                    fontSize: 15,
+                    fontWeight: '500',
+                    marginLeft: 5,
+                    //marginTop: 10
+
+                  }}>
+                  Donation date:
+                  </Text>
+
+                
+<Text style={{marginLeft: 5, marginTop: 1}}>
+{ (this.props.route.params.donation_date).substring(0 , 10).split("-").reverse().join("-") + " " +((this.props.route.params.donation_date).substring(11 , 13) > 12 ? ((this.props.route.params.donation_date).substring(11 , 13))%12 : (this.props.route.params.donation_date).substring(11 , 13)) + ":" +(this.props.route.params.donation_date).substring(14 , 16) }
+</Text>
+
+
+{(this.props.route.params.donation_date).substring(11 , 13) > 12 ? (<Text style={{marginLeft: 5, marginTop: 1}}>
+              PM
+              </Text>) : (<Text style={{marginLeft: 5, marginTop: 1}}>
+              AM
+              </Text>)
+  }
+
+                </View>
+
+
+
+
                   <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
@@ -652,11 +374,11 @@ console.log('comment button clicked!!!!')
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    Expiry Date: {this.state.capmain_details[0]['campaign_end_date']}
+                    Expiry Date:
                   </Text>
                 
                 
-                  { this.state.capmain_details[0]['donation_mode'] == '1' &&  <Text style={{
+                <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -665,9 +387,9 @@ console.log('comment button clicked!!!!')
                   }}>
                     
                     {'Donation Type: Money'}
-                  </Text> }
+                  </Text> 
 
-                  { this.state.capmain_details[0]['donation_mode'] == '2' &&  <Text style={{
+                  <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -675,20 +397,20 @@ console.log('comment button clicked!!!!')
                     marginEnd: 20,
                   }}>
                     
-                    {'Donation Type: In Kind'}
-                  </Text> }
+                    
+                  </Text> 
 
-                  { this.state.capmain_details[0]['donation_mode'] == '1' &&  <Text style={{
+                 <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    Amount Recived: {this.state.amount}
-                  </Text> }
+                    Amount Recived: 
+                  </Text> 
 
-                  { this.state.capmain_details[0]['donation_mode'] == '1' && <Text style={{
+                <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -696,11 +418,11 @@ console.log('comment button clicked!!!!')
                     marginEnd: 20,
                   }}>
                     Target Amount:{' '}
-                    {this.state.capmain_details[0]['campaign_target_amount']}
-                  </Text> }
+                   
+                  </Text> 
                 
                 
-                  { this.state.capmain_details[0]['donation_mode'] == '2' && <Text style={{
+                <Text style={{
                     fontSize: 18,
                     fontWeight: '500',
                     marginTop: 13,
@@ -708,8 +430,8 @@ console.log('comment button clicked!!!!')
                     marginEnd: 20,
                   }}>
                     Target Quantity:{' '}
-                    {this.state.capmain_details[0]['campaign_target_qty']}
-                  </Text> }
+                   
+                  </Text> 
 
                   <TouchableOpacity
                     style={[
@@ -721,7 +443,8 @@ console.log('comment button clicked!!!!')
                         width: 170,
                       },
                     ]}
-                    onPress={() => this.comment()}>
+                    //onPress={() => this.comment()}
+                    >
                   <Text style={{
                     fontSize: 19,
                     fontWeight: '500',
@@ -745,7 +468,6 @@ console.log('comment button clicked!!!!')
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    {'Name: '+this.state.campaign_owner_data['first_name'] + ' ' + this.state.campaign_owner_data['last_name']}
                   </Text>
 
                   {/* <Text style={{
@@ -765,7 +487,7 @@ console.log('comment button clicked!!!!')
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    {'Email: '+this.state.campaign_owner_data['email']}
+                   
                   </Text>
 
                   <Text style={{
@@ -775,7 +497,7 @@ console.log('comment button clicked!!!!')
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    {'Mobile Number: '+this.state.campaign_owner_data['phone']}
+                    
                   </Text>
 
                   <Text style={{
