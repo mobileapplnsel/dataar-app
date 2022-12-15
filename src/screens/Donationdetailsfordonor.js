@@ -9,6 +9,7 @@ import {
   ScrollView,
   Alert,
   FlatList,
+  ActivityIndicator,
   Dimensions,
   KeyboardAvoidingView,
   Share
@@ -51,13 +52,18 @@ class Donationdetailsfordonor extends Component {
     };
   }
   campaign = async () => {
+    this.setState({
+      progress: true,
+    })
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
       donation_number: this.state.donation_id
     };
     var response = await API.post('view_kind_donation_details', logs);
     if (response.status == 'success') {
-      
+      this.setState({
+        progress: false,
+      })
       console.log("Response=====",response.data);
       var arr = new Array();
       var amountVal = 0;
@@ -462,159 +468,31 @@ keyExtractor={(item, id) => id.toString()}
 
           </ImageBackground>
 
-          <Modal
+          <Modal transparent={true} animationType="none" visible={this.state.progress}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          // backgroundColor: `rgba(0,0,0,${0.6})`,
+          width: '100%',
+          height: '100%',
+          // marginTop: 400
+        }}
+      >
+        <View
           style={{
-            width: deviceWidth,
-            margin: 0,
-            backdropOpacity: 10.7,
-            backgroundColor: '#f2f1ed',
-            marginTop: deviceHeight - 600,
+            padding: 13,
+            backgroundColor: 'grey',
+            borderRadius: 3,
+            marginTop: '40%'
           }}
-          animationIn={'slideInUp'}
-          backdropOpacity={0.7}
-          backdropColor={'black'}
-          backdropTransitionInTiming={400}
-          backdropTransitionOutTiming={400}
-          hasBackdrop={true}
-          useNativeDriver={true}
-          isVisible={this.state.modalComment}
-          onBackButtonPress={() =>
-            this.setState({
-              modalComment: false,
-              shareHeight: 360,
-            })
-          }
-          onBackdropPress={() =>
-            this.setState({
-              modalComment: false,
-              shareHeight: 360,
-              isVisible: false,
-            })
-          }>
-          <View
-            style={[
-              {
-                backgroundColor: '#f2f1ed',
-                flexDirection: 'column',
-                alignItems: 'center',
-              },
-            ]}>
-            <View
-              style={{
-                flexDirection: 'row',
-                borderBottomWidth: 1,
-                alignItems: 'center',
-                height: 40,
-                width: '100%',
-                backgroundColor: '#ffff',
-                justifyContent: 'center',
-                borderBottomColor: '#d6d6d6',
-              }}>
-              <Text
-                style={{
-                  color: '#000',
-                  textAlign: 'center',
-                  fontWeight: 'bold',
-                  marginStart: 10,
-                  fontSize: 20,
-                }}>
-                Review
-              </Text>
-              {/* <Text
-                style={{
-                  color: '#000',
-                  alignSelf: 'flex-end',
-                  fontWeight: 'bold',
-                  marginRight: 10,
-                  fontSize: 20,
-                }}>
-                CLOSE
-              </Text> */}
-            </View>
-            <View
-              style={{
-                backgroundColor: '#ffff',
-                justifyContent: 'center',
-                height: '100%',
-              }}>
-                 <View
-              style={{
-                justifyContent: 'center',
-                margin: 20,
-              }}>
-                 <StarRating       
-        disabled={false}
-        maxStars={5}
-        rating={this.state.starCount}
-        selectedStar={(rating) => this.onStarRatingPress(rating)}
-        fullStarColor={'#ff5c5c'}
-      />
+        >
+          <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
+          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+        </View>
       </View>
-              <FlatList
-                // style={{backgroundColor: 'red'}}
-                keyExtractor={item => item.id.toString()}
-                data={this.state.commentArr}
-                onEndReachedThreshold={0.5}
-                renderItem={this.renderItemComment}
-              />
-
-              <KeyboardAvoidingView
-                style={[{marginBottom: 75, backgroundColor: 'transparent'}]}
-                behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
-                <View
-                  style={[
-                    {
-                      flexDirection: 'row',
-                      marginBottom: 4,
-                      paddingHorizontal: 20,
-                    },
-                  ]}>
-                  <View
-                    style={{
-                      backgroundColor: '#e8e3e3',
-                      height: 50,
-                      flexDirection: 'row',
-                      width: '100%',
-                      borderRadius: 10,
-                      alignItems: 'center'
-                    }}>
-                    <TextInput
-                      style={{
-                        flex: 1,
-                        backgroundColor: '#e8e3e3',
-                        
-                        padding: 10,
-                        borderRadius: 40,
-                        fontSize: 16,
-                        color: '#000',
-                        paddingLeft: 15,
-                        alignSelf: 'center',
-                        marginTop: 5
-                      }}
-                      placeholder={'Type your comment here...'}
-                      multiline={true}
-                      onChangeText={textEntry => {
-                        this.commentText(textEntry);
-                      }}></TextInput>
-                    <TouchableOpacity
-                      style={{
-                        height: 40,
-                        paddingVertical: 0,
-                        width: 50,
-                        justifyContent: 'center',
-                        alignSelf: 'center',
-                      }}
-                      onPress={() => {
-                        this.commentSend();
-                      }}>
-                      <Icon_3 name="ios-send" color="#ff5c5c" size={30} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </KeyboardAvoidingView>
-            </View>
-          </View>
-        </Modal>
+    </Modal>
         </Container>
       
     );

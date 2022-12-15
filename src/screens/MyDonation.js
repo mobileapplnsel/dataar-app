@@ -82,6 +82,9 @@ class View_campaign extends Component {
   }
 
   campaign = async () => {
+    this.setState({
+      progress: true,
+    })
     console.log(user_id);
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
@@ -106,6 +109,9 @@ class View_campaign extends Component {
   };
 
   campaign2 = async () => {
+    this.setState({
+      progress: true,
+    })
     console.log(user_id);
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
@@ -674,7 +680,7 @@ class View_campaign extends Component {
                 alignSelf: 'center',
                 borderColor: 'grey',
                 borderWidth: 1,
-                borderRadius: 6,
+               // borderRadius: 6,
                
                 backgroundColor: this.state.moneybutton == true ? '#D0CFCE' : 'white' ,
               }}
@@ -711,7 +717,7 @@ class View_campaign extends Component {
               alignSelf: 'center',
               borderColor: 'grey',
               borderWidth: 1,
-              borderRadius: 6,
+             // borderRadius: 6,
               //marginRight: 10,
              
               backgroundColor: this.state.kindbutton == true ? '#D0CFCE' : 'white' ,}}
@@ -781,7 +787,7 @@ class View_campaign extends Component {
         </ImageBackground>
 
 
-        <Modal
+        {/* <Modal
           animationType="slide"
           transparent={true}
           visible={modalVisible}
@@ -789,7 +795,33 @@ class View_campaign extends Component {
             Alert.alert("Modal has been closed.");
             this.setModalVisible(!modalVisible);
           }}
-        />
+        /> */}
+
+<Modal transparent={true} animationType="none" visible={this.state.progress}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          // backgroundColor: `rgba(0,0,0,${0.6})`,
+          width: '100%',
+          height: '100%',
+          // marginTop: 400
+        }}
+      >
+        <View
+          style={{
+            padding: 13,
+            backgroundColor: 'grey',
+            borderRadius: 3,
+            marginTop: '40%'
+          }}
+        >
+          <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
+          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+        </View>
+      </View>
+    </Modal>
 
 
       </Container>

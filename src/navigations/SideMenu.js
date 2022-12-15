@@ -475,8 +475,17 @@ const CustomSidebarMenu = props => {
                 onChangeText={(text) => remarksTyping(text)}
                 ></TextInput>
 <Text style={{ fontSize: 11, alignSelf: 'flex-start', marginTop: 5, color: '#f55656', marginLeft: 17, marginBottom: 7, fontWeight: '400' }}>{maxLengthh1+' Character remaining'}</Text>
+
+
+<View style={{
+  flexDirection: 'row',
+  justifyContent: 'center'
+}}>
 <TouchableOpacity style={{  height: 40, alignSelf: 'center',borderRadius:2, marginLeft: 17, marginRight: 17,
  backgroundColor: '#f55656', marginTop: 20, borderRadius: 5}} onPress ={() => deleteRequestSend()}>
+
+
+
               <Text style={{  fontSize:16,fontWeight: "bold",color:'white',
  textAlign: 'center', textAlignVertical: 'center',
 color: 'white', padding: 6}}>
@@ -484,10 +493,25 @@ color: 'white', padding: 6}}>
 </Text> 
 </TouchableOpacity>
 
+<TouchableOpacity 
+
+style={{  height: 40, width: 120, alignSelf: 'center',borderRadius:2, marginLeft: 17, marginRight: 17,
+ backgroundColor: '#f55656', marginTop: 20, borderRadius: 5}} onPress={() => { setmodalVisibleForZip(false) }}
+ >
+
+
+
+              <Text style={{  fontSize:16,fontWeight: "bold",color:'white',
+ textAlign: 'center', textAlignVertical: 'center',
+color: 'white', padding: 6}}>
+   Cancel
+</Text> 
+</TouchableOpacity>
+</View>
 
                                 </View>
 
-                                <TouchableOpacity onPress={() => { setmodalVisibleForZip(false) }}>
+                                {/* <TouchableOpacity onPress={() => { setmodalVisibleForZip(false) }}>
                                     <View style={{
         height: 45,
         marginTop: 7,
@@ -500,7 +524,25 @@ color: 'white', padding: 6}}>
     }}>
                                         <Text style={{ fontSize: 20, alignSelf: 'center', marginTop: 10, color: 'black' }}>Cancel</Text>
                                     </View>
-                                </TouchableOpacity>
+                                </TouchableOpacity> */}
+
+{/* <TouchableOpacity 
+
+style={{  height: 40, width: 120, alignSelf: 'center',borderRadius:2, marginLeft: 17, marginRight: 17,
+ backgroundColor: '#f55656', marginTop: 20, borderRadius: 5}} onPress={() => { setmodalVisibleForZip(false) }}
+ >
+
+
+
+              <Text style={{  fontSize:16,fontWeight: "bold",color:'white',
+ textAlign: 'center', textAlignVertical: 'center',
+color: 'white', padding: 6}}>
+   Cancel
+</Text> 
+</TouchableOpacity> */}
+
+
+
                                 </View>
                             
                         </Modal>
