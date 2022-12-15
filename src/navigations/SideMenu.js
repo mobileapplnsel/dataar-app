@@ -287,16 +287,27 @@ const CustomSidebarMenu = props => {
   }}>{'Hi '+profile_name}</Text>) : null}
 
       <DrawerContentScrollView {...props}>
-        <DrawerItemList {...props} />
+        {/* <DrawerItemList {...props} /> */}
 
 
         {user_id == null ? (
           <DrawerItem label="User Profile" onPress={() =>  logout()} />
         ) : null}
 
-{/* {user_Type == 0 ? (
-          <DrawerItem label="Donation Campaign" onPress={() => props.navigation.navigate('Dashboard_donation')} />
-        ) : null} */}
+{user_Type == 1 ? (
+
+
+          <DrawerItem 
+          label="Dashboard" 
+          onPress={() => props.navigation.navigate('Dashboard')} />
+
+          
+        ) : null}
+{user_Type == 0 ? (
+          <DrawerItem label="Dashboard" 
+          
+          onPress={() => props.navigation.navigate('Dashboard_donation')} />
+        ) : null}
         
 
         {user_Type == 0 ? (
@@ -318,9 +329,9 @@ const CustomSidebarMenu = props => {
         ) : null}
 
        
-{user_Type == 0 ? (
+{/* {user_Type == 0 ? (
           <DrawerItem label="Set Preference" onPress={() => props.navigation.navigate('Preference')} />
-        ) : null}
+        ) : null} */}
 
 
 
@@ -341,14 +352,14 @@ const CustomSidebarMenu = props => {
 
 {user_Type == 0 ? (
         <DrawerItem
-          label="Manage Account"
+          label="Change Password"
           onPress={() => props.navigation.navigate('Manage_Account')}
         />  
         ) : null}
 
 {user_Type == 1 ? (
         <DrawerItem
-          label="Manage Account"
+          label="Change Password"
           onPress={() => props.navigation.navigate('Manage_AccountforDonee')}
         />  
         ) : null}

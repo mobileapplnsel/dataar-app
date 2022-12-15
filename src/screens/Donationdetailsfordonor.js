@@ -284,7 +284,7 @@ class Donationdetailsfordonor extends Component {
                       alignSelf: 'center',
                     }}
                     source={require('../../src/assets/images/heart1.png')}
-                    // resizeMode="contain"dashboard_main_btn
+                   
                   />
                 </TouchableOpacity>
 
@@ -397,13 +397,17 @@ class Donationdetailsfordonor extends Component {
             height: 40,
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginTop: 20
+            marginTop: 20,
+            backgroundColor: '#f55656'
           }}>
-        <View style={{alignItems: 'center', marginStart: 6}}>
+        <View style={{
+          alignItems: 'center',
+           marginStart: 6,
+           }}>
             <Text style={{
                 fontSize: 15,
                 fontWeight: '700',
-
+                color: 'white'
             }}>Item name</Text>
           </View>
           <View style={{
@@ -414,14 +418,15 @@ class Donationdetailsfordonor extends Component {
             <Text style={{
                 fontSize: 15,
                 fontWeight: '700',
-                
+                color: 'white'
             }}>Target Quantity</Text>
           </View>
           <View style={{alignItems: 'center', marginRight: 10}}>
             <Text style={{
                 fontSize: 15,
                 fontWeight: '700',
-                width: '60%'
+                width: '60%',
+                color: 'white'
             }}>Donated Quantity</Text>
           </View>
           
