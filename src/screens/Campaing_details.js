@@ -303,8 +303,14 @@ class Campaing_details extends Component {
                   Date:
                 </Text>
                 <Text style={Styles.doner_title_font}>
-                  {item.created_at}
+                {(item.created_at).substring(0 , 10).split("-").reverse().join("-") + " " +((item.created_at).substring(11 , 13) > 12 ? ((item.created_at).substring(11 , 13))%12 : (item.created_at).substring(11 , 13)) + ":" +(item.created_at).substring(14 , 16) }
                 </Text>
+                {(item.created_at).substring(11 , 13) > 12 ? (<Text style={Styles.doner_title_font}>
+              PM
+              </Text>) : (<Text style={Styles.doner_title_font}>
+              AM
+              </Text>)
+  }
               </View>
 
               <View style={{ flexDirection: 'row', marginTop: 3 }}>
