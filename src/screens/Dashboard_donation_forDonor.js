@@ -16,10 +16,12 @@ import {
   KeyboardAvoidingView,
   PermissionsAndroid,
   ActivityIndicator,
-  Share
+  Share,
+  RefreshControl,
 } from 'react-native';
 import { Container, Card, CardItem, Body, ListItem } from 'native-base';
 import API from '../services/api';
+import Loader from '../utils/Loader';
 var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon_3 from 'react-native-vector-icons/Ionicons';
@@ -45,7 +47,7 @@ class Dashboard_donation_forDonor extends Component {
     super(props);
 
     this.state = {
-
+      refreshing: false,
       setcmpData: [],
       isWish: '',
       modalComment: false,
@@ -88,6 +90,13 @@ class Dashboard_donation_forDonor extends Component {
   }
 
   TrackCampaign = () => { };
+  onRefresh = async () => {
+    this.setState({
+
+     refreshing: true
+    });
+  
+  };
   StartCampaign = async () => {
     var token = await AsyncStorage.getItem('token');
     console.log(token);
@@ -257,6 +266,9 @@ class Dashboard_donation_forDonor extends Component {
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
       console.log('donation_list response: ', response.data.campaign_data);
+      // this.setState({
+      //   refreshing: false
+      // })
       this.setState({
         progress: false
       })
@@ -301,6 +313,18 @@ class Dashboard_donation_forDonor extends Component {
       Alert.alert(response.status, response.message);
     }
   };
+
+  // ItemSeparatorView = async() => {
+  //   return (
+  //     <View
+  //       style={{
+  //         height: 1,
+  //         width: '100%',
+  //         backgroundColor: '#C8C8C8',
+  //       }}
+  //     />
+  //   );
+  // };
 
   preference_dashboard_donate = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
@@ -589,7 +613,7 @@ class Dashboard_donation_forDonor extends Component {
 
 
 
-
+  
 
 
 
@@ -1104,7 +1128,7 @@ class Dashboard_donation_forDonor extends Component {
           style={Styles.login_main}>
 
           <SafeAreaView style={Styles.dashboard_main_header}>
-
+          
             <View style={Styles.dashboard_main_headers}>
               <TouchableOpacity
                 onPress={() => this.props.navigation.openDrawer()}>
@@ -1197,7 +1221,10 @@ class Dashboard_donation_forDonor extends Component {
 
 
           <View style={Styles.dashboard_main_contain}>
-            <ScrollView>
+            <ScrollView  refreshControl={
+          <RefreshControl refreshing={this.state.refreshing} onRefresh={this.state.onRefresh} />
+            }
+          >
 
               {/* <Card style={{overflow: 'hidden'}}>
           <CardItem>
@@ -1231,6 +1258,12 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
 
                 horizontal={true}
                 keyExtractor={(item, id) => id.toString()}
+
+               
+              
+               
+               
+               
               />
 
 
