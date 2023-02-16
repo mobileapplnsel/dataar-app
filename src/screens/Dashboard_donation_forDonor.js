@@ -32,6 +32,7 @@ import Toast from 'react-native-simple-toast';
 import KeyboardManager from 'react-native-keyboard-manager';
 import normalize from '../components/normalize';
 import { SwiperFlatList } from 'react-native-swiper-flatlist';
+import Carousel, { Pagination } from 'react-native-snap-carousel'
 
 //import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
@@ -934,6 +935,7 @@ class Dashboard_donation_forDonor extends Component {
   };
 
   renderlog1 = ({ item, index }) => {
+    console.log("ID====", item.id)
     var progressStatus = 0;
     var amountpaind;
 
@@ -1226,9 +1228,12 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
               <FlatList
                 data={this.state.setcmpData}
                 renderItem={this.renderlog1}
+
                 horizontal={true}
                 keyExtractor={(item, id) => id.toString()}
               />
+
+
 
 
 
