@@ -471,8 +471,8 @@ const StartCampaign = ({navigation}) => {
       Title === '' &&
         Description === '' &&
         strdate === '' &&
-        endseldate === '' &&
-        image === '',
+        endseldate === ''
+       // image === '',
     );
 
     //  setNext(1);
@@ -489,9 +489,9 @@ const StartCampaign = ({navigation}) => {
       Alert.alert('PIN code', 'Please enter PIN where you wish to run your campaign');
     }
     
-     else if (selectedCampaignImageSource == '') {
-      Alert.alert('Image', 'Please add a campaign Image');
-    } 
+    //  else if (selectedCampaignImageSource == '') {
+    //   Alert.alert('Image', 'Please add a campaign Image');
+    // } 
     // else if (selectID == '') {
     //   Alert.alert('Campaign type', 'Please select a campaign type');
     // }
