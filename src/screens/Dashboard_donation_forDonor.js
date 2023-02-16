@@ -30,6 +30,7 @@ import StarRating from 'react-native-star-rating';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-simple-toast';
 import KeyboardManager from 'react-native-keyboard-manager';
+import normalize from '../components/normalize';
  //import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
@@ -807,11 +808,22 @@ source={{uri: item.campaign_image}}>
 
 
 
-              <View style={{flexDirection: 'row', marginTop: 1}}>
-                <Text style={Styles.doner_title_font}>
+              <View 
+               
+              style={{
+                flexDirection: 'row',
+               
+               // backgroundColor:'red',
+                 //marginTop: 1
+                 }}>
+                <Text 
+                numberOfLines={2}
+                style={Styles.doner_title_font}>
                   {item.campaign_details}
                 </Text>
               </View>
+
+
               { item.donation_mode == '1' && <View
                 style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Text style={Styles.doner_title_font}>{amountpaind}</Text>

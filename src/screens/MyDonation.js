@@ -395,9 +395,17 @@ class View_campaign extends Component {
                 <Text style={Styles.doner_title_font_Modified}>
                   Date:
                 </Text>
+                
                 <Text style={Styles.doner_title_font}>
-                  {item.updated_at}
-                </Text>
+                    {(item.updated_at).substring(0, 10).split("-").reverse().join("-") + " " + ((item.updated_at).substring(11, 13) > 12 ? ((item.updated_at).substring(11, 13)) % 12 : (item.updated_at).substring(11, 13)) + ":" + (item.updated_at).substring(14, 16)}
+                  </Text>
+
+                  {(item.updated_at).substring(11, 13) > 12 ? (<Text style={Styles.doner_title_font}>
+                    PM
+                  </Text>) : (<Text style={Styles.doner_title_font}>
+                    AM
+                  </Text>)
+                  }
               </View>
 
 
