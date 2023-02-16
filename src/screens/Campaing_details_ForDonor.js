@@ -601,7 +601,7 @@ console.log('comment button clicked!!!!')
     textAlignVertical: 'center',
     textAlign: 'center',
     marginTop: -4
-  }}>Contact Donee</Text>
+  }}>Donate Now</Text>
                 </TouchableOpacity>
   }
 

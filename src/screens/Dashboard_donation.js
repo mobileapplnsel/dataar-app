@@ -627,7 +627,7 @@ class Dashboard_donation extends Component {
     textAlignVertical: 'center',
     textAlign: 'center',
     marginTop: -4
-  }}>Contact Donee</Text>
+  }}>Donate Now</Text>
                 </TouchableOpacity>
   }
               </View>
