@@ -1,5 +1,5 @@
 // weight screw 4 nut bolt rober checkval weight
-import React, {useState, useEffect, Component} from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import {
   Text,
   View,
@@ -18,7 +18,7 @@ import {
   ActivityIndicator,
   Share
 } from 'react-native';
-import {Container, Card, CardItem, Body, ListItem} from 'native-base';
+import { Container, Card, CardItem, Body, ListItem } from 'native-base';
 import API from '../services/api';
 var Styles = require('../assets/files/Styles');
 import AsyncStorage from '@react-native-community/async-storage';
@@ -31,7 +31,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-simple-toast';
 import KeyboardManager from 'react-native-keyboard-manager';
 import normalize from '../components/normalize';
- //import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
+import { SwiperFlatList } from 'react-native-swiper-flatlist';
+
+//import FontAwesome from 'react-native-vector-icons/dist/FontAwesome';
 const deviceWidth = Dimensions.get('window').width;
 const deviceHeight =
   Platform.OS === 'ios'
@@ -68,12 +70,12 @@ class Dashboard_donation_forDonor extends Component {
           pref_name: 'All',
           id: 'all',
         },
-        
+
       ],
       ArrPref1: [
-        {id: "2", name: "In Kind"},
-        {id: "1", name: "Fundraising"},
-        {id: "all", name: "All"},
+        { id: "2", name: "In Kind" },
+        { id: "1", name: "Fundraising" },
+        { id: "all", name: "All" },
 
       ],
       showPicker: false,
@@ -84,7 +86,7 @@ class Dashboard_donation_forDonor extends Component {
     };
   }
 
-  TrackCampaign = () => {};
+  TrackCampaign = () => { };
   StartCampaign = async () => {
     var token = await AsyncStorage.getItem('token');
     console.log(token);
@@ -118,18 +120,18 @@ class Dashboard_donation_forDonor extends Component {
     var response = await API.post('filter_by_type_list');
     console.log('filter_by_type_list', response);
     if (response.status == 'success') {
-      
+
       this.setState({
-        
+
         ArrPref1: [...response.data],
       });
-      this.state.ArrPref1.push({name: 'All', id: 'all',})
+      this.state.ArrPref1.push({ name: 'All', id: 'all', })
       console.log(this.state.ArrPref1);
     } else {
       Alert.alert(response.status, response.message);
     }
   };
-  
+
   componentDidMount = async () => {
 
     if (Platform.OS === 'ios') {
@@ -137,16 +139,17 @@ class Dashboard_donation_forDonor extends Component {
     }
 
     let profile_imgggg = await AsyncStorage.getItem('profile_image');
-    
+
 
     this.setState({
       profile_img_URL: profile_imgggg
     });
 
     this.dashboard_donate();
+
     // this.getPreferences()
 
-   
+
 
     // this.getuser();
 
@@ -154,15 +157,15 @@ class Dashboard_donation_forDonor extends Component {
 
       console.log('focusListener has calle1d!!!!')
       this.props.navigation.closeDrawer();
-       this.dashboard_donate();
+      this.dashboard_donate();
 
-       let profile_imgggg = await AsyncStorage.getItem('profile_image');
-    
+      let profile_imgggg = await AsyncStorage.getItem('profile_image');
 
-    this.setState({
-      profile_img_URL: profile_imgggg
-    });
-    // this.getPreferences()
+
+      this.setState({
+        profile_img_URL: profile_imgggg
+      });
+      // this.getPreferences()
       //Put your Data loading function here instead of my this.loadData()
     });
 
@@ -181,14 +184,14 @@ class Dashboard_donation_forDonor extends Component {
     );
     console.log(this.state.hasLocationPermission);
     if (
-      this.state.hasLocationPermissio === PermissionsAndroid.RESULTS.GRANTED
+      this.state.hasLocationPermission === PermissionsAndroid.RESULTS.GRANTED
     ) {
       console.log('You can use the camera');
     } else {
       console.log('Camera permission denied');
     }
   }
-  
+
   goToCampaignDetails = async (item, index) => {
     var token = await AsyncStorage.getItem('token');
     var user_id = await AsyncStorage.getItem('user_id');
@@ -196,7 +199,7 @@ class Dashboard_donation_forDonor extends Component {
       this.props.navigation.navigate('Campaing_details_ForDonor', {
         camp_id: item.campaign_id,
       })
-      
+
     } else {
       this.props.navigation.replace('LogIn');
     }
@@ -239,8 +242,8 @@ class Dashboard_donation_forDonor extends Component {
   dashboard_donate = async () => {
 
     this.setState({
-      progress:true
-  })
+      progress: true
+    })
 
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
@@ -252,12 +255,11 @@ class Dashboard_donation_forDonor extends Component {
     var response = await API.post('donation_list', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
-      console.log('donation_list response: ',response.data.campaign_data);
+      console.log('donation_list response: ', response.data.campaign_data);
       this.setState({
-        progress:false
-    })
-      if ([...response.data.campaign_data] == 0)
-      {
+        progress: false
+      })
+      if ([...response.data.campaign_data] == 0) {
         Toast.show('No Campaign found', Toast.LONG)
       }
 
@@ -267,8 +269,8 @@ class Dashboard_donation_forDonor extends Component {
       // setcmpData(response.data);
     } else {
       this.setState({
-        progress:false
-    })
+        progress: false
+      })
       Alert.alert(response.status, response.message);
     }
   };
@@ -284,10 +286,9 @@ class Dashboard_donation_forDonor extends Component {
     var response = await API.post('donation_list', logs);
     if (response.status == 'success') {
       // navigation.navigate('OtpVerify', {mobile: Mobile});
-      console.log('donation_list response: ',response.data.campaign_data);
+      console.log('donation_list response: ', response.data.campaign_data);
 
-      if ([...response.data.campaign_data] == 0)
-      {
+      if ([...response.data.campaign_data] == 0) {
         Toast.show('No Campaign found', Toast.LONG)
       }
 
@@ -309,8 +310,7 @@ class Dashboard_donation_forDonor extends Component {
     var response = await API.post('donation_list_by_preference', logs);
     if (response.status == 'success') {
       console.log(response);
-      if ([...response.data.campaign_data] == 0)
-      {
+      if ([...response.data.campaign_data] == 0) {
         Toast.show('No Campaign found', Toast.LONG)
       }
 
@@ -353,7 +353,7 @@ class Dashboard_donation_forDonor extends Component {
       this.dashboard_donate_by_filter(id);
     }
   };
-  
+
   location = () => {
     if (hasLocationPermission) {
       Geolocation.getCurrentPosition(
@@ -364,7 +364,7 @@ class Dashboard_donation_forDonor extends Component {
           // See error code charts below.
           console.log(error.code, error.message);
         },
-        {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
       );
     }
   };
@@ -383,7 +383,7 @@ class Dashboard_donation_forDonor extends Component {
     var token = await AsyncStorage.getItem('token');
     var kyc_verified = await AsyncStorage.getItem('kyc_verified');
     var pan_number = await AsyncStorage.getItem('pan_number');
-    console.log("pan_number",pan_number, item);
+    console.log("pan_number", pan_number, item);
 
     console.log(token);
 
@@ -392,49 +392,45 @@ class Dashboard_donation_forDonor extends Component {
 
 
       var user_id = await AsyncStorage.getItem('user_id');
-    var logs = {
-      user_id: user_id,
-    };
-    console.log(logs);
-    var response = await API.post('kyc_status', logs);
-    if (response.status == 'success') {
-      console.log(response.userdata.pan_number);
-      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
-        {
-          if(response.userdata.pan_number!='')
-          {
-            console.log("ContactDonee selected item: ",item);
+      var logs = {
+        user_id: user_id,
+      };
+      console.log(logs);
+      var response = await API.post('kyc_status', logs);
+      if (response.status == 'success') {
+        console.log(response.userdata.pan_number);
+        if (response.userdata.kyc_verified != 0 && response.userdata.kyc_verified != '') {
+          if (response.userdata.pan_number != '') {
+            console.log("ContactDonee selected item: ", item);
 
-    this.props.navigation.navigate('DonationInKind', {
-      campaign_id: item.campaign_id,
-      kind_id: item.kind_id,
-    });
+            this.props.navigation.navigate('DonationInKind', {
+              campaign_id: item.campaign_id,
+              kind_id: item.kind_id,
+            });
           }
         }
-        else
-          {
-            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
-            {
-              Alert.alert("Alert", "Kyc under the processing");
-            }
-            else{
-              Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page",  [
-                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
-              ],
-              {cancelable: false},);
-            }
-    
-          
+        else {
+          if (response.userdata.pan_number != '' && response.userdata.pan_number != null) {
+            Alert.alert("Alert", "Kyc under the processing");
           }
-        
+          else {
+            Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page", [
+              { text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor') },
+            ],
+              { cancelable: false },);
+          }
 
-    } else {
-      Alert.alert(response.status, response.message);
+
+        }
+
+
+      } else {
+        Alert.alert(response.status, response.message);
+      }
+
     }
 
-  }
-    
-     else {
+    else {
       this.props.navigation.replace('LogIn');
     }
 
@@ -446,7 +442,7 @@ class Dashboard_donation_forDonor extends Component {
     var token = await AsyncStorage.getItem('token');
     var kyc_verified = await AsyncStorage.getItem('kyc_verified');
     var pan_number = await AsyncStorage.getItem('pan_number');
-    console.log("pan_number",pan_number, item);
+    console.log("pan_number", pan_number, item);
 
     console.log(token);
 
@@ -455,53 +451,49 @@ class Dashboard_donation_forDonor extends Component {
 
 
       var user_id = await AsyncStorage.getItem('user_id');
-    var logs = {
-      user_id: user_id,
-    };
-    console.log(logs);
-    var response = await API.post('kyc_status', logs);
-    if (response.status == 'success') {
-      console.log(response.userdata.pan_number);
-      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
-        {
-          if(response.userdata.pan_number!='')
-          {
+      var logs = {
+        user_id: user_id,
+      };
+      console.log(logs);
+      var response = await API.post('kyc_status', logs);
+      if (response.status == 'success') {
+        console.log(response.userdata.pan_number);
+        if (response.userdata.kyc_verified != 0 && response.userdata.kyc_verified != '') {
+          if (response.userdata.pan_number != '') {
             this.props.navigation.navigate('DonationAmount', {
-                      donate_amt: item.campaign_target_amount,
-                      donation_mode: item.donation_mode,
-                      campaign_id: item.campaign_id,
-                      kind_id: item.kind_id,
-                      campaign_name: item.campaign_name
-                    });
+              donate_amt: item.campaign_target_amount,
+              donation_mode: item.donation_mode,
+              campaign_id: item.campaign_id,
+              kind_id: item.kind_id,
+              campaign_name: item.campaign_name
+            });
           }
         }
-        else
-          {
-            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
-            {
-              Alert.alert("Alert", "Kyc under the processing");
-            }
-            else{
-              Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page",  [
-                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
-              ],
-              {cancelable: false},);
-            }
-    
-          
+        else {
+          if (response.userdata.pan_number != '' && response.userdata.pan_number != null) {
+            Alert.alert("Alert", "Kyc under the processing");
           }
-        
-        
-        
-      // this.setState({
-      //   pan_number:response.,
-      // });
-      // setcmpData(response.data);
-    } else {
-      Alert.alert(response.status, response.message);
-    }
+          else {
+            Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page", [
+              { text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor') },
+            ],
+              { cancelable: false },);
+          }
 
-  }
+
+        }
+
+
+
+        // this.setState({
+        //   pan_number:response.,
+        // });
+        // setcmpData(response.data);
+      } else {
+        Alert.alert(response.status, response.message);
+      }
+
+    }
 
     //   if(kyc_verified!=0 && kyc_verified!='')
     //   {
@@ -528,10 +520,10 @@ class Dashboard_donation_forDonor extends Component {
     //       {cancelable: false},);
     //     }
 
-      
+
     //   }
-    
-     else {
+
+    else {
       this.props.navigation.replace('LogIn');
     }
   };
@@ -545,17 +537,15 @@ class Dashboard_donation_forDonor extends Component {
 
 
       var user_id = await AsyncStorage.getItem('user_id');
-    var logs = {
-      user_id: user_id,
-    };
-    console.log(logs);
-    var response = await API.post('kyc_status', logs);
-    if (response.status == 'success') {
-      console.log(response.userdata.pan_number);
-      if(response.userdata.kyc_verified!=0 && response.userdata.kyc_verified!='')
-        {
-          if(response.userdata.pan_number!='')
-          {
+      var logs = {
+        user_id: user_id,
+      };
+      console.log(logs);
+      var response = await API.post('kyc_status', logs);
+      if (response.status == 'success') {
+        console.log(response.userdata.pan_number);
+        if (response.userdata.kyc_verified != 0 && response.userdata.kyc_verified != '') {
+          if (response.userdata.pan_number != '') {
             this.props.navigation.navigate('OneRupeeDonation', {
               donate_amt: '100',
               donation_mode: 'dsadas',
@@ -564,34 +554,32 @@ class Dashboard_donation_forDonor extends Component {
             });
           }
         }
-        else
-          {
-            if(response.userdata.pan_number!='' && response.userdata.pan_number!=null)
-            {
-              Alert.alert("Alert", " Your Kyc is currently under review. We will let you know once your KYC gets approved.");
-            }
-            else{
-              Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page",  [
-                {text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor')},
-              ],
-              {cancelable: false},);
-            }
-    
-          
+        else {
+          if (response.userdata.pan_number != '' && response.userdata.pan_number != null) {
+            Alert.alert("Alert", " Your Kyc is currently under review. We will let you know once your KYC gets approved.");
           }
-        
-        
-        
-     
-    } else {
-      Alert.alert(response.status, response.message);
+          else {
+            Alert.alert("Alert", "Please submit your KYC for approval, click OK to go to KYC page", [
+              { text: 'OK', onPress: () => this.props.navigation.navigate('KYCUpdateForDonor') },
+            ],
+              { cancelable: false },);
+          }
+
+
+        }
+
+
+
+
+      } else {
+        Alert.alert(response.status, response.message);
+      }
+
     }
 
-  }
 
- 
-    
-     else {
+
+    else {
       this.props.navigation.replace('LogIn');
     }
 
@@ -600,10 +588,10 @@ class Dashboard_donation_forDonor extends Component {
 
 
 
-  
 
 
-    
+
+
   };
   // const Logout = async () => {
   //   AsyncStorage.clear();
@@ -625,12 +613,12 @@ class Dashboard_donation_forDonor extends Component {
   };
   shareCampaign = async (item) => {
     // this.modalizeRefComment.current.open();    campaign_details_url
-    console.log('item.campaign_details_url: '+ item.donation_mode, item);
+    console.log('item.campaign_details_url: ' + item.donation_mode, item);
     try {
       const result = await Share.share({
-       title: 'Campaign Link',
-  message: 'Here is the Campaign link of Dataar App: ' + item.campaign_details_url, 
-  url: item.campaign_details_url//item.campaign_details_url
+        title: 'Campaign Link',
+        message: 'Here is the Campaign link of Dataar App: ' + item.campaign_details_url,
+        url: item.campaign_details_url//item.campaign_details_url
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
@@ -644,7 +632,7 @@ class Dashboard_donation_forDonor extends Component {
     } catch (error) {
       alert(error.message);
     }
-    
+
   };
   commetFetch = async () => {
     var token = await AsyncStorage.getItem('token');
@@ -675,7 +663,7 @@ class Dashboard_donation_forDonor extends Component {
       this.props.navigation.replace('LogIn');
     }
   };
-  renderlog = ({item, index}) => {
+  renderlog = ({ item, index }) => {
     var progressStatus = 0;
     var amountpaind;
     if (item.donation_mode == '1') {
@@ -689,11 +677,10 @@ class Dashboard_donation_forDonor extends Component {
           (parseInt(item.total_donation_amountpaid) /
             parseInt(item.campaign_target_amount)) *
           100;
-          progressStatus = parseFloat(progressStatus).toFixed(2)
-          if (progressStatus > 100)
-          {
-            progressStatus = 100
-          }
+        progressStatus = parseFloat(progressStatus).toFixed(2)
+        if (progressStatus > 100) {
+          progressStatus = 100
+        }
         amountpaind =
           item.total_donation_amountpaid + ' of ' + item.campaign_target_amount;
       }
@@ -701,22 +688,20 @@ class Dashboard_donation_forDonor extends Component {
       if (item.total_donation_quantity == null) {
         // progressStatus =
         //   (parseInt(0) / parseInt(item.campaign_target_amount)) * 100;
-           progressStatus = 0.00
+        progressStatus = 0.00
         amountpaind = 0 + ' of ' + item.campaign_target_qty;
       } else {
         progressStatus =
           (parseInt(item.total_donation_quantity) /
             parseInt(item.campaign_target_qty)) *
           100;
-          progressStatus = parseFloat(progressStatus).toFixed(2)
-          if (progressStatus == 'Infinity')
-          {
-            progressStatus = 0
-          }
-          else if (progressStatus > 100.00)
-          {
-            progressStatus = 100
-          }
+        progressStatus = parseFloat(progressStatus).toFixed(2)
+        if (progressStatus == 'Infinity') {
+          progressStatus = 0
+        }
+        else if (progressStatus > 100.00) {
+          progressStatus = 100
+        }
         amountpaind =
           item.total_donation_quantity + ' of ' + item.campaign_target_qty;
       }
@@ -730,58 +715,55 @@ class Dashboard_donation_forDonor extends Component {
     var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24)) + 1
 
     var finalDaysleft = daysTill30June2035
-    if (daysTill30June2035 == 0)
-    {
+    if (daysTill30June2035 == 0) {
       finalDaysleft = 'Expiring Today'
     }
-    else if (daysTill30June2035 == 1)
-    {
+    else if (daysTill30June2035 == 1) {
       finalDaysleft = 'Expiring Tomorrow'
     }
-    else
-    {
-      finalDaysleft = daysTill30June2035 +' days left'
+    else {
+      finalDaysleft = daysTill30June2035 + ' days left'
     }
 
     return (
-      <View style={{flex: 1}} key={item.donation_id}>
-        <Card style={{overflow: 'hidden'}}>
+      <View style={{ flex: 1 }} key={item.donation_id}>
+        <Card style={{ overflow: 'hidden' }}>
           <CardItem>
-            <View style={{flexDirection: 'column', flex: 1}}>
+            <View style={{ flexDirection: 'column', flex: 1 }}>
               <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   backgroundColor: '#ffff',
-                }}> 
-                  <TouchableOpacity style={{
+                }}>
+                <TouchableOpacity style={{
                   width: '90%'
                 }}
-        onPress={() => this.goToCampaignDetails(item, index)}>
-           
-                <Text style={{
-    fontSize: 16,
-    alignSelf: 'flex-start',
-    alignItems: 'center',
-    color: '#000',
-    fontWeight: '700',
-    
-    // paddingTop:40,
-  }}>{item.campaign_name}</Text>
+                  onPress={() => this.goToCampaignDetails(item, index)}>
+
+                  <Text style={{
+                    fontSize: 16,
+                    alignSelf: 'flex-start',
+                    alignItems: 'center',
+                    color: '#000',
+                    fontWeight: '700',
+
+                    // paddingTop:40,
+                  }}>{item.campaign_name}</Text>
                 </TouchableOpacity>
-                <View style={{flexDirection: 'row'}}>
+                <View style={{ flexDirection: 'row' }}>
                   <TouchableOpacity onPress={() => this.like(item, index)}>
                     {wish ? (
                       <Image
                         style={Styles.donation_icon_font}
                         source={require('../../src/assets/images/like.png')}
-                        // resizeMode="contain"dashboard_main_btn
+                      // resizeMode="contain"dashboard_main_btn
                       />
                     ) : (
                       <Image
                         style={Styles.donation_icon_font}
                         source={require('../../src/assets/images/heartic.png')}
-                        // resizeMode="contain"dashboard_main_btn
+                      // resizeMode="contain"dashboard_main_btn
                       />
                     )}
                   </TouchableOpacity>
@@ -794,53 +776,53 @@ class Dashboard_donation_forDonor extends Component {
                   </TouchableOpacity> */}
                 </View>
               </View>
-              <View style={{ marginLeft: 0, marginRight: 0, borderRadius:4, backgroundColor: 'null', flex: 1, marginTop: 10}}>
-<Image style={{
-  
-    resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%', 
-}}
+              <View style={{ marginLeft: 0, marginRight: 0, borderRadius: 4, backgroundColor: 'null', flex: 1, marginTop: 10 }}>
+                <Image style={{
 
-source={{uri: item.campaign_image}}>
-{/* source={require('../../src/assets/images/daatar_banner.jpg')}> */}
+                  resizeMode: 'contain', alignSelf: 'center', height: 200, alignSelf: 'flex-start', borderRadius: 4, width: '100%',
+                }}
 
-</Image> 
-</View>
+                  source={{ uri: item.campaign_image }}>
+                  {/* source={require('../../src/assets/images/daatar_banner.jpg')}> */}
+
+                </Image>
+              </View>
 
 
 
-              <View 
-               
-              style={{
-                flexDirection: 'row',
-               
-               // backgroundColor:'red',
-                 //marginTop: 1
-                 }}>
-                <Text 
-                numberOfLines={2}
-                style={Styles.doner_title_font}>
+              <View
+
+                style={{
+                  flexDirection: 'row',
+
+                  // backgroundColor:'red',
+                  //marginTop: 1
+                }}>
+                <Text
+                  numberOfLines={2}
+                  style={Styles.doner_title_font}>
                   {item.campaign_details}
                 </Text>
               </View>
 
 
-              { item.donation_mode == '1' && <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              {item.donation_mode == '1' && <View
+                style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Text style={Styles.doner_title_font}>{amountpaind}</Text>
                 <Text style={Styles.doner_title_font}>{progressStatus}%</Text>
-              </View> }
+              </View>}
               {/* <View> */}
-              { item.donation_mode == '1' &&  <View style={Styles.inner_barpro}>
+              {item.donation_mode == '1' && <View style={Styles.inner_barpro}>
                 <Animated.View
                   style={[
                     Styles.inner_bar,
-                    {width: parseInt(progressStatus) + '%'},
+                    { width: parseInt(progressStatus) + '%' },
                   ]}
                 />
-              </View> }
+              </View>}
               {/* </View> */}
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -860,34 +842,34 @@ source={{uri: item.campaign_image}}>
                 {/* <Text style={Styles.doner_title_font}>
                   {item.days} days to go
                 </Text> */}
-                 <Text style={Styles.doner_title_font}>
+                <Text style={Styles.doner_title_font}>
                   {finalDaysleft}
                 </Text>
               </View>
-             
-                <View
+
+              <View
                 style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   // backgroundColor: '#5ca7f2',
                 }}>
-                  <TouchableOpacity
-                    style={[
-                      {
-                        marginTop: 20,
-                        alignSelf: 'center',
-    alignItems: 'center',
-                      },
-                    ]}
-                    onPress={() => this.shareCampaign(item)}>
-                <Text style={{
-    fontSize: 14,
-    color: '#757373',
-    fontWeight: '500',
-  }}>
-                  {item.quantity} Share
-                </Text>
+                <TouchableOpacity
+                  style={[
+                    {
+                      marginTop: 20,
+                      alignSelf: 'center',
+                      alignItems: 'center',
+                    },
+                  ]}
+                  onPress={() => this.shareCampaign(item)}>
+                  <Text style={{
+                    fontSize: 14,
+                    color: '#757373',
+                    fontWeight: '500',
+                  }}>
+                    {item.quantity} Share
+                  </Text>
                 </TouchableOpacity>
                 <View
                   style={{
@@ -898,7 +880,7 @@ source={{uri: item.campaign_image}}>
                     justifyContent: 'center',
                     alignItems: 'center',
                   }}
-                  // onStartShouldSetResponder={() => this.comment(item)}
+                // onStartShouldSetResponder={() => this.comment(item)}
                 >
                   <TouchableOpacity
                     style={[
@@ -910,39 +892,39 @@ source={{uri: item.campaign_image}}>
                     ]}
                     onPress={() => this.comment(item)}>
                     <Text style={Styles.doner_comment_font}>
-                       Review
+                      Review
                     </Text>
                   </TouchableOpacity>
                 </View>
-               { item.donation_mode == '1' && <TouchableOpacity
+                {item.donation_mode == '1' && <TouchableOpacity
                   style={Styles.donate_btn_now}
                   onPress={() => this.Donate(item)}>
                   <Text style={{
-    fontSize: 21,
-    alignSelf: 'center',
-    color: '#ffff',
-    fontWeight: '500',
-    textAlignVertical: 'center',
-    textAlign: 'center',
-    marginTop: -4
-  }}>Donate Now</Text>
+                    fontSize: 21,
+                    alignSelf: 'center',
+                    color: '#ffff',
+                    fontWeight: '500',
+                    textAlignVertical: 'center',
+                    textAlign: 'center',
+                    marginTop: -4
+                  }}>Donate Now</Text>
                 </TouchableOpacity>
-  }
+                }
 
-{ item.donation_mode == '2' && <TouchableOpacity
+                {item.donation_mode == '2' && <TouchableOpacity
                   style={Styles.donate_btn_now}
                   onPress={() => this.ContactDonee(item)}>
                   <Text style={{
-    fontSize: 17,
-    alignSelf: 'center',
-    color: '#ffff',
-    fontWeight: '500',
-    textAlignVertical: 'center',
-    textAlign: 'center',
-    marginTop: -4
-  }}>Donate Now</Text>
+                    fontSize: 17,
+                    alignSelf: 'center',
+                    color: '#ffff',
+                    fontWeight: '500',
+                    textAlignVertical: 'center',
+                    textAlign: 'center',
+                    marginTop: -4
+                  }}>Donate Now</Text>
                 </TouchableOpacity>
-  }
+                }
               </View>
             </View>
           </CardItem>
@@ -950,7 +932,67 @@ source={{uri: item.campaign_image}}>
       </View>
     );
   };
-  renderItemComment = ({item, index}) => {
+
+  renderlog1 = ({ item, index }) => {
+    var progressStatus = 0;
+    var amountpaind;
+
+
+    var base64String = item.campaign_image
+
+    const wish = item.like_status == 1 ? true : false;
+    console.log('new Date().getTime(): ', new Date());
+    var msDiff = new Date(item.campaign_end_date).getTime() - new Date().getTime();    //Future date - current date
+    var daysTill30June2035 = Math.floor(msDiff / (1000 * 60 * 60 * 24)) + 1
+
+    var finalDaysleft = daysTill30June2035
+    if (daysTill30June2035 == 0) {
+      finalDaysleft = 'Expiring Today'
+    }
+    else if (daysTill30June2035 == 1) {
+      finalDaysleft = 'Expiring Tomorrow'
+    }
+    else {
+      finalDaysleft = daysTill30June2035 + ' days left'
+    }
+
+    return (
+      <View style={{
+        height: 250,
+        width: 250,
+        //backgroundColor: 'red',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: normalize(20)
+      }} >
+
+        <Image style={{
+
+          resizeMode: 'cover',
+          alignSelf: 'center',
+          height: 200,
+          width: 180,
+          borderWidth: normalize(1),
+          borderColor: '#D3D3D3',
+          padding: 2,
+          borderRadius: 4,
+          width: '100%',
+        }}
+
+          source={{ uri: item.campaign_image }}>
+
+
+        </Image>
+
+
+
+
+
+
+      </View>
+    );
+  };
+  renderItemComment = ({ item, index }) => {
     console.log(item.usr_pos_imgComment);
     return (
       <View
@@ -962,7 +1004,7 @@ source={{uri: item.campaign_image}}>
           marginBottom: 10,
           // width: '30%',
         }}>
-        <View style={[{flexDirection: 'row', marginTop: -10, marginLeft: 12}]}>
+        <View style={[{ flexDirection: 'row', marginTop: -10, marginLeft: 12 }]}>
           <Text
             style={[
               {
@@ -975,7 +1017,7 @@ source={{uri: item.campaign_image}}>
             {item.User_Name1}
           </Text>
 
-          
+
 
           {/* <Text
             style={[
@@ -998,24 +1040,24 @@ source={{uri: item.campaign_image}}>
               marginStart: 18,
             },
           ]}></View>
-        <View style={[{marginStart: 13, width: '60%'}]}>
-          
-          <Text style={[{marginTop: 3, color: '#000', fontWeight: 'bold'}]}>{item.comment_user_name}</Text>
-          <Text style={[{marginTop: 3, color: '#000'}]}>{item.comment}</Text>
+        <View style={[{ marginStart: 13, width: '60%' }]}>
+
+          <Text style={[{ marginTop: 3, color: '#000', fontWeight: 'bold' }]}>{item.comment_user_name}</Text>
+          <Text style={[{ marginTop: 3, color: '#000' }]}>{item.comment}</Text>
           <View
-              style={{
-                marginTop: 10,
-                width: 120,
-              }}>
-                 <StarRating       
-        disabled={false}
-        maxStars={5}
-        rating={parseInt(item.rating)}
-        starSize = {20}
-        // selectedStar={(rating) => this.onStarRatingPress(rating)}
-        fullStarColor={'#ff5c5c'}
-      />
-      </View>
+            style={{
+              marginTop: 10,
+              width: 120,
+            }}>
+            <StarRating
+              disabled={false}
+              maxStars={5}
+              rating={parseInt(item.rating)}
+              starSize={20}
+              // selectedStar={(rating) => this.onStarRatingPress(rating)}
+              fullStarColor={'#ff5c5c'}
+            />
+          </View>
         </View>
       </View>
     );
@@ -1058,9 +1100,9 @@ source={{uri: item.campaign_image}}>
         <ImageBackground
           source={require('../../src/assets/images/bg.jpg')}
           style={Styles.login_main}>
-            
+
           <SafeAreaView style={Styles.dashboard_main_header}>
-            
+
             <View style={Styles.dashboard_main_headers}>
               <TouchableOpacity
                 onPress={() => this.props.navigation.openDrawer()}>
@@ -1069,12 +1111,12 @@ source={{uri: item.campaign_image}}>
                     width: 30,
                     height: 30,
                     marginStart: 10,
-                     marginTop: 4,
+                    marginTop: 4,
                     backgroundColor: 'transparent',
                     alignSelf: 'center',
                   }}
                   source={require('../../src/assets/images/3_line_icon.png')}
-                  // resizeMode="contain"dashboard_main_btn
+                // resizeMode="contain"dashboard_main_btn
                 />
               </TouchableOpacity>
               <TouchableOpacity>
@@ -1088,11 +1130,11 @@ source={{uri: item.campaign_image}}>
                     alignSelf: 'center',
                   }}
                   source={require('../../src/assets/images/heart1.png')}
-                  // resizeMode="contain"dashboard_main_btn
+                // resizeMode="contain"dashboard_main_btn
                 />
               </TouchableOpacity>
             </View>
-            
+
             <View style={Styles.dashboard_main_headers}>
 
 
@@ -1109,11 +1151,11 @@ source={{uri: item.campaign_image}}>
                     alignSelf: 'center',
                   }}
                   source={require('../../src/assets/images/search.png')}
-                  // resizeMode="contain"dashboard_main_btn
+                // resizeMode="contain"dashboard_main_btn
                 />
               </TouchableOpacity>
 
-              { this.state.profile_img_URL != null && <TouchableOpacity onPress={() => this.user()}>
+              {this.state.profile_img_URL != null && <TouchableOpacity onPress={() => this.user()}>
                 <Image
                   style={{
                     width: 40,
@@ -1125,14 +1167,14 @@ source={{uri: item.campaign_image}}>
                     backgroundColor: 'transparent',
                     alignSelf: 'center',
                   }}
-         source={{uri: this.state.profile_img_URL}}/>
-         </TouchableOpacity> }  
-           
-        
+                  source={{ uri: this.state.profile_img_URL }} />
+              </TouchableOpacity>}
 
-       
 
-{ this.state.profile_img_URL == null &&  <TouchableOpacity onPress={() => this.user()}>
+
+
+
+              {this.state.profile_img_URL == null && <TouchableOpacity onPress={() => this.user()}>
                 <Image
                   style={{
                     width: 30,
@@ -1144,18 +1186,18 @@ source={{uri: item.campaign_image}}>
                     alignSelf: 'center',
                   }}
                   source={require('../../src/assets/images/user.png')}
-                  // resizeMode="contain"dashboard_main_btn
+                // resizeMode="contain"dashboard_main_btn
                 />
-              </TouchableOpacity> }
+              </TouchableOpacity>}
             </View>
           </SafeAreaView>
 
-          
+
 
           <View style={Styles.dashboard_main_contain}>
-<ScrollView>
-         
-        <Card style={{overflow: 'hidden'}}>
+            <ScrollView>
+
+              {/* <Card style={{overflow: 'hidden'}}>
           <CardItem>
             <View style={{flexDirection: 'column', flex: 1}}>
 
@@ -1180,10 +1222,23 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
 
             </View>
           </CardItem>
-        </Card>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between',
-    alignItems: 'center',}}>
-        {/* <View style={{width: '49%'}}>
+        </Card> */}
+              <FlatList
+                data={this.state.setcmpData}
+                renderItem={this.renderlog1}
+                horizontal={true}
+                keyExtractor={(item, id) => id.toString()}
+              />
+
+
+
+
+
+              <View style={{
+                flexDirection: 'row', justifyContent: 'space-between',
+                alignItems: 'center',
+              }}>
+                {/* <View style={{width: '49%'}}>
             <Selector
               text={this.state.gender}
               placeholder="Gender"
@@ -1238,64 +1293,64 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
             />
  </View> */}
 
- <View style={{width: '100%', }}>
- <Selector
-                text={this.state.gender1}
-                placeholder="Preference"
-                
-                onPress={() => this.setState({showPicker1: true})}
-                width={'100%'}
-                height={42}
-                imageheight={10}
-                imagewidth={11}
-                backcolor={'#ffff'}
-                borderRadius={10}
-                borderWidth={1}
-                margright={10}
-                fontcolor={'#A1A1A1'}
-              />
+                <View style={{ width: '100%', }}>
+                  <Selector
+                    text={this.state.gender1}
+                    placeholder="Preference"
 
-<Picker
-              backgroundColor={'#ffff'}
-              dataList={this.state.ArrPref1}
-              modalVisible={this.state.showPicker1}
-              onBackdropPress={() => this.setState({showPicker1: false})}
-              renderData={({item, index}) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                     // this.prefArr.push(item.pref_id);
-                     this.user_filter(item.name, item.id);
-                      this.setState({gender1: item.name});
-                      this.setState({showPicker1: false});
+                    onPress={() => this.setState({ showPicker1: true })}
+                    width={'100%'}
+                    height={42}
+                    imageheight={10}
+                    imagewidth={11}
+                    backcolor={'#ffff'}
+                    borderRadius={10}
+                    borderWidth={1}
+                    margright={10}
+                    fontcolor={'#A1A1A1'}
+                  />
+
+                  <Picker
+                    backgroundColor={'#ffff'}
+                    dataList={this.state.ArrPref1}
+                    modalVisible={this.state.showPicker1}
+                    onBackdropPress={() => this.setState({ showPicker1: false })}
+                    renderData={({ item, index }) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() => {
+                            // this.prefArr.push(item.pref_id);
+                            this.user_filter(item.name, item.id);
+                            this.setState({ gender1: item.name });
+                            this.setState({ showPicker1: false });
+                          }}
+                          style={{
+                            paddingVertical: 12,
+                            borderBottomColor: '#DDDDDD',
+                            borderBottomWidth: 1,
+                          }}>
+                          <Text
+                            style={[
+                              {
+                                fontSize: 14,
+                                lineHeight: 40,
+                              },
+                              this.state.genderValue1 == item.name,
+                            ]}>
+                            {item.name}
+                          </Text>
+                        </TouchableOpacity>
+                      );
                     }}
-                    style={{
-                      paddingVertical: 12,
-                      borderBottomColor: '#DDDDDD',
-                      borderBottomWidth: 1,
-                    }}>
-                    <Text
-                      style={[
-                        {
-                          fontSize: 14,
-                          lineHeight: 40,
-                        },
-                        this.state.genderValue1 == item.name,
-                      ]}>
-                      {item.name}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              }}
-            />
- </View>
-            
-             </View>
-            <FlatList
-              data={this.state.setcmpData}
-              renderItem={this.renderlog}
-              keyExtractor={(item, id) => id.toString()}
-            />
+                  />
+                </View>
+
+              </View>
+              <FlatList
+                data={this.state.setcmpData}
+                renderItem={this.renderlog}
+                keyExtractor={(item, id) => id.toString()}
+              />
             </ScrollView>
           </View>
         </ImageBackground>
@@ -1375,19 +1430,19 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
                 justifyContent: 'center',
                 height: '100%',
               }}>
-                 <View
-              style={{
-                justifyContent: 'center',
-                margin: 20,
-              }}>
-                 <StarRating       
-        disabled={false}
-        maxStars={5}
-        rating={this.state.starCount}
-        selectedStar={(rating) => this.onStarRatingPress(rating)}
-        fullStarColor={'#ff5c5c'}
-      />
-      </View>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  margin: 20,
+                }}>
+                <StarRating
+                  disabled={false}
+                  maxStars={5}
+                  rating={this.state.starCount}
+                  selectedStar={(rating) => this.onStarRatingPress(rating)}
+                  fullStarColor={'#ff5c5c'}
+                />
+              </View>
               <FlatList
                 // style={{backgroundColor: 'red'}}
                 keyExtractor={item => item.id.toString()}
@@ -1397,7 +1452,7 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
               />
 
               <KeyboardAvoidingView
-                style={[{marginBottom: 75, backgroundColor: 'transparent'}]}
+                style={[{ marginBottom: 75, backgroundColor: 'transparent' }]}
                 behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
                 <View
                   style={[
@@ -1452,30 +1507,30 @@ source={require('../../src/assets/images/daatar_banner.jpg')}>
           </View>
         </Modal>
         <Modal transparent={true} animationType="none" visible={this.state.progress}>
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          justifyContent: "center",
-          // backgroundColor: `rgba(0,0,0,${0.6})`,
-          width: '100%',
-          height: '100%',
-          // marginTop: 400
-        }}
-      >
-        <View
-          style={{
-            padding: 13,
-            backgroundColor: 'grey',
-            borderRadius: 3,
-            marginTop: '90%'
-          }}
-        >
-          <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
-          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
-        </View>
-      </View>
-    </Modal>
+          <View
+            style={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              // backgroundColor: `rgba(0,0,0,${0.6})`,
+              width: '100%',
+              height: '100%',
+              // marginTop: 400
+            }}
+          >
+            <View
+              style={{
+                padding: 13,
+                backgroundColor: 'grey',
+                borderRadius: 3,
+                marginTop: '90%'
+              }}
+            >
+              <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
+              <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+            </View>
+          </View>
+        </Modal>
       </Container>
     );
   }
