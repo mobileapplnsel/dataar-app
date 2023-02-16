@@ -65,7 +65,7 @@ export default function RiseEnquery(props) {
                 <Text style={{
                     fontSize: 12,
                     color: 'white'
-                }}>Rise Enquiry</Text>
+                }}>Raise Query</Text>
             </TouchableOpacity>
             
             
