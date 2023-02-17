@@ -183,28 +183,39 @@ class DonationAmount extends Component {
       progress: true,
     })
 
-    // console.log('donate qty index: ', this.state['donateQty'+1])
-     console.log(this.state.data_list)
-  //   if (this.state.remarksString.trim() == '')
-  //   {
-  //     this.setState({remarksError: 'Please enter note'})
-  //   }
     
-  //  else
-  //  {
+     console.log(this.state.data_list)
+  
     
     
     var user_id = await AsyncStorage.getItem('user_id');
     var logs = {
        user_id: user_id,
       campaign_id: this.state.campaign_id,
-      // message: this.state.remarksString,
+      
       kind_id: this.state.kind_id,
     };
-    var campaign_data = {campaign_data:logs,
+    console.log("DATA=========", logs)
+
+
+
+    var campaign_data = {
+      campaign_data:logs,
       kind_list:this.state.data_list}
+
+      console.log("dhskbfsb====", campaign_data?.kind_list[0]?.donated_quantity)
+      console.log("dhskbfsbef====", campaign_data?.kind_list[0]?.item_quantity)
+
+
     console.log(JSON.stringify(campaign_data));
+
+
+    
     var response = await API.post('kind_donation_submit', campaign_data);
+
+
+
+
     if (response.status == 'success') {
 
       this.setState({
@@ -223,6 +234,9 @@ class DonationAmount extends Component {
       })
       Alert.alert(response.status, response.message);
     }
+
+  
+
     // var response = await API.post('contact_donee', logs);
     // if (response.status == 'success') {
     //   console.log('contact_donee response', response);
@@ -374,7 +388,7 @@ class DonationAmount extends Component {
                 
                  let newArray = [...this.state.data_list];
                  newArray[index].donated_quantity = val
-                
+                 
                  
                   
                 this.setState({
