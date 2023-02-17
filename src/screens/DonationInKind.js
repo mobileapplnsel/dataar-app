@@ -9,8 +9,10 @@ import {
   ScrollView,
   Alert,
   FlatList,
+  ActivityIndicator,
   StyleSheet,
-  Platform
+  Platform,
+  Modal
 } from 'react-native';
 import {
   Container,
@@ -39,6 +41,7 @@ class DonationAmount extends Component {
     super(props);
     this.state = {
       Amount: '',
+      progress: false,
       donateAmt: props.route.params.donate_amt,
       donation_mode: props.route.params.donation_mode,
       campaign_id: props.route.params.campaign_id,
@@ -176,6 +179,10 @@ class DonationAmount extends Component {
   };
   donate = async () => {
 
+    this.setState({
+      progress: true,
+    })
+
     // console.log('donate qty index: ', this.state['donateQty'+1])
      console.log(this.state.data_list)
   //   if (this.state.remarksString.trim() == '')
@@ -199,6 +206,10 @@ class DonationAmount extends Component {
     console.log(JSON.stringify(campaign_data));
     var response = await API.post('kind_donation_submit', campaign_data);
     if (response.status == 'success') {
+
+      this.setState({
+        progress: false,
+      })
       console.log('contact_donee response', response);
       // Toast.show(response.message, Toast.LONG)
       Alert.alert('success', response.message, [
@@ -207,6 +218,9 @@ class DonationAmount extends Component {
       {cancelable: false},);
         
     } else {
+      this.setState({
+        progress: false,
+      })
       Alert.alert(response.status, response.message);
     }
     // var response = await API.post('contact_donee', logs);
@@ -508,7 +522,7 @@ class DonationAmount extends Component {
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    Start Date: {this.state.start_date}
+                    Start Date: {(this.state.start_date).substring(0 , 10).split("-").reverse().join("-")}
                   </Text>
 
                   <Text style={{
@@ -518,7 +532,7 @@ class DonationAmount extends Component {
                     marginStart: 20, 
                     marginEnd: 20,
                   }}>
-                    Expiry Date: {this.state.expiry_date}
+                    Expiry Date: {(this.state.expiry_date).substring(0 , 10).split("-").reverse().join("-")}
                   </Text>
                 
                 
@@ -645,6 +659,7 @@ class DonationAmount extends Component {
                     marginEnd: 20,
                   }}>
                     Unit List
+                    
                   </Text>
         
         <FlatList
@@ -784,6 +799,32 @@ class DonationAmount extends Component {
            
 
           </ImageBackground>
+
+          <Modal transparent={true} animationType="none" visible={this.state.progress}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          // backgroundColor: `rgba(0,0,0,${0.6})`,
+          width: '100%',
+          height: '100%',
+          // marginTop: 400
+        }}
+      >
+        <View
+          style={{
+            padding: 13,
+            backgroundColor: 'grey',
+            borderRadius: 3,
+            marginTop: '40%'
+          }}
+        >
+          <ActivityIndicator animating={this.state.progress} color={'white'} size="large" />
+          <Text style={{ color: `${'white'}` }}>{'Wait a moment....'}</Text>
+        </View>
+      </View>
+    </Modal>
         </Container>
      
     );

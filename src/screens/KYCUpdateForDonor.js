@@ -443,7 +443,7 @@ selectOneFile = async () => {
         this.setState({
           progress:false
       })
-        Alert.alert(response.status, response.message);
+        Alert.alert("Thank you for submitting your KYC. It is currently under review. We will let you know once your KYC gets approved.");
       }
     }
   };
