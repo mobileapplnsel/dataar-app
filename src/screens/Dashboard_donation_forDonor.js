@@ -897,13 +897,19 @@ class Dashboard_donation_forDonor extends Component {
                     },
                   ]}
                   onPress={() => this.shareCampaign(item)}>
-                  <Text style={{
+  <Image
+                        style={Styles.donation_icon_font2}
+                        source={require('../../src/assets/images/share2.png')}
+                      // resizeMode="contain"dashboard_main_btn
+                      />
+
+                  {/* <Text style={{
                     fontSize: 14,
                     color: '#757373',
                     fontWeight: '500',
                   }}>
-                    {item.quantity} Share
-                  </Text>
+                    {item.quantity} 
+                  </Text> */}
                 </TouchableOpacity>
                 <View
                   style={{
@@ -925,9 +931,14 @@ class Dashboard_donation_forDonor extends Component {
                       },
                     ]}
                     onPress={() => this.comment(item)}>
-                    <Text style={Styles.doner_comment_font}>
+                    {/* <Text style={Styles.doner_comment_font}>
                       Review
-                    </Text>
+                    </Text> */}
+                     <Image
+                        style={Styles.donation_icon_font2}
+                        source={require('../../src/assets/images/reviews.png')}
+                      // resizeMode="contain"dashboard_main_btn
+                      />
                   </TouchableOpacity>
                 </View>
                 {item.donation_mode == '1' && <TouchableOpacity

@@ -1001,6 +1001,15 @@ module.exports = StyleSheet.create({
     // marginTop: 20,
     backgroundColor: 'transparent',
   },
+
+  donation_icon_font2: {
+    width: 24,
+    height: 24,
+    marginStart: 10,
+    // marginTop: 20,
+    backgroundColor: 'transparent',
+  },
+
   location_icon_font: {
     width: 28,
     height: 28,
