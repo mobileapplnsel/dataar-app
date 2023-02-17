@@ -486,51 +486,63 @@ class DonationAmount extends Component {
 
 
 
-              {/* <Text style={{ marginStart: 5, fontWeight: 'bold', fontSize: 20,marginTop:23 }}>
+              <Text style={{ 
+                
+                fontWeight: 'bold',
+                 fontSize: 18,
+                 marginTop:23 }}>
                     Campaign Details : 
-                  </Text> */}
+                  </Text>
+
+
+
                   
                   <Text style={{
-                    fontSize: 18,
+                    fontSize: 16,
             
                     marginTop: 10,
-                    marginStart: 20, 
-                    marginEnd: 20,
+                   
                    
                   
                   }}>
-                    {'Camapign Name: '+this.state.campaign_name}
+                    {this.state.campaign_name}
                   </Text>
                 
+                  <Text style={{ 
                 
+                fontWeight: 'bold',
+                 fontSize: 18,
+                 marginTop:23 }}>
+                    Campaign Details : 
+                  </Text>
+
                   <Text style={{
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: '500',
                     marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
+                    
+                    
                   }}>
-                    {'Camapign Details: '+this.state.campaign_details}
+                    {this.state.campaign_details}
                   </Text>
                 
 
                 
                   <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
+                     fontWeight: 'bold',
+                    fontSize: 16,
+                    
                     marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
+                    
                   }}>
                     Start Date: {(this.state.start_date).substring(0 , 10).split("-").reverse().join("-")}
                   </Text>
 
                   <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
-                    marginTop: 13,
-                    marginStart: 20, 
-                    marginEnd: 20,
+                     fontWeight: 'bold',
+                     fontSize: 16,
+                     
+                     marginTop: 13,
                   }}>
                     Expiry Date: {(this.state.expiry_date).substring(0 , 10).split("-").reverse().join("-")}
                   </Text>
@@ -649,14 +661,14 @@ class DonationAmount extends Component {
                     {''}
                   </Text> */}
 
-                  <View style={{flex: 1, marginTop: 15}}>
+                  <View style={{flex: 1, marginTop: 45}}>
                   <Text style={{
-                    fontSize: 18,
-                    fontWeight: '500',
+                    fontSize: 16,
                    
-                    marginStart: 20, 
+                   
+                   
                     fontWeight:'bold',
-                    marginEnd: 20,
+                    textAlign: 'center'
                   }}>
                     Unit List
                     
