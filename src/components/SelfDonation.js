@@ -162,6 +162,8 @@ export default function SelfDonation(props) {
                     </TouchableOpacity>
                 </View>
             </Modal>
+
+            
         </View>
     )
 }

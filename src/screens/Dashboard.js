@@ -1033,7 +1033,7 @@ const deviceHeight =
             <View
               style={{
                 padding: 13,
-                backgroundColor: 'red',
+                backgroundColor: 'grey',
                 borderRadius: 3,
                 marginTop: '80%'
               }}

@@ -587,14 +587,14 @@ else
           if (response.status == 'success') {
             this.setState({progress: false})
             // need to add kyc uploadation function here
-            Alert.alert('success', 'Thank you for submitting your KYC. It is currently under review. We will let you know once your KYC gets approved.', [
+            Alert.alert('Thank you for submitting your KYC. It is currently under review. We will let you know once your KYC gets approved.', [
               {text: 'OK', onPress: () => this.props.navigation.navigate('Dashboard')},
             ],
             {cancelable: false},);
            
           } else {
             this.setState({progress: false})
-            Alert.alert(response.status, response.message);
+            Alert.alert("KYC not submitted");
           }
         }
       }
@@ -649,14 +649,14 @@ else
           if (response.status == 'success') {
             this.setState({progress: false})
             // need to add kyc uploadation function here
-            Alert.alert('success', 'Thank you for submitting your KYC. It is currently under review. We will let you know once your KYC gets approved.', [
+            Alert.alert('Thank you for submitting your KYC. It is currently under review. We will let you know once your KYC gets approved.', [
               {text: 'OK', onPress: () => this.props.navigation.navigate('Dashboard')},
             ],
             {cancelable: false},);
            
           } else {
             this.setState({progress: false})
-            Alert.alert(response.status, response.message);
+            Alert.alert("KYC not submitted");
           }
         }
       }
@@ -1234,7 +1234,7 @@ onValueChange={
                         
                          if (Platform.OS === 'android')
                          {
-                          this.selecselectOneFileForBankStOneFile()
+                          this.selectOneFileForBankS()
                          }
                          else
                          {

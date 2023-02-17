@@ -690,13 +690,15 @@ const StartCampaign = ({navigation}) => {
 
     // console.log('Start campaign response: ', response)
 
-    // if (response.status == 'success') {
-    //   navigation.navigate('Dashboard');
-    //   Alert.alert(response.status, response.message);
-    // } else {
-    //   Alert.alert(response.status, response.message);
-    //   navigation.navigate('Dashboard');
-    // }
+    if (response.status == 'success') {
+      setprogress(false)
+      navigation.navigate('Dashboard');
+      //Alert.alert(response.status, response.message);
+    } else {
+      Alert.alert("Campaign not created");
+      setprogress(false)
+      //navigation.navigate('Dashboard');
+    }
   };
   const Start_CampaignNow = async () => {
     var user_id = await AsyncStorage.getItem('user_id');
@@ -2224,7 +2226,7 @@ const add_more = (id) => {
         <View
           style={{
             padding: 13,
-            backgroundColor: 'grey',
+            backgroundColor: 'grey ',
             borderRadius: 3,
             marginTop: '90%'
           }}

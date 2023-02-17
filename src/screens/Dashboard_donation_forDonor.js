@@ -215,6 +215,9 @@ class Dashboard_donation_forDonor extends Component {
     }
   };
   like = async (item, index) => {
+    this.setState({
+      progress: true
+    })
     var token = await AsyncStorage.getItem('token');
     var user_id = await AsyncStorage.getItem('user_id');
     if (token != null && token !== '') {
@@ -227,6 +230,11 @@ class Dashboard_donation_forDonor extends Component {
       console.log(logs);
       var response = await API.post('add_to_favourite', logs);
       if (response.status == 'success') {
+
+        this.setState({
+          progress: false
+        })
+        
         Toast.show(response.message, Toast.LONG)
         let arr = [...this.state.setcmpData];
         arr[index].like_status = item.like_status == 1 ? 2 : 1;
@@ -787,6 +795,7 @@ class Dashboard_donation_forDonor extends Component {
                     ) : (
                       <Image
                         style={Styles.donation_icon_font}
+                        
                         source={require('../../src/assets/images/heartic.png')}
                       // resizeMode="contain"dashboard_main_btn
                       />
